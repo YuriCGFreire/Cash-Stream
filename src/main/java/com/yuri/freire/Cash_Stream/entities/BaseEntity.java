@@ -13,10 +13,10 @@ import java.time.LocalDateTime;
 @SuperBuilder
 public class BaseEntity {
 
-    @Column(name = "createdAt", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updatedAt", insertable = false, updatable = true)
+    @Column(name = "updated_at", insertable = false, updatable = true)
     private LocalDateTime updatedAt;
 
     @PrePersist

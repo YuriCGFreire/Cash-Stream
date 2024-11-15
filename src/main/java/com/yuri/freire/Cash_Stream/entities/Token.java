@@ -8,8 +8,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.math.BigInteger;
-
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
@@ -30,7 +28,7 @@ public class Token extends BaseEntity{
             allocationSize = 1,
             initialValue = 1
     )
-    private BigInteger id;
+    private Integer id;
 
     private String token;
 

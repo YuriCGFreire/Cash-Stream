@@ -24,7 +24,6 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtRequestFilter;
     private final AuthenticationProvider authenticationProvider;
-
     private final LogoutHandler logoutHandler;
 
     @Bean

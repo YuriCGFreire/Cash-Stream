@@ -3,16 +3,17 @@ package com.yuri.freire.Cash_Stream.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
-
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "tb_expense_subcategory")
-public class ExpenseSubcategory {
+public class ExpenseSubcategory extends BaseEntity{
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
@@ -35,5 +36,5 @@ public class ExpenseSubcategory {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
-    private ExpenseCategory category;
+    private ExpenseCategory expenseCategory;
 }

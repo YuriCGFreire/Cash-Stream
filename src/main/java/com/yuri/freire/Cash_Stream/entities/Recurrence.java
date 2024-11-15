@@ -3,12 +3,13 @@ package com.yuri.freire.Cash_Stream.entities;
 import com.yuri.freire.Cash_Stream.entities.entity_enum.RecurrenceType;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

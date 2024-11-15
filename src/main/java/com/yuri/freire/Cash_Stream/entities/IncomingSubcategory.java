@@ -1,20 +1,18 @@
 package com.yuri.freire.Cash_Stream.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
-
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "tb_incoming_subcategory")
-public class IncomingSubcategory {
+public class IncomingSubcategory extends BaseEntity{
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
@@ -27,7 +25,7 @@ public class IncomingSubcategory {
             initialValue = 1
     )
     @Column(name = "incoming_subcategory_id")
-    private Integer incomingSubCategoryId;
+    private Integer incomingSubcategoryId;
 
     @Column(name = "subcategory_name", nullable = false, length = 50)
     private String subCategoryName;

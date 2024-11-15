@@ -10,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +34,7 @@ public class User extends BaseEntity implements UserDetails {
             initialValue = 1
     )
     @Column(name = "id")
-    private BigInteger id;
+    private Integer id;
 
     @Column(name = "firstname", nullable = false)
     private String firstname;

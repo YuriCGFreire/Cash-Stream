@@ -1,20 +1,18 @@
 package com.yuri.freire.Cash_Stream.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
-
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "tb_expense_category")
-public class ExpenseCategory {
+public class ExpenseCategory extends BaseEntity{
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
@@ -35,4 +33,6 @@ public class ExpenseCategory {
     @OneToMany(mappedBy = "expenseCategory")
     private List<ExpenseSubcategory> expenseSubcategories;
 
+    @OneToMany(mappedBy = "expenseCategory")
+    private List<Expense> expenses;
 }

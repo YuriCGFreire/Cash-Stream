@@ -31,7 +31,7 @@ public class ExpenseMethod extends BaseEntity{
     private Integer expenseMethodId;
 
     @Enumerated(EnumType.STRING)
-    private ExpenseMethodType epenseMethodName;
+    private ExpenseMethodType expenseMethodName;
 
     @OneToMany(mappedBy = "expenseMethod")
     private List<Expense> expenses;

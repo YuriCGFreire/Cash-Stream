@@ -1,11 +1,11 @@
 package com.yuri.freire.Cash_Stream.Incoming.controllers.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Builder

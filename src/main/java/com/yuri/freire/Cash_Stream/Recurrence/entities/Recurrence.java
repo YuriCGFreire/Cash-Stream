@@ -35,9 +35,9 @@ public class Recurrence extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private RecurrenceType recurrenceFrequency;
 
-    @OneToMany(mappedBy = "recurrence")
+    @OneToMany(mappedBy = "recurrence", fetch = FetchType.LAZY)
     private List<Incoming> incomings;
 
-    @OneToMany(mappedBy = "recurrence")
+    @OneToMany(mappedBy = "recurrence", fetch = FetchType.LAZY)
     private List<Expense> expenses;
 }

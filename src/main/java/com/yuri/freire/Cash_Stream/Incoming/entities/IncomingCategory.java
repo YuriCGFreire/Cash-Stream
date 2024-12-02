@@ -32,9 +32,9 @@ public class IncomingCategory extends BaseEntity {
     @Column(name = "category_name", nullable = false, length = 50)
     private String categoryName;
 
-    @OneToMany(mappedBy = "incomingCategory")
+    @OneToMany(mappedBy = "incomingCategory", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Incoming> incomings;
 
-    @OneToMany(mappedBy = "incomingCategory")
+    @OneToMany(mappedBy = "incomingCategory", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<IncomingSubcategory> subcategories;
 }

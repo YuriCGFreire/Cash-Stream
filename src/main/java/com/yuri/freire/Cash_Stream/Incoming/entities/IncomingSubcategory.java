@@ -1,5 +1,6 @@
 package com.yuri.freire.Cash_Stream.Incoming.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yuri.freire.Cash_Stream.Common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,10 +32,10 @@ public class IncomingSubcategory extends BaseEntity {
     @Column(name = "subcategory_name", nullable = false, length = 50)
     private String subCategoryName;
 
-    @OneToMany(mappedBy = "incomingSubcategory")
+    @OneToMany(mappedBy = "incomingSubcategory", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Incoming> incomings;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "incoming_category_id")
     private IncomingCategory incomingCategory;
 }

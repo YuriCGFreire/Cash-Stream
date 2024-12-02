@@ -14,13 +14,15 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class IncomingResponse {
 
+    private Integer incomingId;
+
     private String incomingDescription;
 
     private BigDecimal grossIncoming;
 
     private BigDecimal netIncoming;
 
-    private RecurrenceType recurrence;
+    private String recurrence;
 
     private String incomingCategory;
 

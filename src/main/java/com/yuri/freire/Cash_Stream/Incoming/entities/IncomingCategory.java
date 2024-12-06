@@ -3,6 +3,7 @@ package com.yuri.freire.Cash_Stream.Incoming.entities;
 
 import com.yuri.freire.Cash_Stream.Common.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -29,6 +30,7 @@ public class IncomingCategory extends BaseEntity {
     @Column(name = "incoming_category_id")
     private Integer incomingCategoryId;
 
+    @NotNull(message = "Incoming category name cannot be null")
     @Column(name = "category_name", nullable = false, length = 50)
     private String categoryName;
 

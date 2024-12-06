@@ -1,8 +1,8 @@
 package com.yuri.freire.Cash_Stream.Incoming.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yuri.freire.Cash_Stream.Common.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -29,12 +29,14 @@ public class IncomingSubcategory extends BaseEntity {
     @Column(name = "incoming_subcategory_id")
     private Integer incomingSubcategoryId;
 
+    @NotNull(message = "Incoming subcategory name cannot be null")
     @Column(name = "subcategory_name", nullable = false, length = 50)
     private String subCategoryName;
 
     @OneToMany(mappedBy = "incomingSubcategory", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Incoming> incomings;
 
+//    @NotNull(message = "Incoming category cannot be null")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "incoming_category_id")
     private IncomingCategory incomingCategory;

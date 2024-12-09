@@ -29,7 +29,7 @@ public class IncomingCategoryController {
     }
 
     @GetMapping("/find-all")
-    public ResponseEntity<ApiResponse<Page<IncomingCategoryResponse>>> find(Pageable pageable, HttpServletRequest request){
+    public ResponseEntity<ApiResponse<Page<IncomingCategoryResponse>>> findAllIncomingCategory(Pageable pageable, HttpServletRequest request){
         Page<IncomingCategoryResponse> incomingCategories = incomingCategoryService.findAll(pageable);
         ApiResponse<Page<IncomingCategoryResponse>> response = ResponseUtil.success(incomingCategories, "List of categories fetched successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);

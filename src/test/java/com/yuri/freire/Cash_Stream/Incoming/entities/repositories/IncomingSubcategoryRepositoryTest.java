@@ -1,7 +1,9 @@
-package com.yuri.freire.Cash_Stream.Incoming.entities.repositories;
+package com.yuri.freire.Cash_Stream.Common.Incoming.entities.repositories;
 
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingSubcategory;
+import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingCategoryRepository;
+import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingSubcategoryRepository;
 import com.yuri.freire.Cash_Stream.util.IncomingCategoryCreator;
 import com.yuri.freire.Cash_Stream.util.IncomingSubcategoryCreator;
 import jakarta.validation.ConstraintViolationException;

@@ -2,6 +2,7 @@ package com.yuri.freire.Cash_Stream.Exceptions;
 
 import com.yuri.freire.Cash_Stream.Response.ApiResponse;
 import com.yuri.freire.Cash_Stream.Response.ResponseUtil;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ValidationException;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
@@ -24,9 +25,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<ApiResponse<Void>> handleResponseStatusException(HttpServletRequest request, ResponseStatusException responseStatusException){
-        ApiResponse<Void> response = ResponseUtil.error(responseStatusException.getMessage(), "Resource not found", 1001, request.getRequestURI());
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleEntityNotFoundException(HttpServletRequest request, EntityNotFoundException entityNotFoundException){
+        ApiResponse<Void> response = ResponseUtil.error(entityNotFoundException.getMessage(), "Resource not found", 404, request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 

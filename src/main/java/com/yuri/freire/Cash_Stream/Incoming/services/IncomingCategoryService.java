@@ -5,6 +5,7 @@ import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingCategoryRe
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
 import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingCategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
 public class IncomingCategoryService {
     private final IncomingCategoryRepository incomingCategoryRepository;
 
-    public IncomingCategoryResponse createIncomingCategory(IncomingCategoryRequest incomingCategoryRequest){
+    public IncomingCategoryResponse createIncomingCategory(@Valid IncomingCategoryRequest incomingCategoryRequest){
         IncomingCategory incomingCategory = IncomingCategory.builder()
                 .categoryName(incomingCategoryRequest.getCategoryName())
                 .build();

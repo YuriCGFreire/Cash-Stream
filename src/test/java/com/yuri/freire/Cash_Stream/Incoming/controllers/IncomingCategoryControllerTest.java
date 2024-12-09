@@ -42,7 +42,7 @@ class IncomingCategoryControllerTest {
                 .thenReturn(categoryPage);
 
         BDDMockito.when(requestMock.getRequestURI())
-                .thenReturn("/test-path");
+                .thenReturn("/category-test-path");
 
         BDDMockito.when(categoryServiceMock.createIncomingCategory(ArgumentMatchers.any(IncomingCategoryRequest.class)))
                 .thenReturn(IncomingCategoryCreator.createValidCategory());
@@ -55,7 +55,7 @@ class IncomingCategoryControllerTest {
     @DisplayName("findAll returns list of Incoming Category inside of Page Object When successfull")
     void findAll_ReturnsListOfIncomingCategoryInsidePageObject_WhenSuccessfull(){
         String expectedName = IncomingCategoryCreator.createValidCategory().getIncomingCategoryName();
-        Page<IncomingCategoryResponse> categoryPage = categoryController.find(null, requestMock).getBody().getData();
+        Page<IncomingCategoryResponse> categoryPage = categoryController.findAllIncomingCategory(null, requestMock).getBody().getData();
         Assertions.assertThat(categoryPage).isNotNull();
         Assertions.assertThat(categoryPage.toList())
                 .isNotEmpty()

@@ -1,0 +1,92 @@
+package com.yuri.freire.Cash_Stream.Common.Incoming.controllers;
+
+import com.yuri.freire.Cash_Stream.Incoming.controllers.IncomingSubcatergoyController;
+import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingSubcategoryResponse;
+import com.yuri.freire.Cash_Stream.Incoming.services.IncomingCategoryService;
+import com.yuri.freire.Cash_Stream.Incoming.services.IncomingSubcategoryService;
+import com.yuri.freire.Cash_Stream.util.IncomingCategoryCreator;
+import com.yuri.freire.Cash_Stream.util.IncomingCategoryRequestCreator;
+import com.yuri.freire.Cash_Stream.util.IncomingSubcategoryCreator;
+import com.yuri.freire.Cash_Stream.util.IncomingSubcategoryRequestCreator;
+import jakarta.servlet.http.HttpServletRequest;
+import org.assertj.core.api.AssertionInfo;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
+import org.mockito.BDDMockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.List;
+
+@ExtendWith(SpringExtension.class)
+@DisplayName("Tests for Incoming Subcategory Controller")
+class IncomingSubcatergoyControllerTest {
+
+    @InjectMocks
+    private IncomingSubcatergoyController subcatergoyController;
+    @Mock
+    private IncomingSubcategoryService subcategoryServiceMock;
+
+    @Mock
+    IncomingCategoryService categoryServiceMock;
+    @Mock
+    private HttpServletRequest requestMock;
+
+    @BeforeEach
+    void setUp(){
+
+        IncomingSubcategoryResponse subcategory = IncomingSubcategoryCreator.createValidSubcategoryResponse();
+        categoryServiceMock.createIncomingCategory(IncomingCategoryRequestCreator.createIncomingCategoryRequest());
+
+        PageImpl<IncomingSubcategoryResponse> subcategoryPage = new PageImpl<>(List.of(subcategory));
+
+        BDDMockito.when(subcategoryServiceMock.findAllSubcategory(ArgumentMatchers.any()))
+                .thenReturn(subcategoryPage);
+
+        BDDMockito.when(requestMock.getRequestURI())
+                .thenReturn("/subcategory-test-path");
+
+        BDDMockito.when(subcategoryServiceMock.createIncomingSubcategory(ArgumentMatchers.any()))
+                .thenReturn(subcategory);
+    }
+
+    @Test
+    @DisplayName("findAll returns list of Incoming Subcategory inside of Page Object When successfull")
+    void findAll_ReturnsListOfIncomingSubcategoryInsidePageObject_WhenSuccessfull(){
+        String expectedSubcategoryName = IncomingSubcategoryCreator.createValidSubcategoryResponse().getIncomingSubcategoryName();
+        Integer expectedSubcategoryId = IncomingSubcategoryCreator.createValidSubcategoryResponse().getIncomingSubcategoryId();
+        String expectedCategoryName = IncomingCategoryCreator.createValidCategory().getIncomingCategoryName();
+        Page<IncomingSubcategoryResponse> subcategoryPage = subcatergoyController.findAllIncomingSubcategory(null, requestMock).getBody().getData();
+
+        Assertions.assertThat(subcategoryPage).isNotNull();
+        Assertions.assertThat(subcategoryPage.toList())
+                .isNotEmpty()
+                .hasSize(1);
+        Assertions.assertThat(subcategoryPage.toList().get(0).getIncomingSubcategoryName()).isEqualTo(expectedSubcategoryName);
+        Assertions.assertThat(subcategoryPage.toList().get(0).getIncomingSubcategoryId()).isNotNull().isEqualTo(expectedSubcategoryId);
+        Assertions.assertThat(subcategoryPage.toList().get(0).getIncomingCategoryName()).isEqualTo(expectedCategoryName);
+    }
+
+    @Test
+    @DisplayName("createIncomingSubcategory returns Incoming Subcategory when successfull")
+    void createIncomingSubcategory_ReturnsIncomingSubcategory_WhenSuccessfull(){
+        IncomingSubcategoryResponse savedSubcategory = subcatergoyController.createIncomingSubcategory(IncomingSubcategoryRequestCreator.createIncomingSubcategoryRequest(), requestMock)
+                .getBody().getData();
+        Assertions.assertThat(savedSubcategory).isNotNull();
+        Assertions.assertThat(savedSubcategory.getIncomingSubcategoryId()).isNotNull();
+        Assertions.assertThat(savedSubcategory.getIncomingSubcategoryName())
+                .isNotNull()
+                .isEqualTo(IncomingSubcategoryRequestCreator.createIncomingSubcategoryRequest().getSubcategoryName());
+        Assertions.assertThat(savedSubcategory.getIncomingCategoryName())
+                .isNotNull()
+                .isEqualTo(IncomingSubcategoryRequestCreator.createIncomingSubcategoryRequest().getIncomingCategoryName());
+    }
+
+}

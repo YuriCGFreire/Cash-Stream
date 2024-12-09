@@ -1,6 +1,5 @@
-package com.yuri.freire.Cash_Stream.Common.Incoming.controllers;
+package com.yuri.freire.Cash_Stream.Incoming.controllers;
 
-import com.yuri.freire.Cash_Stream.Incoming.controllers.IncomingSubcatergoyController;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingSubcategoryResponse;
 import com.yuri.freire.Cash_Stream.Incoming.services.IncomingCategoryService;
 import com.yuri.freire.Cash_Stream.Incoming.services.IncomingSubcategoryService;

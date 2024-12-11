@@ -27,11 +27,11 @@ public class IncomingSubcategoryService {
                 .subCategoryName(incomingSubcategoryRequest.getSubcategoryName())
                 .incomingCategory(incomingCategory)
                 .build();
-         incomingSubcategoryRepository.save(incomingSubcategory);
+         IncomingSubcategory savedSubcategory = incomingSubcategoryRepository.save(incomingSubcategory);
          return IncomingSubcategoryResponse.builder()
-                 .incomingSubcategoryId(incomingSubcategory.getIncomingSubcategoryId())
-                 .incomingSubcategoryName(incomingSubcategory.getSubCategoryName())
-                 .incomingCategoryName(incomingCategory.getCategoryName())
+                 .incomingSubcategoryId(savedSubcategory.getIncomingSubcategoryId())
+                 .incomingSubcategoryName(savedSubcategory.getSubCategoryName())
+                 .incomingCategoryName(savedSubcategory.getIncomingCategory().getCategoryName())
                  .build();
     }
 
@@ -50,7 +50,8 @@ public class IncomingSubcategoryService {
     }
 
     public Page<IncomingSubcategoryResponse> findAllByCategoryName(String categoryName, Pageable pageable){
-        return incomingSubcategoryRepository.findAllByCategory(categoryName, pageable)
+        IncomingCategory category = incomingCategoryService.findByCategoryName(categoryName);
+        return incomingSubcategoryRepository.findAllByCategory(category.getCategoryName(), pageable)
                 .map(incomginSubcategory -> IncomingSubcategoryResponse.builder()
                         .incomingSubcategoryId(incomginSubcategory.getIncomingSubcategoryId())
                         .incomingSubcategoryName(incomginSubcategory.getSubCategoryName())
@@ -61,7 +62,9 @@ public class IncomingSubcategoryService {
     public String deleteBySubcategoryId(Integer incomginSubcategoryId){
         IncomingSubcategory subcategory = incomingSubcategoryRepository.findById(incomginSubcategoryId)
                 .orElseThrow(() -> new EntityNotFoundException("Subcategory not found: " + incomginSubcategoryId));
-        incomingSubcategoryRepository.deleteById(incomginSubcategoryId);
+        incomingSubcategoryRepository.deleteById(subcategory.getIncomingSubcategoryId());
         return subcategory.getSubCategoryName();
     }
+
+
 }

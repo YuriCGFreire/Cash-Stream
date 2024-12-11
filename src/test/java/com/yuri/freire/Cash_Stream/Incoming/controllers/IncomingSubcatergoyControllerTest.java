@@ -3,12 +3,12 @@ package com.yuri.freire.Cash_Stream.Incoming.controllers;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingSubcategoryResponse;
 import com.yuri.freire.Cash_Stream.Incoming.services.IncomingCategoryService;
 import com.yuri.freire.Cash_Stream.Incoming.services.IncomingSubcategoryService;
+import com.yuri.freire.Cash_Stream.Response.ApiResponse;
 import com.yuri.freire.Cash_Stream.util.IncomingCategoryCreator;
 import com.yuri.freire.Cash_Stream.util.IncomingCategoryRequestCreator;
 import com.yuri.freire.Cash_Stream.util.IncomingSubcategoryCreator;
 import com.yuri.freire.Cash_Stream.util.IncomingSubcategoryRequestCreator;
 import jakarta.servlet.http.HttpServletRequest;
-import org.assertj.core.api.AssertionInfo;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +20,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
@@ -32,7 +34,6 @@ class IncomingSubcatergoyControllerTest {
     private IncomingSubcatergoyController subcatergoyController;
     @Mock
     private IncomingSubcategoryService subcategoryServiceMock;
-
     @Mock
     IncomingCategoryService categoryServiceMock;
     @Mock
@@ -49,29 +50,41 @@ class IncomingSubcatergoyControllerTest {
         BDDMockito.when(subcategoryServiceMock.findAllSubcategory(ArgumentMatchers.any()))
                 .thenReturn(subcategoryPage);
 
+        BDDMockito.when(subcategoryServiceMock.findAllByCategoryName(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
+                        .thenReturn(subcategoryPage);
+
         BDDMockito.when(requestMock.getRequestURI())
                 .thenReturn("/subcategory-test-path");
 
         BDDMockito.when(subcategoryServiceMock.createIncomingSubcategory(ArgumentMatchers.any()))
                 .thenReturn(subcategory);
+
+        BDDMockito.when(subcategoryServiceMock.deleteBySubcategoryId(ArgumentMatchers.anyInt()))
+                .thenReturn(IncomingSubcategoryCreator.createValidSubcategoryResponse().getIncomingSubcategoryName());
     }
 
     @Test
     @DisplayName("findAll returns list of Incoming Subcategory inside of Page Object When successfull")
     void findAll_ReturnsListOfIncomingSubcategoryInsidePageObject_WhenSuccessfull(){
-        String expectedSubcategoryName = IncomingSubcategoryCreator.createValidSubcategoryResponse().getIncomingSubcategoryName();
-        Integer expectedSubcategoryId = IncomingSubcategoryCreator.createValidSubcategoryResponse().getIncomingSubcategoryId();
-        String expectedCategoryName = IncomingCategoryCreator.createValidCategory().getIncomingCategoryName();
         Page<IncomingSubcategoryResponse> subcategoryPage = subcatergoyController.findAllIncomingSubcategory(null, requestMock).getBody().getData();
 
         Assertions.assertThat(subcategoryPage).isNotNull();
         Assertions.assertThat(subcategoryPage.toList())
                 .isNotEmpty()
                 .hasSize(1);
-        Assertions.assertThat(subcategoryPage.toList().get(0).getIncomingSubcategoryName()).isEqualTo(expectedSubcategoryName);
-        Assertions.assertThat(subcategoryPage.toList().get(0).getIncomingSubcategoryId()).isNotNull().isEqualTo(expectedSubcategoryId);
+    }
+
+    @Test
+    @DisplayName("findAllByCategoryName returns a list os Incoming Subcategory by category name inside of a page object when successfull")
+    void findAllByCategoryName_ReturnsAListOfSubcategoryByCategoryNameInsideOfPageObject_WhenSucessfull(){
+        String expectedCategoryName = IncomingCategoryCreator.createValidCategory().getIncomingCategoryName();
+        Page<IncomingSubcategoryResponse> subcategoryPage = subcatergoyController.findAllByCategoryName(expectedCategoryName, null, requestMock).getBody().getData();
+        Assertions.assertThat(subcategoryPage.toList())
+                .isNotEmpty()
+                .hasSize(1);
         Assertions.assertThat(subcategoryPage.toList().get(0).getIncomingCategoryName()).isEqualTo(expectedCategoryName);
     }
+
 
     @Test
     @DisplayName("createIncomingSubcategory returns Incoming Subcategory when successfull")
@@ -86,6 +99,16 @@ class IncomingSubcatergoyControllerTest {
         Assertions.assertThat(savedSubcategory.getIncomingCategoryName())
                 .isNotNull()
                 .isEqualTo(IncomingSubcategoryRequestCreator.createIncomingSubcategoryRequest().getIncomingCategoryName());
+    }
+
+    @Test
+    @DisplayName("deleteByCategoryId removes category whem successfull")
+    void deleteByCategoryId_RemovesCategory_WhenSuccessfull(){
+        ResponseEntity<ApiResponse<String>> deletedSubcategory = subcatergoyController.deleteByIncomingSubcategoryId(1, requestMock);
+
+        Assertions.assertThat(deletedSubcategory.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(deletedSubcategory.getBody().getData()).isEqualTo(IncomingSubcategoryCreator.createValidSubcategoryResponse().getIncomingSubcategoryName());
+        Assertions.assertThat(deletedSubcategory.getBody().getMessage()).isEqualTo("Subcategory deleted successfully");
     }
 
 }

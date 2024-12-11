@@ -18,13 +18,10 @@ import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("Tests for Incoming Category Service")
@@ -36,7 +33,7 @@ class IncomingCategoryServiceTest {
     private IncomingCategoryRepository categoryRepositoryMock;
 
     @BeforeEach
-    void setup(){
+    void setUp(){
         PageImpl<IncomingCategory> categoryPage = new PageImpl<>(List.of(IncomingCategoryCreator.createValidCategoryForRepository()));
         BDDMockito.when(categoryRepositoryMock.findAll(ArgumentMatchers.any(PageRequest.class)))
                 .thenReturn(categoryPage);
@@ -55,7 +52,7 @@ class IncomingCategoryServiceTest {
         BDDMockito.when(categoryRepositoryMock.findByCategoryName(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(IncomingCategoryCreator.createValidCategoryForRepository()));
 
-        BDDMockito.when(categoryRepositoryMock.findByCategoryName("Nome qualquer"))
+        BDDMockito.when(categoryRepositoryMock.findByCategoryName("Some random categoryname"))
                 .thenReturn(Optional.empty());
     }
 
@@ -120,7 +117,7 @@ class IncomingCategoryServiceTest {
     @Test
     @DisplayName("findByCategoryName EntityNotFoundException when category does not exist")
     void findByCategoryName_ThrowsEntityNotFoundException_WhenCategoryDoesNotExiste(){
-        String categoryName = "Nome qualquer";
+        String categoryName = "Some random categoryname";
 
         Assertions.assertThatThrownBy(() -> categoryService.findByCategoryName(categoryName))
                 .isInstanceOf(EntityNotFoundException.class)

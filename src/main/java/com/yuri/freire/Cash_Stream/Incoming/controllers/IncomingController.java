@@ -22,7 +22,7 @@ public class IncomingController {
     private final IncomingService incomingService;
 
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse<IncomingResponse>> createIncomingCategory(@Valid @RequestBody IncomingRequest incomingRequest, HttpServletRequest request){
+    public ResponseEntity<ApiResponse<IncomingResponse>> createIncoming(@Valid @RequestBody IncomingRequest incomingRequest, HttpServletRequest request){
         IncomingResponse incomingCreated = incomingService.createIncoming(incomingRequest);
         ApiResponse<IncomingResponse> response = ResponseUtil.success(incomingCreated, "Incoming created successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -50,8 +50,8 @@ public class IncomingController {
     }
 
     @DeleteMapping("/delete-by-id")
-    public ResponseEntity<ApiResponse<String>> deleteByCategoryId(@RequestParam Integer incomginId, HttpServletRequest request){
-        String deletedCategory = incomingService.deleteByIncomingId(incomginId);
+    public ResponseEntity<ApiResponse<String>> deleteByIncomingId(@RequestParam Integer incomingId, HttpServletRequest request){
+        String deletedCategory = incomingService.deleteByIncomingId(incomingId);
         ApiResponse<String> response = ResponseUtil.success(deletedCategory, "Incoming deleted successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

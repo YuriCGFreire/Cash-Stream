@@ -18,12 +18,12 @@ public class IncomingRequest {
     @Size(min = 3, max = 50)
     private String incomingDescription;
 
-    @NotEmpty(message = "Gross incomingo cannot be null")
+    @NotNull(message = "Gross incoming cannot be null")
     @DecimalMin(value = "0.0", inclusive = false, message = "Gross incoming must be greater than 0")
     @Digits(integer = 10, fraction = 2, message = "Gross incoming must be a valid monetary value with up to 10 digits and 2 decimal places")
     private BigDecimal grossIncoming;
 
-    @NotEmpty(message = "Net incoming cannot be null")
+    @NotNull(message = "Net incoming cannot be null")
     @DecimalMin(value = "0.0", inclusive = false, message = "Net incoming must be greater than 0")
     @Digits(integer = 10, fraction = 2, message = "Net incoming must be a valid monetary value with up to 10 digits and 2 decimal places")
     private BigDecimal netIncoming;

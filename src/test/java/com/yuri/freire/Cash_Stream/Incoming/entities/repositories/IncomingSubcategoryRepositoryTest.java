@@ -35,8 +35,8 @@ class IncomingSubcategoryRepositoryTest {
     }
 
     @Test
-    @DisplayName("Save persists Incoming Subcategory when successfull")
-    void save_PersistsIncomingSubcategory_WhenSuccessfull(){ //Passou
+    @DisplayName("Save persists Incoming Subcategory when successful")
+    void save_PersistsIncomingSubcategory_WhenSuccessful(){
         IncomingSubcategory subcategory = IncomingSubcategoryCreator.createSubcategoryToBeSaved();
         IncomingCategory expectedCategory = subcategory.getIncomingCategory();
         IncomingSubcategory savedSubcategory = subcategoryRepository.save(subcategory);
@@ -55,8 +55,8 @@ class IncomingSubcategoryRepositoryTest {
     }
 
     @Test
-    @DisplayName("Save updates Incoming Subcategory when successfull")
-    void save_UpdatesIncomingSubcategory_WhenSuccessfull(){ //Passou
+    @DisplayName("Save updates Incoming Subcategory when successful")
+    void save_UpdatesIncomingSubcategory_WhenSuccessful(){ //Passou
         IncomingSubcategory subcategoryToBeSaved = IncomingSubcategoryCreator.createSubcategoryToBeSaved();
 
         IncomingSubcategory subcategorySaved = this.subcategoryRepository.save(subcategoryToBeSaved);
@@ -91,8 +91,8 @@ class IncomingSubcategoryRepositoryTest {
     void findAllSubcategory_ReturnsListOfIncomingSubcategoryInsideOfPageObject_WhenSuccessfull(){
         IncomingSubcategory subCategoryToBeSaved = IncomingSubcategoryCreator.createSubcategoryToBeSaved();
         IncomingSubcategory subCategoryToBeSaved2 = IncomingSubcategoryCreator.createSubcategoryToBeSaved();
-        subCategoryToBeSaved.setIncomingCategory(savedIncomingCategory);
         subCategoryToBeSaved2.setIncomingCategory(savedIncomingCategory);
+        subCategoryToBeSaved.setIncomingCategory(savedIncomingCategory);
         this.subcategoryRepository.save(subCategoryToBeSaved);
         this.subcategoryRepository.save(subCategoryToBeSaved2);
 
@@ -110,8 +110,8 @@ class IncomingSubcategoryRepositoryTest {
     void findAllByCategory_ReturnsListOfIncomingSubcategoryByCategoryName_WhenSuccessfull(){
         IncomingSubcategory subCategoryToBeSaved = IncomingSubcategoryCreator.createSubcategoryToBeSaved();
         IncomingSubcategory subCategoryToBeSaved2 = IncomingSubcategoryCreator.createSubcategoryToBeSaved();
-        subCategoryToBeSaved.setIncomingCategory(savedIncomingCategory);
         subCategoryToBeSaved2.setIncomingCategory(savedIncomingCategory);
+        subCategoryToBeSaved.setIncomingCategory(savedIncomingCategory);
         this.subcategoryRepository.save(subCategoryToBeSaved);
         this.subcategoryRepository.save(subCategoryToBeSaved2);
         Pageable pageable = PageRequest.of(0, 2);
@@ -139,7 +139,7 @@ class IncomingSubcategoryRepositoryTest {
 
     @Test
     @DisplayName("findBySubCategoryName returns empty when no IncomingSubcategory is not found")
-    void findBySubcategoryName_ReturnsEmpty_WhenIncomingSubcategoryIsNotFound(){ //Passou
+    void findBySubcategoryName_ReturnsEmpty_WhenIncomingSubcategoryIsNotFound(){
 
         Optional<IncomingSubcategory> fetchedSubcategory = this.subcategoryRepository.findBySubCategoryName("Subcategoria qualquer");
         Assertions.assertThat(fetchedSubcategory).isEmpty();

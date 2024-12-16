@@ -1,30 +1,18 @@
 package com.yuri.freire.Cash_Stream.Incoming.services;
 
-import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingCategoryResponse;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingRequest;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingResponse;
 import com.yuri.freire.Cash_Stream.Incoming.entities.Incoming;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingSubcategory;
-import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingCategoryRepository;
 import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingRepository;
-import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingSubcategoryRepository;
 import com.yuri.freire.Cash_Stream.Recurrence.entities.Recurrence;
-import com.yuri.freire.Cash_Stream.Recurrence.entities.entitie_enum.RecurrenceType;
-import com.yuri.freire.Cash_Stream.Recurrence.entities.repositories.RecurrenceRepository;
 import com.yuri.freire.Cash_Stream.Recurrence.services.RecurrenceService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +33,6 @@ public class IncomingService {
 
         Recurrence recurrence = recurrenceService.findByRecurrenFrequency(incomingRequest.getRecurrence());
 
-
         Incoming incoming = Incoming.builder()
                 .incomingDescription(incomingRequest.getIncomingDescription())
                 .grossIncoming(incomingRequest.getGrossIncoming())
@@ -55,16 +42,16 @@ public class IncomingService {
                 .recurrence(recurrence)
                 .build();
 
-        incomingRepository.save(incoming);
+        Incoming savedIncoming = incomingRepository.save(incoming);
 
         return IncomingResponse.builder()
-                .incomingId(incoming.getIncomingId())
-                .incomingDescription(incoming.getIncomingDescription())
-                .grossIncoming(incoming.getGrossIncoming())
-                .netIncoming(incoming.getNetIncoming())
-                .recurrence(incoming.getRecurrence().getRecurrenceFrequency().name())
-                .incomingSubcategory(incoming.getIncomingCategory().getCategoryName())
-                .incomingCategory(incoming.getIncomingCategory().getCategoryName())
+                .incomingId(savedIncoming.getIncomingId())
+                .incomingDescription(savedIncoming.getIncomingDescription())
+                .grossIncoming(savedIncoming.getGrossIncoming())
+                .netIncoming(savedIncoming.getNetIncoming())
+                .recurrence(savedIncoming.getRecurrence().getRecurrenceFrequency().name())
+                .incomingSubcategory(savedIncoming.getIncomingSubcategory().getSubCategoryName())
+                .incomingCategory(savedIncoming.getIncomingCategory().getCategoryName())
                 .build();
     }
 

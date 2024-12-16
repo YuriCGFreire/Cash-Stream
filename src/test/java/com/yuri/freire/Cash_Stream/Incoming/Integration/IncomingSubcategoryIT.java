@@ -79,7 +79,9 @@ public class IncomingSubcategoryIT {
         String expectedSubcategoryName = savedSubcategory.getSubCategoryName();
         Integer expectedSubcategoryId = savedSubcategory.getIncomingSubcategoryId();
 
-        ApiResponse<PageableResponse<IncomingSubcategoryResponse>> subcategoryPage = testRestTemplate.exchange("/incoming-subcategory/find-all", HttpMethod.GET, null,
+        ApiResponse<PageableResponse<IncomingSubcategoryResponse>> subcategoryPage = testRestTemplate.exchange(
+                "/incoming-subcategory/find-all", HttpMethod.GET,
+                null,
                 new ParameterizedTypeReference<ApiResponse<PageableResponse<IncomingSubcategoryResponse>>>() {}).getBody();
 
         Assertions.assertThat(subcategoryPage).isNotNull();

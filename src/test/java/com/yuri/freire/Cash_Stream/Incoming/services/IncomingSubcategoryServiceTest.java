@@ -1,12 +1,9 @@
 package com.yuri.freire.Cash_Stream.Incoming.services;
 
-import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingCategoryResponse;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingSubcategoryResponse;
-import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingSubcategory;
 import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingSubcategoryRepository;
 import com.yuri.freire.Cash_Stream.util.IncomingCategoryCreator;
-import com.yuri.freire.Cash_Stream.util.IncomingCategoryRequestCreator;
 import com.yuri.freire.Cash_Stream.util.IncomingSubcategoryCreator;
 import com.yuri.freire.Cash_Stream.util.IncomingSubcategoryRequestCreator;
 import jakarta.persistence.EntityNotFoundException;

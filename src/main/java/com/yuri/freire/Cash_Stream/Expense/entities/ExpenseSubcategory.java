@@ -27,7 +27,7 @@ public class ExpenseSubcategory extends BaseEntity {
             initialValue = 1
     )
     @Column(name = "expense_subcategory_id")
-    private Integer incomingSubCategoryId;
+    private Integer expenseSubcategoryId;
 
     @Column(name = "subcategory_name", nullable = false, length = 50)
     private String subCategoryName;

@@ -1,5 +1,6 @@
 package com.yuri.freire.Cash_Stream.Incoming.entities.repositories;
 
+import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingSubcategoryResponse;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingSubcategory;
 import com.yuri.freire.Cash_Stream.util.IncomingCategoryCreator;
@@ -97,7 +98,7 @@ class IncomingSubcategoryRepositoryTest {
         this.subcategoryRepository.save(subCategoryToBeSaved2);
 
         Pageable pageable = PageRequest.of(0, 2);
-        Page<IncomingSubcategory> allSubcategories = this.subcategoryRepository.findAllSubcategory(pageable);
+        Page<IncomingSubcategoryResponse> allSubcategories = this.subcategoryRepository.findAllSubcategory(pageable);
 
         Assertions.assertThat(allSubcategories).isNotNull();
         Assertions.assertThat(allSubcategories.getContent())
@@ -115,7 +116,7 @@ class IncomingSubcategoryRepositoryTest {
         this.subcategoryRepository.save(subCategoryToBeSaved);
         this.subcategoryRepository.save(subCategoryToBeSaved2);
         Pageable pageable = PageRequest.of(0, 2);
-        Page<IncomingSubcategory> allSubcategories = this.subcategoryRepository.findAllByCategory(savedIncomingCategory.getCategoryName(), pageable);
+        Page<IncomingSubcategoryResponse> allSubcategories = this.subcategoryRepository.findAllByCategory(savedIncomingCategory.getCategoryName(), pageable);
 
         Assertions.assertThat(allSubcategories).isNotNull();
         Assertions.assertThat(allSubcategories.getContent())

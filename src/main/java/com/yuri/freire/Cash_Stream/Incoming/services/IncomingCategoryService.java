@@ -4,6 +4,7 @@ import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingCategoryRe
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingCategoryResponse;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
 import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingCategoryRepository;
+import com.yuri.freire.Cash_Stream.Incoming.services.factory.IncomingFactory;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,27 +15,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-
 public class IncomingCategoryService {
     private final IncomingCategoryRepository incomingCategoryRepository;
+    private final IncomingFactory incomingFactory;
 
     public IncomingCategoryResponse createIncomingCategory(@Valid IncomingCategoryRequest incomingCategoryRequest){
-        IncomingCategory incomingCategory = IncomingCategory.builder()
-                .categoryName(incomingCategoryRequest.getCategoryName())
-                .build();
+        IncomingCategory incomingCategory = incomingFactory.createIncomingCategory(incomingCategoryRequest);
         IncomingCategory incomingCategorySaved = incomingCategoryRepository.save(incomingCategory);
-        return IncomingCategoryResponse.builder()
-                .incomingCategoryId(incomingCategorySaved.getIncomingCategoryId())
-                .incomingCategoryName(incomingCategorySaved.getCategoryName())
-                .build();
+        return incomingFactory.createIncomingCategoryResponse(incomingCategorySaved);
     }
 
     public Page<IncomingCategoryResponse> findAll(Pageable pageable) {
-        return incomingCategoryRepository.findAll(pageable)
-                .map(incomingCategory -> IncomingCategoryResponse.builder()
-                        .incomingCategoryId(incomingCategory.getIncomingCategoryId())
-                        .incomingCategoryName(incomingCategory.getCategoryName())
-                        .build());
+        return incomingCategoryRepository.findAllIncomingCategory(pageable);
     }
 
     public IncomingCategory findByCategoryName(String categoryName){

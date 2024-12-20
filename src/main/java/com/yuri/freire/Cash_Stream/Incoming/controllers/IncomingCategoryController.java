@@ -42,3 +42,4 @@ public class IncomingCategoryController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
+

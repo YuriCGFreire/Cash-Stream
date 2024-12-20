@@ -5,6 +5,7 @@ import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingSubcategor
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingSubcategory;
 import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingSubcategoryRepository;
+import com.yuri.freire.Cash_Stream.Incoming.services.factory.IncomingFactory;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,22 +18,16 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class IncomingSubcategoryService {
     private final IncomingSubcategoryRepository incomingSubcategoryRepository;
-
     private final IncomingCategoryService incomingCategoryService;
+
+    private final IncomingFactory incomingFactory;
+
 
     public IncomingSubcategoryResponse createIncomingSubcategory(IncomingSubcategoryRequest incomingSubcategoryRequest){
         IncomingCategory incomingCategory = incomingCategoryService.findByCategoryName(incomingSubcategoryRequest.getIncomingCategoryName());
-
-        IncomingSubcategory incomingSubcategory = IncomingSubcategory.builder()
-                .subCategoryName(incomingSubcategoryRequest.getSubcategoryName())
-                .incomingCategory(incomingCategory)
-                .build();
-         IncomingSubcategory savedSubcategory = incomingSubcategoryRepository.save(incomingSubcategory);
-         return IncomingSubcategoryResponse.builder()
-                 .incomingSubcategoryId(savedSubcategory.getIncomingSubcategoryId())
-                 .incomingSubcategoryName(savedSubcategory.getSubCategoryName())
-                 .incomingCategoryName(savedSubcategory.getIncomingCategory().getCategoryName())
-                 .build();
+        IncomingSubcategory incomingSubcategory = incomingFactory.createIncomingSubcategory(incomingSubcategoryRequest, incomingCategory);
+        IncomingSubcategory savedSubcategory = incomingSubcategoryRepository.save(incomingSubcategory);
+        return incomingFactory.createIncomingSubcategoryResponse(savedSubcategory);
     }
 
     public IncomingSubcategory findBySubcategoryName(String subcategoryName){
@@ -41,22 +36,12 @@ public class IncomingSubcategoryService {
     }
 
     public Page<IncomingSubcategoryResponse> findAllSubcategory(Pageable pageable){
-        return incomingSubcategoryRepository.findAllSubcategory(pageable)
-                .map(incomginSubcategory -> IncomingSubcategoryResponse.builder()
-                        .incomingSubcategoryId(incomginSubcategory.getIncomingSubcategoryId())
-                        .incomingSubcategoryName(incomginSubcategory.getSubCategoryName())
-                        .incomingCategoryName(incomginSubcategory.getIncomingCategory().getCategoryName())
-                        .build());
+        return incomingSubcategoryRepository.findAllSubcategory(pageable);
     }
 
     public Page<IncomingSubcategoryResponse> findAllByCategoryName(String categoryName, Pageable pageable){
         IncomingCategory category = incomingCategoryService.findByCategoryName(categoryName);
-        return incomingSubcategoryRepository.findAllByCategory(category.getCategoryName(), pageable)
-                .map(incomginSubcategory -> IncomingSubcategoryResponse.builder()
-                        .incomingSubcategoryId(incomginSubcategory.getIncomingSubcategoryId())
-                        .incomingSubcategoryName(incomginSubcategory.getSubCategoryName())
-                        .incomingCategoryName(incomginSubcategory.getIncomingCategory().getCategoryName())
-                        .build());
+        return incomingSubcategoryRepository.findAllByCategory(category.getCategoryName(), pageable);
     }
 
     public String deleteBySubcategoryId(Integer incomginSubcategoryId){

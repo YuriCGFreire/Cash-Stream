@@ -50,10 +50,11 @@ class IncomingServiceTest {
                 .recurrenceId(1)
                 .recurrenceFrequency(RecurrenceType.ANNUAL)
                 .build();
-        Incoming incoming1 = IncomingCreator.createValidIncoming();
-        Incoming incoming2 = IncomingCreator.createValidIncoming();
+        Incoming incoming = IncomingCreator.createValidIncoming();
+        IncomingResponse incoming1 = IncomingCreator.createValidIncomingResponse();
+        IncomingResponse incoming2 = IncomingCreator.createValidIncomingResponse();
 
-        PageImpl<Incoming> incomingPage = new PageImpl<>(List.of(incoming1, incoming2));
+        PageImpl<IncomingResponse> incomingPage = new PageImpl<>(List.of(incoming1, incoming2));
 
         BDDMockito.when(
                 this.incomingRepositoryMock.findAllIncomings(ArgumentMatchers.any(PageRequest.class))
@@ -77,7 +78,7 @@ class IncomingServiceTest {
 
         BDDMockito.when(
                 this.incomingRepositoryMock.save(ArgumentMatchers.any(Incoming.class))
-        ).thenReturn(incoming1);
+        ).thenReturn(incoming);
 
         BDDMockito.when(
                 this. categoryServiceMock.findByCategoryName(ArgumentMatchers.anyString())
@@ -93,7 +94,7 @@ class IncomingServiceTest {
 
         BDDMockito.when(
                 this.incomingRepositoryMock.findById(ArgumentMatchers.anyInt())
-        ).thenReturn(Optional.of(incoming1));
+        ).thenReturn(Optional.of(incoming));
 
         BDDMockito.doNothing().when(this.incomingRepositoryMock).deleteById(ArgumentMatchers.anyInt());
 

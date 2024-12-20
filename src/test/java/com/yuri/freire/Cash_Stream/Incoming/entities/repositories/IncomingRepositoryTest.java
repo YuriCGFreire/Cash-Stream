@@ -99,7 +99,7 @@ class IncomingRepositoryTest {
         this.incomingRepository.save(incomingToBeSaved);
 
         Pageable pageable = PageRequest.of(0, 1);
-        Page<Incoming> incomingPage = this.incomingRepository.findAllIncomings(pageable);
+        Page<IncomingResponse> incomingPage = this.incomingRepository.findAllIncomings(pageable);
 
 
         Assertions.assertThat(incomingPage).isNotNull();
@@ -118,16 +118,16 @@ class IncomingRepositoryTest {
 
         this.incomingRepository.save(incomingToBeSaved);
         Pageable pageable = PageRequest.of(0, 1);
-        Page<Incoming> incomingPage = this.incomingRepository.findAllByCategory(savedCategory.getCategoryName(), pageable);
+        Page<IncomingResponse> incomingPage = this.incomingRepository.findAllByCategory(savedCategory.getCategoryName(), pageable);
 
         Assertions.assertThat(incomingPage).isNotNull();
         Assertions.assertThat(incomingPage.getContent())
                 .isNotEmpty()
                 .hasSize(1);
-        Assertions.assertThat(incomingPage.getContent().get(0).getIncomingCategory().getCategoryName())
+        Assertions.assertThat(incomingPage.getContent().get(0).getIncomingCategory())
                 .isNotNull()
                 .isEqualTo(savedCategory.getCategoryName());
-        Assertions.assertThat(incomingPage.getContent().get(0).getIncomingCategory().getIncomingCategoryId())
+        Assertions.assertThat(incomingPage.getContent().get(0).getIncomingCategory())
                 .isNotNull()
                 .isEqualTo(savedCategory.getIncomingCategoryId());
     }
@@ -141,16 +141,16 @@ class IncomingRepositoryTest {
         incomingToBeSaved.setRecurrence(savedRecurrence);
         this.incomingRepository.save(incomingToBeSaved);
         Pageable pageable = PageRequest.of(0, 1);
-        Page<Incoming> incomingPage = this.incomingRepository.findAllBySubcategory(savedSubcategory.getSubCategoryName(), pageable);
+        Page<IncomingResponse> incomingPage = this.incomingRepository.findAllBySubcategory(savedSubcategory.getSubCategoryName(), pageable);
 
         Assertions.assertThat(incomingPage).isNotNull();
         Assertions.assertThat(incomingPage.getContent())
                 .isNotEmpty()
                 .hasSize(1);
-        Assertions.assertThat(incomingPage.getContent().get(0).getIncomingSubcategory().getSubCategoryName())
+        Assertions.assertThat(incomingPage.getContent().get(0).getIncomingSubcategory())
                 .isNotNull()
                 .isEqualTo(savedSubcategory.getSubCategoryName());
-        Assertions.assertThat(incomingPage.getContent().get(0).getIncomingSubcategory().getIncomingSubcategoryId())
+        Assertions.assertThat(incomingPage.getContent().get(0).getIncomingSubcategory())
                 .isNotNull()
                 .isEqualTo(savedSubcategory.getIncomingSubcategoryId());
     }

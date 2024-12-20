@@ -38,10 +38,11 @@ class IncomingSubcategoryServiceTest {
     @BeforeEach
     void setUp() {
         IncomingSubcategory subcategory = IncomingSubcategoryCreator.createValidSubcategoryRepository();
-        IncomingSubcategory subcategory2 = IncomingSubcategoryCreator.createValidSubcategoryRepository();
+        IncomingSubcategoryResponse subcategory1 = IncomingSubcategoryCreator.createValidSubcategoryResponse();
+        IncomingSubcategoryResponse subcategory2 = IncomingSubcategoryCreator.createValidSubcategoryResponse();
 
-        PageImpl<IncomingSubcategory>  subcategoryPage = new PageImpl<>(List.of(
-                subcategory,
+        PageImpl<IncomingSubcategoryResponse>  subcategoryPage = new PageImpl<>(List.of(
+                subcategory1,
                 subcategory2));
 
         BDDMockito.when(

@@ -48,19 +48,19 @@ class IncomingCategoryControllerTest {
                 .thenReturn(IncomingCategoryCreator.createValidCategory());
 
         BDDMockito.when(categoryServiceMock.deleteByCategoryId(ArgumentMatchers.anyInt()))
-                .thenReturn(IncomingCategoryCreator.createValidCategory().getIncomingCategoryName());
+                .thenReturn(IncomingCategoryCreator.createValidCategory().getCategoryName());
     }
 
     @Test
     @DisplayName("findAll returns list of Incoming Category inside of Page Object When successfull")
     void findAll_ReturnsListOfIncomingCategoryInsidePageObject_WhenSuccessfull(){
-        String expectedName = IncomingCategoryCreator.createValidCategory().getIncomingCategoryName();
+        String expectedName = IncomingCategoryCreator.createValidCategory().getCategoryName();
         Page<IncomingCategoryResponse> categoryPage = categoryController.findAllIncomingCategory(null, requestMock).getBody().getData();
         Assertions.assertThat(categoryPage).isNotNull();
         Assertions.assertThat(categoryPage.toList())
                 .isNotEmpty()
                 .hasSize(1);
-        Assertions.assertThat(categoryPage.toList().get(0).getIncomingCategoryName()).isEqualTo(expectedName);
+        Assertions.assertThat(categoryPage.toList().get(0).getCategoryName()).isEqualTo(expectedName);
     }
 
     @Test
@@ -78,7 +78,7 @@ class IncomingCategoryControllerTest {
         ResponseEntity<ApiResponse<String>> deletedCategory = categoryController.deleteByCategoryId(1, requestMock);
 
         Assertions.assertThat(deletedCategory.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Assertions.assertThat(deletedCategory.getBody().getData()).isEqualTo(IncomingCategoryCreator.createValidCategory().getIncomingCategoryName());
+        Assertions.assertThat(deletedCategory.getBody().getData()).isEqualTo(IncomingCategoryCreator.createValidCategory().getCategoryName());
         Assertions.assertThat(deletedCategory.getBody().getMessage()).isEqualTo("Category deleted successfully");
     }
 }

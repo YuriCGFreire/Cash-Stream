@@ -19,7 +19,7 @@ public interface IncomingSubcategoryRepository extends JpaRepository<IncomingSub
             isc.subCategoryName,
             isc.incomingCategory.categoryName
             )
-            FROM IncomiingSucategory isc
+            FROM IncomingSubcategory isc
             JOIN isc.incomingCategory
             """)
     Page<IncomingSubcategoryResponse> findAllSubcategory(Pageable pageable);
@@ -30,9 +30,9 @@ public interface IncomingSubcategoryRepository extends JpaRepository<IncomingSub
             isc.subCategoryName,
             isc.incomingCategory.categoryName
             )
-            FROM IncomiingSucategory isc
-            JOIN isc.incomingCategory
-            WHERE isc.categoryName = :categoryName            
+            FROM IncomingSubcategory isc
+            JOIN isc.incomingCategory ic
+            WHERE ic.categoryName = :categoryName            
             """)
     Page<IncomingSubcategoryResponse> findAllByCategory(@Param("categoryName") String categoryName, Pageable pageable);
 }

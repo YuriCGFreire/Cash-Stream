@@ -60,7 +60,7 @@ class IncomingSubcatergoyControllerTest {
                 .thenReturn(subcategory);
 
         BDDMockito.when(subcategoryServiceMock.deleteBySubcategoryId(ArgumentMatchers.anyInt()))
-                .thenReturn(IncomingSubcategoryCreator.createValidSubcategoryResponse().getIncomingSubcategoryName());
+                .thenReturn(IncomingSubcategoryCreator.createValidSubcategoryResponse().getSubCategoryName());
     }
 
     @Test
@@ -77,12 +77,12 @@ class IncomingSubcatergoyControllerTest {
     @Test
     @DisplayName("findAllByCategoryName returns a list os Incoming Subcategory by category name inside of a page object when successfull")
     void findAllByCategoryName_ReturnsAListOfSubcategoryByCategoryNameInsideOfPageObject_WhenSucessfull(){
-        String expectedCategoryName = IncomingCategoryCreator.createValidCategory().getIncomingCategoryName();
+        String expectedCategoryName = IncomingCategoryCreator.createValidCategory().getCategoryName();
         Page<IncomingSubcategoryResponse> subcategoryPage = subcatergoyController.findAllByCategoryName(expectedCategoryName, null, requestMock).getBody().getData();
         Assertions.assertThat(subcategoryPage.toList())
                 .isNotEmpty()
                 .hasSize(1);
-        Assertions.assertThat(subcategoryPage.toList().get(0).getIncomingCategoryName()).isEqualTo(expectedCategoryName);
+        Assertions.assertThat(subcategoryPage.toList().get(0).getCategoryName()).isEqualTo(expectedCategoryName);
     }
 
 
@@ -93,10 +93,10 @@ class IncomingSubcatergoyControllerTest {
                 .getBody().getData();
         Assertions.assertThat(savedSubcategory).isNotNull();
         Assertions.assertThat(savedSubcategory.getIncomingSubcategoryId()).isNotNull();
-        Assertions.assertThat(savedSubcategory.getIncomingSubcategoryName())
+        Assertions.assertThat(savedSubcategory.getSubCategoryName())
                 .isNotNull()
                 .isEqualTo(IncomingSubcategoryRequestCreator.createIncomingSubcategoryRequest().getSubcategoryName());
-        Assertions.assertThat(savedSubcategory.getIncomingCategoryName())
+        Assertions.assertThat(savedSubcategory.getSubCategoryName())
                 .isNotNull()
                 .isEqualTo(IncomingSubcategoryRequestCreator.createIncomingSubcategoryRequest().getIncomingCategoryName());
     }
@@ -107,7 +107,7 @@ class IncomingSubcatergoyControllerTest {
         ResponseEntity<ApiResponse<String>> deletedSubcategory = subcatergoyController.deleteByIncomingSubcategoryId(1, requestMock);
 
         Assertions.assertThat(deletedSubcategory.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Assertions.assertThat(deletedSubcategory.getBody().getData()).isEqualTo(IncomingSubcategoryCreator.createValidSubcategoryResponse().getIncomingSubcategoryName());
+        Assertions.assertThat(deletedSubcategory.getBody().getData()).isEqualTo(IncomingSubcategoryCreator.createValidSubcategoryResponse().getSubCategoryName());
         Assertions.assertThat(deletedSubcategory.getBody().getMessage()).isEqualTo("Subcategory deleted successfully");
     }
 

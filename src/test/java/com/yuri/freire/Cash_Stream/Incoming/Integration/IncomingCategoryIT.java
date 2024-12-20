@@ -79,7 +79,7 @@ public class IncomingCategoryIT {
         Assertions.assertThat(categoryPage.getData().toList())
                 .isNotEmpty()
                 .hasSize(1);
-        Assertions.assertThat(categoryPage.getData().toList().get(0).getIncomingCategoryName()).isEqualTo(expectedName);
+        Assertions.assertThat(categoryPage.getData().toList().get(0).getCategoryName()).isEqualTo(expectedName);
     }
 
     @Test
@@ -111,7 +111,7 @@ public class IncomingCategoryIT {
                 });
 
         Assertions.assertThat(deletedCategory.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Assertions.assertThat(deletedCategory.getBody().getData()).isEqualTo(IncomingCategoryCreator.createValidCategory().getIncomingCategoryName());
+        Assertions.assertThat(deletedCategory.getBody().getData()).isEqualTo(IncomingCategoryCreator.createValidCategory().getCategoryName());
         Assertions.assertThat(deletedCategory.getBody().getMessage()).isEqualTo("Category deleted successfully");
     }
 

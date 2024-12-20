@@ -25,8 +25,8 @@ public class IncomingSubcategoryCreator {
         IncomingCategory category = IncomingCategoryCreator.createValidCategoryForRepository();
         return IncomingSubcategoryResponse.builder()
                 .incomingSubcategoryId(1)
-                .incomingSubcategoryName("Apple")
-                .incomingCategoryName(category.getCategoryName())
+                .subCategoryName("Apple")
+                .categoryName(category.getCategoryName())
                 .build();
     }
 

@@ -145,7 +145,7 @@ public class IncomingIT {
                 new ParameterizedTypeReference<>() {});
 
         incomingPage.getBody().getData().forEach(incomingResponse -> {
-            Assertions.assertThat(incomingResponse.getIncomingCategory())
+            Assertions.assertThat(incomingResponse.getCategoryName())
                     .isNotNull()
                     .isEqualTo(savedIncoming.getIncomingCategory().getCategoryName());
         });
@@ -189,7 +189,7 @@ public class IncomingIT {
                 new ParameterizedTypeReference<>() {});
 
         incomingPage.getBody().getData().forEach(incomingResponse -> {
-            Assertions.assertThat(incomingResponse.getIncomingSubcategory())
+            Assertions.assertThat(incomingResponse.getSubCategoryName())
                     .isNotNull()
                     .isEqualTo(savedIncoming.getIncomingSubcategory().getSubCategoryName());
         });

@@ -15,7 +15,7 @@ public interface IncomingCategoryRepository extends JpaRepository<IncomingCatego
     @Query("""
             SELECT new com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingCategoryResponse(
             ic.incomingCategoryId,
-            in.categoryName
+            ic.categoryName
             )
             FROM IncomingCategory ic
             """)

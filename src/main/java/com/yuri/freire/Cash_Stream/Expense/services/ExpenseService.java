@@ -3,7 +3,6 @@ package com.yuri.freire.Cash_Stream.Expense.services;
 import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseRequest;
 import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseResponse;
 import com.yuri.freire.Cash_Stream.Expense.entities.Expense;
-import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseMethod;
 import com.yuri.freire.Cash_Stream.Expense.entities.entity_enum.ExpenseMethodType;
 import com.yuri.freire.Cash_Stream.Expense.entities.repositories.ExpenseRepository;
 import com.yuri.freire.Cash_Stream.Expense.services.facade.ExpenseFacade;

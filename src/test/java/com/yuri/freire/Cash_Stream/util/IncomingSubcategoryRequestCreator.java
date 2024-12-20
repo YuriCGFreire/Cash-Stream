@@ -5,8 +5,8 @@ import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingSubcategor
 public class IncomingSubcategoryRequestCreator {
     public static IncomingSubcategoryRequest createIncomingSubcategoryRequest(){
         return IncomingSubcategoryRequest.builder()
-                .subcategoryName(IncomingSubcategoryCreator.createValidSubcategoryResponse().getIncomingSubcategoryName())
-                .incomingCategoryName(IncomingSubcategoryCreator.createValidSubcategoryResponse().getIncomingCategoryName())
+                .subcategoryName(IncomingSubcategoryCreator.createValidSubcategoryResponse().getSubCategoryName())
+                .incomingCategoryName(IncomingSubcategoryCreator.createValidSubcategoryResponse().getCategoryName())
                 .build();
     }
 }

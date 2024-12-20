@@ -60,7 +60,7 @@ class IncomingSubcategoryServiceTest {
         BDDMockito.when(subcategoryRepositoryMock.findAllSubcategory(ArgumentMatchers.any(PageRequest.class)))
                 .thenReturn(subcategoryPage);
 
-        BDDMockito.when(subcategoryRepositoryMock.findAllByCategory(IncomingCategoryCreator.createValidCategory().getIncomingCategoryName(), PageRequest.of(0, 2)))
+        BDDMockito.when(subcategoryRepositoryMock.findAllByCategory(IncomingCategoryCreator.createValidCategory().getCategoryName(), PageRequest.of(0, 2)))
                 .thenReturn(subcategoryPage);
 
         BDDMockito.when(categoryServiceMock.findByCategoryName(ArgumentMatchers.anyString()))
@@ -89,9 +89,9 @@ class IncomingSubcategoryServiceTest {
                 .isEqualTo(validSubcategoryResponse)
                 .isInstanceOf(IncomingSubcategoryResponse.class);
 
-        Assertions.assertThat(incomingSubcategory.getIncomingCategoryName())
+        Assertions.assertThat(incomingSubcategory.getCategoryName())
                 .isNotNull()
-                .isEqualTo(validSubcategoryResponse.getIncomingCategoryName());
+                .isEqualTo(validSubcategoryResponse.getCategoryName());
     }
 
     @Test
@@ -117,9 +117,9 @@ class IncomingSubcategoryServiceTest {
     @Test
     @DisplayName("findAllSubcategory returns list of Incoming Subcategory inside of Page Object When successfull")
     void findAllSubcategory_ReturnsListOfIncomingSubcategoryInsideOfPageObject_WhenSuccessfull(){
-        String expectedSubcategoryName = IncomingSubcategoryCreator.createValidSubcategoryResponse().getIncomingSubcategoryName();
+        String expectedSubcategoryName = IncomingSubcategoryCreator.createValidSubcategoryResponse().getSubCategoryName();
         Integer expctedSubcategoryId = IncomingSubcategoryCreator.createValidSubcategoryResponse().getIncomingSubcategoryId();
-        String expectedCategoryName = IncomingSubcategoryCreator.createValidSubcategoryResponse().getIncomingCategoryName();
+        String expectedCategoryName = IncomingSubcategoryCreator.createValidSubcategoryResponse().getSubCategoryName();
         Page<IncomingSubcategoryResponse> subcategoryPage = subcategoryService.findAllSubcategory(PageRequest.of(0, 2));
 
         Assertions.assertThat(subcategoryPage).isNotNull();
@@ -129,10 +129,10 @@ class IncomingSubcategoryServiceTest {
         Assertions.assertThat(subcategoryPage.toList().get(0).getIncomingSubcategoryId())
                 .isNotNull()
                 .isEqualTo(expctedSubcategoryId);
-        Assertions.assertThat(subcategoryPage.toList().get(0).getIncomingSubcategoryName())
+        Assertions.assertThat(subcategoryPage.toList().get(0).getSubCategoryName())
                 .isNotNull()
                 .isEqualTo(expectedSubcategoryName);
-        Assertions.assertThat(subcategoryPage.toList().get(0).getIncomingCategoryName())
+        Assertions.assertThat(subcategoryPage.toList().get(0).getCategoryName())
                 .isNotNull()
                 .isEqualTo(expectedCategoryName);
     }
@@ -140,14 +140,14 @@ class IncomingSubcategoryServiceTest {
     @Test
     @DisplayName("findAllByCategoryName returns list of Incoming Subcategory inside of Page Object by category name When successfull")
     void findAllByCategoryName_ReturnsListOfIncomingSubcategoryInsidePageObjectByCategoryName_WhenSuccessfull(){
-        String expectedCategoryName = IncomingSubcategoryCreator.createValidSubcategoryResponse().getIncomingCategoryName();
+        String expectedCategoryName = IncomingSubcategoryCreator.createValidSubcategoryResponse().getCategoryName();
         Page<IncomingSubcategoryResponse> subcategoryPage = subcategoryService.findAllByCategoryName(expectedCategoryName, PageRequest.of(0, 2));
         Assertions.assertThat(subcategoryPage).isNotNull();
         Assertions.assertThat(subcategoryPage.toList())
                 .isNotEmpty()
                 .hasSize(2);
         Assertions.assertThat(subcategoryPage.toList())
-                .allMatch(subcategory -> subcategory.getIncomingCategoryName().equals(expectedCategoryName));
+                .allMatch(subcategory -> subcategory.getCategoryName().equals(expectedCategoryName));
     }
 
     @Test
@@ -162,7 +162,7 @@ class IncomingSubcategoryServiceTest {
     @Test
     @DisplayName("deleteBySubcategoryId removes subcategory when successfull")
     void deleteBySubcategoryId_RemovesSubcategory_WhenSuccessfull(){
-        String expcetedSubcategoryName = IncomingSubcategoryCreator.createValidSubcategoryResponse().getIncomingSubcategoryName();
+        String expcetedSubcategoryName = IncomingSubcategoryCreator.createValidSubcategoryResponse().getSubCategoryName();
         String subcategoryName = subcategoryService.deleteBySubcategoryId(1);
         Assertions.assertThat(subcategoryName).isNotNull().isEqualTo(expcetedSubcategoryName);
     }

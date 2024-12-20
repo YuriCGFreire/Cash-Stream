@@ -119,11 +119,11 @@ class IncomingControllerTest {
     @Test
     @DisplayName("findAllIncomingsByCategory return list of Incomings inside of Page Object selected by category name when successful")
     void findAllIncomingsByCategory_ReturnListOfIncomingsInsideOfPageObjectSelectedByCategoryName_WhenSuccessful(){
-        String expctedCategoryName = IncomingCategoryCreator.createValidCategory().getIncomingCategoryName();
+        String expctedCategoryName = IncomingCategoryCreator.createValidCategory().getCategoryName();
         ResponseEntity<ApiResponse<Page<IncomingResponse>>> incomingPage = incomingController.findAllIncomingsByCategory(expctedCategoryName, requestMock, null);
 
         incomingPage.getBody().getData().forEach(incomingResponse -> {
-            Assertions.assertThat(incomingResponse.getIncomingCategory())
+            Assertions.assertThat(incomingResponse.getCategoryName())
                     .isNotNull()
                     .isEqualTo(expctedCategoryName);
 
@@ -139,11 +139,11 @@ class IncomingControllerTest {
     @Test
     @DisplayName("findAllIncomingsBySubcategory return list of Incomings inside of Page Object selected by subcategory name when successful")
     void findAllIncomingsBySubcategory_ReturnListOfIncomingsInsideOfPageObjectSelectedBySuncategoryName_WhenSuccessful(){
-        String expctedSubcategoryName = IncomingSubcategoryCreator.createValidSubcategoryResponse().getIncomingSubcategoryName();
+        String expctedSubcategoryName = IncomingSubcategoryCreator.createValidSubcategoryResponse().getSubCategoryName();
         ResponseEntity<ApiResponse<Page<IncomingResponse>>> incomingPage = incomingController.findAllIncomingsBySubcategory(expctedSubcategoryName, requestMock, null);
 
         incomingPage.getBody().getData().forEach(incomingResponse -> {
-            Assertions.assertThat(incomingResponse.getIncomingSubcategory())
+            Assertions.assertThat(incomingResponse.getSubCategoryName())
                     .isNotNull()
                     .isEqualTo(expctedSubcategoryName);
 

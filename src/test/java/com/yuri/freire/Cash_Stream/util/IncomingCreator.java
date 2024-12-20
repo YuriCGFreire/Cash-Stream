@@ -45,9 +45,9 @@ public class IncomingCreator {
                 .incomingDescription("Dividendos Amazon")
                 .grossIncoming(new BigDecimal("2500.00"))
                 .netIncoming(new BigDecimal("1800.00"))
-                .recurrence(RecurrenceType.ANNUAL.toString())
-                .incomingCategory(IncomingCategoryCreator.createValidCategoryForRepository().getCategoryName())
-                .incomingSubcategory(IncomingSubcategoryCreator.createValidSubcategoryRepository().getSubCategoryName())
+                .recurrence(RecurrenceType.ANNUAL)
+                .categoryName(IncomingCategoryCreator.createValidCategoryForRepository().getCategoryName())
+                .subCategoryName(IncomingSubcategoryCreator.createValidSubcategoryRepository().getSubCategoryName())
                 .build();
     }
 }

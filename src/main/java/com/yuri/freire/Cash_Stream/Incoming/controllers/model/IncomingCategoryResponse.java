@@ -13,5 +13,5 @@ import java.util.List;
 @NoArgsConstructor
 public class IncomingCategoryResponse {
     private Integer incomingCategoryId;
-    private String incomingCategoryName;
+    private String categoryName;
 }

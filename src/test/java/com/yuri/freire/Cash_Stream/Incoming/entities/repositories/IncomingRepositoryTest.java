@@ -124,12 +124,9 @@ class IncomingRepositoryTest {
         Assertions.assertThat(incomingPage.getContent())
                 .isNotEmpty()
                 .hasSize(1);
-        Assertions.assertThat(incomingPage.getContent().get(0).getIncomingCategory())
+        Assertions.assertThat(incomingPage.getContent().get(0))
                 .isNotNull()
                 .isEqualTo(savedCategory.getCategoryName());
-        Assertions.assertThat(incomingPage.getContent().get(0).getIncomingCategory())
-                .isNotNull()
-                .isEqualTo(savedCategory.getIncomingCategoryId());
     }
 
     @Test
@@ -147,11 +144,8 @@ class IncomingRepositoryTest {
         Assertions.assertThat(incomingPage.getContent())
                 .isNotEmpty()
                 .hasSize(1);
-        Assertions.assertThat(incomingPage.getContent().get(0).getIncomingSubcategory())
+        Assertions.assertThat(incomingPage.getContent().get(0).getSubCategoryName())
                 .isNotNull()
                 .isEqualTo(savedSubcategory.getSubCategoryName());
-        Assertions.assertThat(incomingPage.getContent().get(0).getIncomingSubcategory())
-                .isNotNull()
-                .isEqualTo(savedSubcategory.getIncomingSubcategoryId());
     }
 }

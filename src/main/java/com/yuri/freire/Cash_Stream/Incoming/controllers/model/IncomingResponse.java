@@ -13,18 +13,11 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class IncomingResponse {
-
     private Integer incomingId;
-
     private String incomingDescription;
-
     private BigDecimal grossIncoming;
-
     private BigDecimal netIncoming;
-
-    private String recurrence;
-
-    private String incomingCategory;
-
-    private String incomingSubcategory;
+    private RecurrenceType recurrence;
+    private String categoryName;
+    private String subCategoryName;
 }

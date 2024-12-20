@@ -88,10 +88,10 @@ public class IncomingSubcategoryIT {
         Assertions.assertThat(subcategoryPage.getData().toList())
                 .isNotEmpty()
                 .hasSize(1);
-        Assertions.assertThat(subcategoryPage.getData().toList().get(0).getIncomingSubcategoryName())
+        Assertions.assertThat(subcategoryPage.getData().toList().get(0).getSubCategoryName())
                 .isNotNull()
                 .isEqualTo(expectedSubcategoryName);
-        Assertions.assertThat(subcategoryPage.getData().toList().get(0).getIncomingCategoryName())
+        Assertions.assertThat(subcategoryPage.getData().toList().get(0).getSubCategoryName())
                 .isNotNull()
                 .isEqualTo(expectedCategoryName);
         Assertions.assertThat(subcategoryPage.getData().toList().get(0).getIncomingSubcategoryId())
@@ -115,7 +115,7 @@ public class IncomingSubcategoryIT {
                 .isNotEmpty()
                 .hasSize(2);
         Assertions.assertThat(subcategoryPage.getData().toList())
-                .allMatch(subcategory -> subcategory.getIncomingCategoryName().equals(savedCategory.getCategoryName()));
+                .allMatch(subcategory -> subcategory.getCategoryName().equals(savedCategory.getCategoryName()));
     }
 
     @Test
@@ -153,10 +153,10 @@ public class IncomingSubcategoryIT {
 
         Assertions.assertThat(savedSubcategory).isNotNull();
         Assertions.assertThat(savedSubcategory.getBody().getData().getIncomingSubcategoryId()).isNotNull();
-        Assertions.assertThat(savedSubcategory.getBody().getData().getIncomingSubcategoryName())
+        Assertions.assertThat(savedSubcategory.getBody().getData().getSubCategoryName())
                 .isNotNull()
                 .isEqualTo(incomingSubcategoryRequest.getSubcategoryName());
-        Assertions.assertThat(savedSubcategory.getBody().getData().getIncomingCategoryName())
+        Assertions.assertThat(savedSubcategory.getBody().getData().getSubCategoryName())
                 .isNotNull()
                 .isEqualTo(incomingSubcategoryRequest.getIncomingCategoryName());
     }
@@ -176,7 +176,7 @@ public class IncomingSubcategoryIT {
         );
 
         Assertions.assertThat(deletedSubcategory.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Assertions.assertThat(deletedSubcategory.getBody().getData()).isEqualTo(IncomingSubcategoryCreator.createValidSubcategoryResponse().getIncomingSubcategoryName());
+        Assertions.assertThat(deletedSubcategory.getBody().getData()).isEqualTo(IncomingSubcategoryCreator.createValidSubcategoryResponse().getSubCategoryName());
         Assertions.assertThat(deletedSubcategory.getBody().getMessage()).isEqualTo("Subcategory deleted successfully");
     }
 

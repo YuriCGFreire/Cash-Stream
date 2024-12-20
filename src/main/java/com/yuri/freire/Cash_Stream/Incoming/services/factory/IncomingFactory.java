@@ -32,9 +32,9 @@ public class IncomingFactory {
                 .incomingDescription(incoming.getIncomingDescription())
                 .grossIncoming(incoming.getGrossIncoming())
                 .netIncoming(incoming.getNetIncoming())
-                .recurrence(incoming.getRecurrence().getRecurrenceFrequency().name())
-                .incomingSubcategory(incoming.getIncomingSubcategory().getSubCategoryName())
-                .incomingCategory(incoming.getIncomingCategory().getCategoryName())
+                .recurrence(incoming.getRecurrence().getRecurrenceFrequency())
+                .categoryName(incoming.getIncomingSubcategory().getSubCategoryName())
+                .subCategoryName(incoming.getIncomingCategory().getCategoryName())
                 .build();
     }
 
@@ -48,8 +48,8 @@ public class IncomingFactory {
     public IncomingSubcategoryResponse createIncomingSubcategoryResponse(IncomingSubcategory incomingSubcategory){
         return IncomingSubcategoryResponse.builder()
                 .incomingSubcategoryId(incomingSubcategory.getIncomingSubcategoryId())
-                .incomingSubcategoryName(incomingSubcategory.getSubCategoryName())
-                .incomingCategoryName(incomingSubcategory.getIncomingCategory().getCategoryName())
+                .subCategoryName(incomingSubcategory.getSubCategoryName())
+                .categoryName(incomingSubcategory.getIncomingCategory().getCategoryName())
                 .build();
     }
     public IncomingCategory createIncomingCategory(IncomingCategoryRequest incomingCategoryRequest){
@@ -61,7 +61,7 @@ public class IncomingFactory {
     public IncomingCategoryResponse createIncomingCategoryResponse(IncomingCategory incomingCategory){
         return IncomingCategoryResponse.builder()
                 .incomingCategoryId(incomingCategory.getIncomingCategoryId())
-                .incomingCategoryName(incomingCategory.getCategoryName())
+                .categoryName(incomingCategory.getCategoryName())
                 .build();
     }
 

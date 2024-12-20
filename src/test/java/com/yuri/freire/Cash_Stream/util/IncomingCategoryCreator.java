@@ -14,7 +14,7 @@ public class IncomingCategoryCreator {
     public static IncomingCategoryResponse createValidCategory(){
         return IncomingCategoryResponse.builder()
                 .incomingCategoryId(1)
-                .incomingCategoryName("Stocks")
+                .categoryName("Stocks")
                 .build();
     }
 

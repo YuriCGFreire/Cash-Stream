@@ -62,7 +62,7 @@ class IncomingCategoryServiceTest {
         IncomingCategoryResponse category = categoryService.createIncomingCategory(IncomingCategoryRequestCreator.createIncomingCategoryRequest());
 
         Assertions.assertThat(category).isNotNull().isEqualTo(IncomingCategoryCreator.createValidCategory());
-        Assertions.assertThat(category.getIncomingCategoryName()).isNotNull().isEqualTo(IncomingCategoryCreator.createValidCategory().getIncomingCategoryName());
+        Assertions.assertThat(category.getCategoryName()).isNotNull().isEqualTo(IncomingCategoryCreator.createValidCategory().getCategoryName());
         Assertions.assertThat(category.getIncomingCategoryId()).isNotNull().isInstanceOf(Integer.class);
     }
 
@@ -77,7 +77,7 @@ class IncomingCategoryServiceTest {
         Assertions.assertThat(categoryPage.toList())
                 .isNotEmpty()
                 .hasSize(1);
-        Assertions.assertThat(categoryPage.toList().get(0).getIncomingCategoryName()).isEqualTo(expectedName);
+        Assertions.assertThat(categoryPage.toList().get(0).getCategoryName()).isEqualTo(expectedName);
         Assertions.assertThat(categoryPage.toList().get(0).getIncomingCategoryId()).isEqualTo(expectedId);
     }
 

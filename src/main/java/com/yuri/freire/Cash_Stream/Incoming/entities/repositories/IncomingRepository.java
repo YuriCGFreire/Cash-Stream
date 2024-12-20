@@ -13,7 +13,6 @@ public interface IncomingRepository extends JpaRepository<Incoming, Integer> {
             SELECT new com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingResponse(
             i.incomingId,
             i.incomingDescription,
-            i.incomingSource,
             i.grossIncoming,
             i.netIncoming,
             i.recurrence.recurrenceFrequency,
@@ -23,7 +22,7 @@ public interface IncomingRepository extends JpaRepository<Incoming, Integer> {
             FROM Incoming i
             JOIN i.recurrence
             JOIN i.incomingCategory
-            JOIN i.incominSubcategory
+            JOIN i.incomingSubcategory
             """)
     Page<IncomingResponse> findAllIncomings(Pageable pageable);
 
@@ -31,7 +30,6 @@ public interface IncomingRepository extends JpaRepository<Incoming, Integer> {
             SELECT new com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingResponse(
             i.incomingId,
             i.incomingDescription,
-            i.incomingSource,
             i.grossIncoming,
             i.netIncoming,
             i.recurrence.recurrenceFrequency,
@@ -41,7 +39,7 @@ public interface IncomingRepository extends JpaRepository<Incoming, Integer> {
             FROM Incoming i
             JOIN i.recurrence
             JOIN i.incomingCategory ic
-            JOIN i.incominSubcategory
+            JOIN i.incomingSubcategory
             WHERE ic.categoryName = :categoryName
             """)
     Page<IncomingResponse> findAllByCategory(@Param("categoryName") String categoryName, Pageable pageable);
@@ -50,7 +48,6 @@ public interface IncomingRepository extends JpaRepository<Incoming, Integer> {
             SELECT new com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingResponse(
             i.incomingId,
             i.incomingDescription,
-            i.incomingSource,
             i.grossIncoming,
             i.netIncoming,
             i.recurrence.recurrenceFrequency,
@@ -60,7 +57,7 @@ public interface IncomingRepository extends JpaRepository<Incoming, Integer> {
             FROM Incoming i
             JOIN i.recurrence
             JOIN i.incomingCategory
-            JOIN i.incominSubcategory isc
+            JOIN i.incomingSubcategory isc
             WHERE isc.subCategoryName = :subCategoryName
             """)
     Page<IncomingResponse> findAllBySubcategory(@Param("subCategoryName") String subcategoryName, Pageable pageable);

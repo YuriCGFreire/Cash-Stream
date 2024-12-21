@@ -91,7 +91,7 @@ public class IncomingSubcategoryIT {
         Assertions.assertThat(subcategoryPage.getData().toList().get(0).getSubCategoryName())
                 .isNotNull()
                 .isEqualTo(expectedSubcategoryName);
-        Assertions.assertThat(subcategoryPage.getData().toList().get(0).getSubCategoryName())
+        Assertions.assertThat(subcategoryPage.getData().toList().get(0).getCategoryName())
                 .isNotNull()
                 .isEqualTo(expectedCategoryName);
         Assertions.assertThat(subcategoryPage.getData().toList().get(0).getIncomingSubcategoryId())
@@ -156,7 +156,7 @@ public class IncomingSubcategoryIT {
         Assertions.assertThat(savedSubcategory.getBody().getData().getSubCategoryName())
                 .isNotNull()
                 .isEqualTo(incomingSubcategoryRequest.getSubcategoryName());
-        Assertions.assertThat(savedSubcategory.getBody().getData().getSubCategoryName())
+        Assertions.assertThat(savedSubcategory.getBody().getData().getCategoryName())
                 .isNotNull()
                 .isEqualTo(incomingSubcategoryRequest.getIncomingCategoryName());
     }

@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class IncomingSubcategoryService {
     private final IncomingSubcategoryRepository incomingSubcategoryRepository;
     private final IncomingCategoryService incomingCategoryService;
-
     private final IncomingFactory incomingFactory;
 
 

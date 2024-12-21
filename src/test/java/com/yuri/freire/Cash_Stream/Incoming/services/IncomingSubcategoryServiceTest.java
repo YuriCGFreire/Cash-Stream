@@ -3,6 +3,7 @@ package com.yuri.freire.Cash_Stream.Incoming.services;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingSubcategoryResponse;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingSubcategory;
 import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingSubcategoryRepository;
+import com.yuri.freire.Cash_Stream.Incoming.services.factory.IncomingFactory;
 import com.yuri.freire.Cash_Stream.util.IncomingCategoryCreator;
 import com.yuri.freire.Cash_Stream.util.IncomingSubcategoryCreator;
 import com.yuri.freire.Cash_Stream.util.IncomingSubcategoryRequestCreator;
@@ -33,7 +34,8 @@ class IncomingSubcategoryServiceTest {
     private IncomingSubcategoryRepository subcategoryRepositoryMock;
     @Mock
     private IncomingCategoryService categoryServiceMock;
-
+    @Mock
+    private IncomingFactory incomingFactory;
 
     @BeforeEach
     void setUp() {
@@ -76,6 +78,12 @@ class IncomingSubcategoryServiceTest {
                         .thenReturn(Optional.empty());
 
         BDDMockito.doNothing().when(subcategoryRepositoryMock).deleteById(ArgumentMatchers.anyInt());
+
+        BDDMockito.when(incomingFactory.createIncomingSubcategory(ArgumentMatchers.any(), ArgumentMatchers.any()))
+                .thenReturn(subcategory);
+
+        BDDMockito.when(incomingFactory.createIncomingSubcategoryResponse(ArgumentMatchers.any()))
+                .thenReturn(subcategory1);
     }
 
     @Test
@@ -119,7 +127,7 @@ class IncomingSubcategoryServiceTest {
     void findAllSubcategory_ReturnsListOfIncomingSubcategoryInsideOfPageObject_WhenSuccessfull(){
         String expectedSubcategoryName = IncomingSubcategoryCreator.createValidSubcategoryResponse().getSubCategoryName();
         Integer expctedSubcategoryId = IncomingSubcategoryCreator.createValidSubcategoryResponse().getIncomingSubcategoryId();
-        String expectedCategoryName = IncomingSubcategoryCreator.createValidSubcategoryResponse().getSubCategoryName();
+        String expectedCategoryName = IncomingSubcategoryCreator.createValidSubcategoryResponse().getCategoryName();
         Page<IncomingSubcategoryResponse> subcategoryPage = subcategoryService.findAllSubcategory(PageRequest.of(0, 2));
 
         Assertions.assertThat(subcategoryPage).isNotNull();

@@ -90,7 +90,6 @@ public class IncomingIT {
                 new HttpEntity<>(incomingRequest),
                 new ParameterizedTypeReference<>() {
                 });
-
         Assertions.assertThat(incomingResponse.getBody().getData()).isNotNull();
         Assertions.assertThat(incomingResponse.getBody().getData())
                 .usingRecursiveComparison()

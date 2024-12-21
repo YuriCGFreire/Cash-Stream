@@ -96,7 +96,7 @@ class IncomingSubcatergoyControllerTest {
         Assertions.assertThat(savedSubcategory.getSubCategoryName())
                 .isNotNull()
                 .isEqualTo(IncomingSubcategoryRequestCreator.createIncomingSubcategoryRequest().getSubcategoryName());
-        Assertions.assertThat(savedSubcategory.getSubCategoryName())
+        Assertions.assertThat(savedSubcategory.getCategoryName())
                 .isNotNull()
                 .isEqualTo(IncomingSubcategoryRequestCreator.createIncomingSubcategoryRequest().getIncomingCategoryName());
     }

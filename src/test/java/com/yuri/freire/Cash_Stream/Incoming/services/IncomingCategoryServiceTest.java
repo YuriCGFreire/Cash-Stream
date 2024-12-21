@@ -3,6 +3,7 @@ package com.yuri.freire.Cash_Stream.Incoming.services;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingCategoryResponse;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
 import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingCategoryRepository;
+import com.yuri.freire.Cash_Stream.Incoming.services.factory.IncomingFactory;
 import com.yuri.freire.Cash_Stream.util.IncomingCategoryCreator;
 import com.yuri.freire.Cash_Stream.util.IncomingCategoryRequestCreator;
 import jakarta.persistence.EntityNotFoundException;
@@ -31,11 +32,22 @@ class IncomingCategoryServiceTest {
     private IncomingCategoryService categoryService;
     @Mock
     private IncomingCategoryRepository categoryRepositoryMock;
+    @Mock
+    private IncomingFactory incomingFactory;
 
     @BeforeEach
     void setUp(){
-        PageImpl<IncomingCategory> categoryPage = new PageImpl<>(List.of(IncomingCategoryCreator.createValidCategoryForRepository()));
-        BDDMockito.when(categoryRepositoryMock.findAll(ArgumentMatchers.any(PageRequest.class)))
+        PageImpl<IncomingCategoryResponse> categoryPage = new PageImpl<>(List.of(IncomingCategoryCreator.createValidCategory()));
+        IncomingCategory incomingCategory = IncomingCategoryCreator.createValidCategoryForRepository();
+        IncomingCategoryResponse incomingCategoryResponse = IncomingCategoryCreator.createValidCategory();
+
+        BDDMockito.when(incomingFactory.createIncomingCategory(ArgumentMatchers.any()))
+                        .thenReturn(incomingCategory);
+
+        BDDMockito.when(incomingFactory.createIncomingCategoryResponse(ArgumentMatchers.any()))
+                .thenReturn(incomingCategoryResponse);
+
+        BDDMockito.when(categoryRepositoryMock.findAllIncomingCategory(ArgumentMatchers.any(PageRequest.class)))
                 .thenReturn(categoryPage);
 
         BDDMockito.when(categoryRepositoryMock.save(ArgumentMatchers.any(IncomingCategory.class)))

@@ -3,6 +3,7 @@ package com.yuri.freire.Cash_Stream.Incoming.services;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingResponse;
 import com.yuri.freire.Cash_Stream.Incoming.entities.Incoming;
 import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingRepository;
+import com.yuri.freire.Cash_Stream.Incoming.services.facade.IncomingFacade;
 import com.yuri.freire.Cash_Stream.Recurrence.entities.Recurrence;
 import com.yuri.freire.Cash_Stream.Recurrence.entities.entitie_enum.RecurrenceType;
 import com.yuri.freire.Cash_Stream.Recurrence.services.RecurrenceService;
@@ -37,19 +38,11 @@ class IncomingServiceTest {
     @Mock
     private IncomingRepository incomingRepositoryMock;
     @Mock
-    private IncomingCategoryService categoryServiceMock;
-    @Mock
-    private IncomingSubcategoryService subcategoryServiceMock;
-    @Mock
-    private RecurrenceService recurrenceServiceMock;
+    private IncomingFacade incomingFacadeMock;
 
 
     @BeforeEach
     void setUp(){
-        Recurrence recurrence = Recurrence.builder()
-                .recurrenceId(1)
-                .recurrenceFrequency(RecurrenceType.ANNUAL)
-                .build();
         Incoming incoming = IncomingCreator.createValidIncoming();
         IncomingResponse incoming1 = IncomingCreator.createValidIncomingResponse();
         IncomingResponse incoming2 = IncomingCreator.createValidIncomingResponse();
@@ -81,18 +74,6 @@ class IncomingServiceTest {
         ).thenReturn(incoming);
 
         BDDMockito.when(
-                this. categoryServiceMock.findByCategoryName(ArgumentMatchers.anyString())
-        ).thenReturn(IncomingCategoryCreator.createValidCategoryForRepository());
-
-        BDDMockito.when(
-                this.subcategoryServiceMock.findBySubcategoryName(ArgumentMatchers.anyString())
-        ).thenReturn(IncomingSubcategoryCreator.createValidSubcategoryRepository());
-
-        BDDMockito.when(
-                this.recurrenceServiceMock.findByRecurrenFrequency(ArgumentMatchers.any(RecurrenceType.class))
-        ).thenReturn(recurrence);
-
-        BDDMockito.when(
                 this.incomingRepositoryMock.findById(ArgumentMatchers.anyInt())
         ).thenReturn(Optional.of(incoming));
 
@@ -101,6 +82,12 @@ class IncomingServiceTest {
         BDDMockito.when(
                 this.incomingRepositoryMock.findById(999)
         ).thenThrow(new EntityNotFoundException("Incoming not found: 999"));
+
+        BDDMockito.when(incomingFacadeMock.createIncoming(ArgumentMatchers.any()))
+                .thenReturn(incoming);
+
+        BDDMockito.when(incomingFacadeMock.createIncomingResponse(ArgumentMatchers.any()))
+                .thenReturn(incoming1);
     }
 
     @Test

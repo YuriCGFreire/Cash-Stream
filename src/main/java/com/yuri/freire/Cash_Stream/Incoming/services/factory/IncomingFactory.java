@@ -33,8 +33,8 @@ public class IncomingFactory {
                 .grossIncoming(incoming.getGrossIncoming())
                 .netIncoming(incoming.getNetIncoming())
                 .recurrence(incoming.getRecurrence().getRecurrenceFrequency())
-                .categoryName(incoming.getIncomingSubcategory().getSubCategoryName())
-                .subCategoryName(incoming.getIncomingCategory().getCategoryName())
+                .categoryName(incoming.getIncomingCategory().getCategoryName())
+                .subCategoryName(incoming.getIncomingSubcategory().getSubCategoryName())
                 .build();
     }
 

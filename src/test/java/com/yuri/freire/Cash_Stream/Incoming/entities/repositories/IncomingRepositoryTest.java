@@ -124,7 +124,7 @@ class IncomingRepositoryTest {
         Assertions.assertThat(incomingPage.getContent())
                 .isNotEmpty()
                 .hasSize(1);
-        Assertions.assertThat(incomingPage.getContent().get(0))
+        Assertions.assertThat(incomingPage.getContent().get(0).getCategoryName())
                 .isNotNull()
                 .isEqualTo(savedCategory.getCategoryName());
     }

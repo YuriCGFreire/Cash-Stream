@@ -10,9 +10,9 @@ import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingCatego
 import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingSubcategoryRepository;
 import com.yuri.freire.Cash_Stream.Response.ApiResponse;
 import com.yuri.freire.Cash_Stream.Response.PageableResponse;
-import com.yuri.freire.Cash_Stream.util.IncomingCategoryCreator;
-import com.yuri.freire.Cash_Stream.util.IncomingSubcategoryCreator;
-import com.yuri.freire.Cash_Stream.util.IncomingSubcategoryRequestCreator;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingCategoryCreator;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingSubcategoryCreator;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingSubcategoryRequestCreator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,18 +37,15 @@ import org.springframework.test.annotation.DirtiesContext;
 @AutoConfigureTestDatabase
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class IncomingSubcategoryIT {
-
     @Autowired
     @Qualifier(value = "testRestTemplateRoleUser")
     private TestRestTemplate testRestTemplate;
-
     @Autowired
     private IncomingSubcategoryRepository subcategoryRepository;
     @Autowired
     private IncomingCategoryRepository categoryRepository;
     @Autowired
     private UserRespository userRespository;
-
     private static final User userTest = User.builder()
             .firstname("Yuri")
             .lastname("Freire")

@@ -2,7 +2,7 @@ package com.yuri.freire.Cash_Stream.Incoming.entities.repositories;
 
 
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
-import com.yuri.freire.Cash_Stream.util.IncomingCategoryCreator;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingCategoryCreator;
 import jakarta.validation.ConstraintViolationException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

@@ -1,8 +1,9 @@
-package com.yuri.freire.Cash_Stream.util;
+package com.yuri.freire.Cash_Stream.util.incoming;
 
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingSubcategoryResponse;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingSubcategory;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingCategoryCreator;
 
 public class IncomingSubcategoryCreator {
     public static IncomingSubcategory createSubcategoryToBeSaved(){

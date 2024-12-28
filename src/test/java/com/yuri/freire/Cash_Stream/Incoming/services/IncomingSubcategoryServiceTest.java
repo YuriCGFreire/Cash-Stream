@@ -4,9 +4,9 @@ import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingSubcategor
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingSubcategory;
 import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingSubcategoryRepository;
 import com.yuri.freire.Cash_Stream.Incoming.services.factory.IncomingFactory;
-import com.yuri.freire.Cash_Stream.util.IncomingCategoryCreator;
-import com.yuri.freire.Cash_Stream.util.IncomingSubcategoryCreator;
-import com.yuri.freire.Cash_Stream.util.IncomingSubcategoryRequestCreator;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingCategoryCreator;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingSubcategoryCreator;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingSubcategoryRequestCreator;
 import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

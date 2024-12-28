@@ -1,8 +1,6 @@
 package com.yuri.freire.Cash_Stream.Incoming.controllers;
 
-import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingCategoryResponse;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingResponse;
-import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingSubcategoryResponse;
 import com.yuri.freire.Cash_Stream.Incoming.services.IncomingCategoryService;
 import com.yuri.freire.Cash_Stream.Incoming.services.IncomingService;
 import com.yuri.freire.Cash_Stream.Incoming.services.IncomingSubcategoryService;
@@ -11,7 +9,7 @@ import com.yuri.freire.Cash_Stream.Recurrence.entities.entitie_enum.RecurrenceTy
 import com.yuri.freire.Cash_Stream.Recurrence.entities.repositories.RecurrenceRepository;
 import com.yuri.freire.Cash_Stream.Recurrence.services.RecurrenceService;
 import com.yuri.freire.Cash_Stream.Response.ApiResponse;
-import com.yuri.freire.Cash_Stream.util.*;
+import com.yuri.freire.Cash_Stream.util.incoming.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

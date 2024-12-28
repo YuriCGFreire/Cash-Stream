@@ -1,4 +1,4 @@
-package com.yuri.freire.Cash_Stream.util;
+package com.yuri.freire.Cash_Stream.util.incoming;
 
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingResponse;
 import com.yuri.freire.Cash_Stream.Incoming.entities.Incoming;

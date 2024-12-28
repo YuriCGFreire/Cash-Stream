@@ -5,7 +5,6 @@ import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseSubcategoryR
 import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseCategory;
 import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseSubcategory;
 import com.yuri.freire.Cash_Stream.Expense.entities.repositories.ExpenseSubcategoryRepository;
-import com.yuri.freire.Cash_Stream.Expense.services.facade.ExpenseFacade;
 import com.yuri.freire.Cash_Stream.Expense.services.factory.ExpenseFactory;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ExpenseSubcategoryService {
     private final ExpenseSubcategoryRepository expenseSubcategoryRepository;
     private final ExpenseFactory expenseFactory;
-
     private final ExpenseCategoryService expenseCategoryService;
 
     public ExpenseSubcategoryResponse createExpenseSubcategory(ExpenseSubcategoryRequest expenseSubcategoryRequest){
@@ -29,7 +27,7 @@ public class ExpenseSubcategoryService {
         ExpenseSubcategory savedExpenseSubcategory = expenseSubcategoryRepository.save(expenseSubcategory);
         return expenseFactory.createExpenseSubcategoryResponse(savedExpenseSubcategory);
     }
-
+//oi amor, te amo. vc codifica programas, mas decodifica meu coração s2
     public ExpenseSubcategory findBySubcategoryName(String subcategoryName){
         ExpenseSubcategory expenseSubcategory = expenseSubcategoryRepository.findBySubCategoryName(subcategoryName)
                 .orElseThrow(() -> new EntityNotFoundException("Subcategory not found: " + subcategoryName));
@@ -41,13 +39,16 @@ public class ExpenseSubcategoryService {
     }
 
     public Page<ExpenseSubcategoryResponse> findAllSubcategoryExpensesByCategory(String categoryName, Pageable pageable){
-        return expenseSubcategoryRepository.findAllSubcategoryExpensesByCategory(categoryName, pageable);
+        ExpenseCategory expenseCategory = expenseCategoryService.findByCategoryName(categoryName);
+        return expenseSubcategoryRepository.findAllSubcategoryExpensesByCategory(expenseCategory.getCategoryName(), pageable);
     }
 
-    public String deleteByCategoryId(Integer subcategoryId){
+    public String deleteBySubcategoryId(Integer subcategoryId){
         ExpenseSubcategory expenseSubcategory = expenseSubcategoryRepository.findById(subcategoryId)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found: " + subcategoryId));
+                .orElseThrow(() -> new EntityNotFoundException("Subcategory not found: " + subcategoryId));
         expenseSubcategoryRepository.deleteById(subcategoryId);
         return expenseSubcategory.getSubCategoryName();
     }
 }
+//fim?
+//eu amo o meu amor. meu homenzarrão

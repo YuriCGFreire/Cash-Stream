@@ -1,0 +1,11 @@
+package com.yuri.freire.Cash_Stream.util.expense;
+
+import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseCategoryRequest;
+
+public class ExpenseCategoryRequestCreator {
+    public static ExpenseCategoryRequest createExpenseCategoryRequest(){
+        return ExpenseCategoryRequest.builder()
+                .categoryName(ExpenseCategoryCreator.createValidExpenseCategory().getCategoryName())
+                .build();
+    }
+}

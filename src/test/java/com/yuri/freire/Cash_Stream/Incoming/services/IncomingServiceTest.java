@@ -4,13 +4,10 @@ import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingResponse;
 import com.yuri.freire.Cash_Stream.Incoming.entities.Incoming;
 import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingRepository;
 import com.yuri.freire.Cash_Stream.Incoming.services.facade.IncomingFacade;
-import com.yuri.freire.Cash_Stream.Recurrence.entities.Recurrence;
-import com.yuri.freire.Cash_Stream.Recurrence.entities.entitie_enum.RecurrenceType;
-import com.yuri.freire.Cash_Stream.Recurrence.services.RecurrenceService;
-import com.yuri.freire.Cash_Stream.util.IncomingCategoryCreator;
-import com.yuri.freire.Cash_Stream.util.IncomingCreator;
-import com.yuri.freire.Cash_Stream.util.IncomingRequestCreator;
-import com.yuri.freire.Cash_Stream.util.IncomingSubcategoryCreator;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingCategoryCreator;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingCreator;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingRequestCreator;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingSubcategoryCreator;
 import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -111,6 +108,7 @@ class IncomingServiceTest {
     void findAllIncomings_ReturnListOfIncomingInsidePageObject_WhenSuccessful(){
         IncomingResponse expectedIncoming = IncomingCreator.createValidIncomingResponse();
         Page<IncomingResponse> incomingPage = this.incomingService.findAllIncomings(PageRequest.of(0, 2));
+
         Assertions.assertThat(incomingPage).isNotNull();
         Assertions.assertThat(incomingPage.toList())
                 .isNotEmpty()

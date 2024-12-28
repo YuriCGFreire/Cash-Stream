@@ -1,9 +1,6 @@
 package com.yuri.freire.Cash_Stream.Expense.services.factory;
 
-import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseRequest;
-import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseResponse;
-import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseSubcategoryRequest;
-import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseSubcategoryResponse;
+import com.yuri.freire.Cash_Stream.Expense.controllers.model.*;
 import com.yuri.freire.Cash_Stream.Expense.entities.Expense;
 import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseCategory;
 import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseMethod;
@@ -32,6 +29,12 @@ public class ExpenseFactory {
                 .build();
     }
 
+    public ExpenseCategory createExpenseCategory(ExpenseCategoryRequest expenseCategoryRequest){
+        return ExpenseCategory.builder()
+                .categoryName(expenseCategoryRequest.getCategoryName())
+                .build();
+    }
+
     public ExpenseSubcategory createExpenseSubcategory(ExpenseSubcategoryRequest expenseSubcategoryRequest, ExpenseCategory expenseCategory){
         return ExpenseSubcategory.builder()
                 .subCategoryName(expenseSubcategoryRequest.getSubcategoryName())
@@ -47,6 +50,13 @@ public class ExpenseFactory {
                 .recurrence(expense.getRecurrence().getRecurrenceFrequency())
                 .categoryName(expense.getExpenseCategory().getCategoryName())
                 .subCategoryName(expense.getExpenseSubcategory().getSubCategoryName())
+                .build();
+    }
+
+    public ExpenseCategoryResponse createExpenseCategoryResponse(ExpenseCategory expenseCategory){
+        return ExpenseCategoryResponse.builder()
+                .expenseCategoryId(expenseCategory.getExpenseCategoryId())
+                .categoryName(expenseCategory.getCategoryName())
                 .build();
     }
 

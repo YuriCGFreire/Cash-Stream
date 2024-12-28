@@ -4,8 +4,8 @@ import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingCategoryRe
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingCategoryResponse;
 import com.yuri.freire.Cash_Stream.Incoming.services.IncomingCategoryService;
 import com.yuri.freire.Cash_Stream.Response.ApiResponse;
-import com.yuri.freire.Cash_Stream.util.IncomingCategoryCreator;
-import com.yuri.freire.Cash_Stream.util.IncomingCategoryRequestCreator;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingCategoryCreator;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingCategoryRequestCreator;
 import jakarta.servlet.http.HttpServletRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

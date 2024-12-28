@@ -4,6 +4,7 @@ import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseCategoryRequ
 import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseCategoryResponse;
 import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseCategory;
 import com.yuri.freire.Cash_Stream.Expense.entities.repositories.ExpenseCategoryRepository;
+import com.yuri.freire.Cash_Stream.Expense.services.factory.ExpenseFactory;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,16 +16,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ExpenseCategoryService {
     private final ExpenseCategoryRepository expenseCategoryRepository;
+    private final ExpenseFactory expenseFactory;
 
     public ExpenseCategoryResponse createExpenseCategory(@Valid ExpenseCategoryRequest expenseCategoryRequest){
-        ExpenseCategory expenseCategory = ExpenseCategory.builder()
-                .categoryName(expenseCategoryRequest.getCategoryName())
-                .build();
+        ExpenseCategory expenseCategory = expenseFactory.createExpenseCategory(expenseCategoryRequest);
         ExpenseCategory expenseCategorySaved = expenseCategoryRepository.save(expenseCategory);
-        return ExpenseCategoryResponse.builder()
-                .expenseCategoryId(expenseCategorySaved.getExpenseCategoryId())
-                .categoryName(expenseCategorySaved.getCategoryName())
-                .build();
+        return expenseFactory.createExpenseCategoryResponse(expenseCategorySaved);
     }
 
     public Page<ExpenseCategoryResponse> findAllCategoryExpenses(Pageable pageable){

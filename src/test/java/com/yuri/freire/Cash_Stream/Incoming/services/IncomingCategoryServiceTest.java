@@ -4,8 +4,8 @@ import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingCategoryRe
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
 import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingCategoryRepository;
 import com.yuri.freire.Cash_Stream.Incoming.services.factory.IncomingFactory;
-import com.yuri.freire.Cash_Stream.util.IncomingCategoryCreator;
-import com.yuri.freire.Cash_Stream.util.IncomingCategoryRequestCreator;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingCategoryCreator;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingCategoryRequestCreator;
 import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -101,7 +101,6 @@ class IncomingCategoryServiceTest {
         Assertions.assertThat(deletedCategory)
                 .isNotNull()
                 .isEqualTo("Stocks");
-
     }
 
     @Test

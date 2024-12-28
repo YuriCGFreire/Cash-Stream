@@ -10,10 +10,10 @@ import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingReposi
 import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingSubcategoryRepository;
 import com.yuri.freire.Cash_Stream.Response.ApiResponse;
 import com.yuri.freire.Cash_Stream.Response.PageableResponse;
-import com.yuri.freire.Cash_Stream.util.IncomingCategoryCreator;
-import com.yuri.freire.Cash_Stream.util.IncomingCreator;
-import com.yuri.freire.Cash_Stream.util.IncomingRequestCreator;
-import com.yuri.freire.Cash_Stream.util.IncomingSubcategoryCreator;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingCategoryCreator;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingCreator;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingRequestCreator;
+import com.yuri.freire.Cash_Stream.util.incoming.IncomingSubcategoryCreator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

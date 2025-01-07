@@ -9,7 +9,7 @@ import com.yuri.freire.Cash_Stream.Authentication.entities.Token;
 import com.yuri.freire.Cash_Stream.Authentication.entities.User;
 import com.yuri.freire.Cash_Stream.Authentication.entities.entity_enum.TokenType;
 import com.yuri.freire.Cash_Stream.Authentication.entities.repositories.TokenRepository;
-import com.yuri.freire.Cash_Stream.Authentication.entities.repositories.UserRespository;
+import com.yuri.freire.Cash_Stream.Authentication.entities.repositories.UserRepository;
 import com.yuri.freire.Cash_Stream.Exceptions.ExceptionDetails;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -34,7 +34,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private final UserRespository userRespository;
+    private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -52,7 +52,7 @@ public class AuthenticationService {
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
-        User savedUser = userRespository.save(user);
+        User savedUser = userRepository.save(user);
 
         String jwtToken = jwtService.generateToken(user);
         savedUserToken(savedUser, jwtToken, TokenType.ACCESS);
@@ -73,7 +73,7 @@ public class AuthenticationService {
                         authenticationRequest.getPassword()
                 )
         );
-        User user = userRespository.findByUsername(authenticationRequest.getUsername()).orElseThrow();
+        User user = userRepository.findByUsername(authenticationRequest.getUsername()).orElseThrow();
         String jwtToken = jwtService.generateToken(user);
         revokeAllTokensUser(user, "AUTHENTICATE");
         savedUserToken(user, jwtToken, TokenType.ACCESS);
@@ -104,7 +104,7 @@ public class AuthenticationService {
             }
             userName = jwtService.extractUsername(refreshToken);
             if(userName != null){
-                var userDetails = this.userRespository.findByUsername(userName).orElseThrow();
+                var userDetails = this.userRepository.findByUsername(userName).orElseThrow();
                 if(jwtService.validateToken(refreshToken, userDetails)){
                     String accessToken = jwtService.generateToken(userDetails);
                     revokeAllTokensUser(userDetails, "REFRESH");

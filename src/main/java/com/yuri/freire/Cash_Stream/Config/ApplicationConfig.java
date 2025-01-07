@@ -1,6 +1,6 @@
 package com.yuri.freire.Cash_Stream.Config;
 
-import com.yuri.freire.Cash_Stream.Authentication.entities.repositories.UserRespository;
+import com.yuri.freire.Cash_Stream.Authentication.entities.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,10 +16,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
-    private final UserRespository userRespository;
+    private final UserRepository userRepository;
     @Bean
     public UserDetailsService userDetailsService(){
-        return username -> this.userRespository.findByUsername(username)
+        return username -> this.userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 

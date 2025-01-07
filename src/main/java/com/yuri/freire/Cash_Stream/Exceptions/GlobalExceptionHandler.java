@@ -4,13 +4,14 @@ import com.yuri.freire.Cash_Stream.Response.ApiResponse;
 import com.yuri.freire.Cash_Stream.Response.ResponseUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ValidationException;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,9 +32,21 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<ApiResponse<Void>> handleValidationException(HttpServletRequest request, ValidationException validationException){
-        ApiResponse<Void> response  = ResponseUtil.error(validationException.getMessage(), "Validation Failed", 1002, request.getRequestURI());
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDataIntegrityViolationException(HttpServletRequest request, DataIntegrityViolationException dataIntegrityViolationException){
+        ApiResponse<Void> response = ResponseUtil.error(dataIntegrityViolationException.getMessage(), "Data already exists. Unique constraint exception", 409, request.getRequestURI());
+        System.out.println("Root cause: " + dataIntegrityViolationException.getRootCause());
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<Void>> handleValidationException(HttpServletRequest request, MethodArgumentNotValidException methodArgumentNotValidException){
+        List<String> errors = methodArgumentNotValidException.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .toList();
+        ApiResponse<Void> response  = ResponseUtil.error(errors, "Argument not valid exception. Check form fields", 400, request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

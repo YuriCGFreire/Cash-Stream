@@ -9,10 +9,22 @@ public class ExpenseRequestCreator {
     public static ExpenseRequest createExpenseRequest(){
         return ExpenseRequest.builder()
                 .expenseDescription("Pizza Calabresa")
-                .expenseAmount(new BigDecimal(120.00))
+                .expenseAmount(new BigDecimal(130.00))
                 .expenseMethod(ExpenseMethodCreator.createValidExpenseMethod().getExpenseMethodName())
+                .recurrence(ExpenseCreator.createValidExpense().getRecurrence().getRecurrenceFrequency())
                 .expenseCategory(ExpenseCategoryCreator.createValidExpenseCategory().getCategoryName())
                 .expenseSubcategory(ExpenseSubcategoryCreator.createValidExpenseSubcategory().getSubCategoryName())
+                .build();
+    }
+
+    public static ExpenseRequest createInvalidExpenseRequest(){
+        return ExpenseRequest.builder()
+                .expenseDescription("")
+                .expenseAmount(new BigDecimal(0.00))
+                .expenseMethod(null)
+                .recurrence(null)
+                .expenseCategory("")
+                .expenseSubcategory("")
                 .build();
     }
 }

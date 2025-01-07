@@ -33,6 +33,7 @@ public class Recurrence extends BaseEntity {
     private Integer recurrenceId;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 50)
     private RecurrenceType recurrenceFrequency;
 
     @OneToMany(mappedBy = "recurrence", fetch = FetchType.LAZY)

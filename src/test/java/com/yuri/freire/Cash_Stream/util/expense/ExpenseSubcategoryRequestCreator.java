@@ -10,4 +10,11 @@ public class ExpenseSubcategoryRequestCreator {
                 .categoryName(ExpenseCategoryCreator.createValidExpenseCategory().getCategoryName())
                 .build();
     }
+
+    public static ExpenseSubcategoryRequest createInvalidSubcategoryRequest(){
+        return ExpenseSubcategoryRequest.builder()
+                .subcategoryName("a")
+                .categoryName(null)
+                .build();
+    }
 }

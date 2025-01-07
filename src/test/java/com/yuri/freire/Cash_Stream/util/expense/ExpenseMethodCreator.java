@@ -6,7 +6,7 @@ import com.yuri.freire.Cash_Stream.Expense.entities.entity_enum.ExpenseMethodTyp
 public class ExpenseMethodCreator {
     public static ExpenseMethod createValidExpenseMethod(){
         return ExpenseMethod.builder()
-                .expenseMethodId(1)
+                .expenseMethodId(3)
                 .expenseMethodName(ExpenseMethodType.CREDIT)
                 .build();
     }

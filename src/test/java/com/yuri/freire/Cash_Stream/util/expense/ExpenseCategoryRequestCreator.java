@@ -8,4 +8,10 @@ public class ExpenseCategoryRequestCreator {
                 .categoryName(ExpenseCategoryCreator.createValidExpenseCategory().getCategoryName())
                 .build();
     }
+
+    public static ExpenseCategoryRequest createInvalidCategoryRequest(){
+        return ExpenseCategoryRequest.builder()
+                .categoryName("")
+                .build();
+    }
 }

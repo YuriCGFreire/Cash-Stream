@@ -44,6 +44,7 @@ public class ExpenseFactory {
 
     public ExpenseResponse createExpenseResponse(Expense expense){
         return ExpenseResponse.builder()
+                .expenseId(expense.getExpenseId())
                 .expenseDescription(expense.getExpenseDescription())
                 .expenseAmount(expense.getExpenseAmount())
                 .expenseMethod(expense.getExpenseMethod().getExpenseMethodName())

@@ -31,7 +31,7 @@ public class IncomingCategory extends BaseEntity {
     private Integer incomingCategoryId;
 
     @NotNull(message = "Incoming category name cannot be null")
-    @Column(name = "category_name", nullable = false, length = 50)
+    @Column(name = "category_name", nullable = false, length = 50, unique = true)
     private String categoryName;
 
     @OneToMany(mappedBy = "incomingCategory", fetch = FetchType.LAZY, orphanRemoval = true)

@@ -29,10 +29,10 @@ public class ExpenseSubcategory extends BaseEntity {
     @Column(name = "expense_subcategory_id")
     private Integer expenseSubcategoryId;
 
-    @Column(name = "subcategory_name", nullable = false, length = 50)
+    @Column(name = "subcategory_name", nullable = false, length = 50, unique = true)
     private String subCategoryName;
 
-    @OneToMany(mappedBy = "expenseSubcategory")
+    @OneToMany(mappedBy = "expenseSubcategory", orphanRemoval = true)
     private List<Expense> expenses;
 
     @ManyToOne(fetch = FetchType.LAZY)

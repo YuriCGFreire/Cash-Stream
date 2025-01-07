@@ -30,7 +30,7 @@ public class IncomingSubcategory extends BaseEntity {
     private Integer incomingSubcategoryId;
 
     @NotNull(message = "Incoming subcategory name cannot be null")
-    @Column(name = "subcategory_name", nullable = false, length = 50)
+    @Column(name = "subcategory_name", nullable = false, length = 50, unique = true)
     private String subCategoryName;
 
     @OneToMany(mappedBy = "incomingSubcategory", fetch = FetchType.LAZY, orphanRemoval = true)

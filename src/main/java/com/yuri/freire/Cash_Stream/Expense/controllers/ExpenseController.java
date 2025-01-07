@@ -23,14 +23,14 @@ public class ExpenseController {
     private final ExpenseService expenseService;
 
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse<ExpenseResponse>> createExpenseSubcategory(@Valid @RequestBody ExpenseRequest expenseRequest, HttpServletRequest request){
+    public ResponseEntity<ApiResponse<ExpenseResponse>> createExpense(@Valid @RequestBody ExpenseRequest expenseRequest, HttpServletRequest request){
         ExpenseResponse expense = expenseService.createExpense(expenseRequest);
         ApiResponse<ExpenseResponse> response = ResponseUtil.success(expense,"Expense created successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/find-all")
-    public ResponseEntity<ApiResponse<Page<ExpenseResponse>>> findAllExpenses(HttpServletRequest request, Pageable pageable){
+    public ResponseEntity<ApiResponse<Page<ExpenseResponse>>> findAllExpenses(Pageable pageable, HttpServletRequest request){
         Page<ExpenseResponse> allExpenses = expenseService.findAllExpenses(pageable);
         ApiResponse<Page<ExpenseResponse>> response = ResponseUtil.success(allExpenses, "Expenses fetched successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -39,28 +39,28 @@ public class ExpenseController {
     @GetMapping("/find-by-category")
     public ResponseEntity<ApiResponse<Page<ExpenseResponse>>> findAllExpensesByCategoryName(@RequestParam String categoryName, Pageable pageable, HttpServletRequest request){
         Page<ExpenseResponse> allExpensesByCategory = expenseService.findAllExpensesByCategoryName(categoryName, pageable);
-        ApiResponse<Page<ExpenseResponse>> response = ResponseUtil.success(allExpensesByCategory, "Expenses fetched successfully by category", request.getRequestURI());
+        ApiResponse<Page<ExpenseResponse>> response = ResponseUtil.success(allExpensesByCategory, "Expenses fetched by category successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/find-by-subcategory")
     public ResponseEntity<ApiResponse<Page<ExpenseResponse>>> findAllExpensesBySubcategoryName(@RequestParam String subcategoryName, Pageable pageable, HttpServletRequest request){
         Page<ExpenseResponse> allExpensesByCategory = expenseService.findAllBySubcategoryName(subcategoryName, pageable);
-        ApiResponse<Page<ExpenseResponse>> response = ResponseUtil.success(allExpensesByCategory, "Expenses fetched successfully by subcategory", request.getRequestURI());
+        ApiResponse<Page<ExpenseResponse>> response = ResponseUtil.success(allExpensesByCategory,  "Expenses fetched by subcategory successfuly", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/find-by-method")
     public ResponseEntity<ApiResponse<Page<ExpenseResponse>>> findAllExpensesByPaymentMethod(@RequestParam ExpenseMethodType expenseMethodType, Pageable pageable, HttpServletRequest request){
         Page<ExpenseResponse> allExpensesByCategory = expenseService.findAllExpensesByPaymentMethod(expenseMethodType, pageable);
-        ApiResponse<Page<ExpenseResponse>> response = ResponseUtil.success(allExpensesByCategory, "Expenses fetched successfully by subcategory", request.getRequestURI());
+        ApiResponse<Page<ExpenseResponse>> response = ResponseUtil.success(allExpensesByCategory, "Expenses fetched by payment method successfuly", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/isEssential")
     public ResponseEntity<ApiResponse<Page<ExpenseResponse>>> findAllByIsEssential(@RequestParam boolean isEssential, Pageable pageable, HttpServletRequest request){
         Page<ExpenseResponse> findByIsEssential = expenseService.findAllExpensesByIsEssential(isEssential,pageable);
-        ApiResponse<Page<ExpenseResponse>> response = ResponseUtil.success(findByIsEssential, "Expenses fetched successfully by essentiality", request.getRequestURI());
+        ApiResponse<Page<ExpenseResponse>> response = ResponseUtil.success(findByIsEssential, "Expenses fetched by essentiality successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

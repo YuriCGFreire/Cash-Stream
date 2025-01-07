@@ -1,7 +1,7 @@
 package com.yuri.freire.Cash_Stream.Incoming.Integration;
 
 import com.yuri.freire.Cash_Stream.Authentication.entities.User;
-import com.yuri.freire.Cash_Stream.Authentication.entities.repositories.UserRespository;
+import com.yuri.freire.Cash_Stream.Authentication.entities.repositories.UserRepository;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingCategoryRequest;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingCategoryResponse;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
@@ -40,8 +40,7 @@ public class IncomingCategoryIT {
     @Autowired
     private IncomingCategoryRepository categoryRepository;
     @Autowired
-    private UserRespository userRespository;
-
+    private UserRepository userRepository;
     private static final User userTest = User.builder()
             .firstname("Yuri")
             .lastname("Freire")
@@ -67,7 +66,7 @@ public class IncomingCategoryIT {
     void findAll_ReturnsListOfIncomingCategoryInsidePageObject_WhenSuccessfull(){
         IncomingCategory savedCategory = this.categoryRepository.save(IncomingCategoryCreator.createCategoryToBeSaved());
 
-        userRespository.save(userTest);
+        userRepository.save(userTest);
         String expectedName = savedCategory.getCategoryName();
 
         ApiResponse<PageableResponse<IncomingCategoryResponse>> categoryPage = testRestTemplate.exchange("/incoming-category/find-all", HttpMethod.GET, null,
@@ -85,7 +84,7 @@ public class IncomingCategoryIT {
     @Test
     @DisplayName("createIncomingCategory returns Incoming Category when successfull")
     void createIncomingCategory_ReturnsIncomingCategoryResponse_WhenSuccessfull(){
-        userRespository.save(userTest);
+        userRepository.save(userTest);
         IncomingCategoryRequest incomingCategoryRequest = IncomingCategoryRequestCreator.createIncomingCategoryRequest();
 
         ResponseEntity<ApiResponse<IncomingCategoryResponse>> categoryResponse = testRestTemplate.exchange("/incoming-category/create", HttpMethod.POST, new HttpEntity<>(incomingCategoryRequest),
@@ -101,7 +100,7 @@ public class IncomingCategoryIT {
     @Test
     @DisplayName("deleteByCategoryId removes category whem successfull")
     void deleteByCategoryId_RemovesCategory_WhenSuccessfull(){
-        userRespository.save(userTest);
+        userRepository.save(userTest);
         this.categoryRepository.save(IncomingCategoryCreator.createCategoryToBeSaved());
 
         ResponseEntity<ApiResponse<String>> deletedCategory = testRestTemplate.exchange("/incoming-category/delete-by-id?categoryId=1",
@@ -118,7 +117,7 @@ public class IncomingCategoryIT {
     @Test
     @DisplayName("deleteByCategoryId throws EntityNotFoundException if category was not found")
     void deleteByCategoryId_ThrowsEntityNotFounException_IfCategoryWasNotFound(){
-        userRespository.save(userTest);
+        userRepository.save(userTest);
         Integer categoryId = 325;
         ResponseEntity<ApiResponse<String>> deletedCategory = testRestTemplate.exchange("/incoming-category/delete-by-id?categoryId=" + categoryId,
                 HttpMethod.DELETE,

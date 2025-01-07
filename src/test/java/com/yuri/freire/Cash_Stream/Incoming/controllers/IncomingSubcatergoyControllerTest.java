@@ -53,8 +53,8 @@ class IncomingSubcatergoyControllerTest {
         BDDMockito.when(subcategoryServiceMock.findAllByCategoryName(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
                         .thenReturn(subcategoryPage);
 
-        BDDMockito.when(requestMock.getRequestURI())
-                .thenReturn("/subcategory-test-path");
+            BDDMockito.when(requestMock.getRequestURI())
+                    .thenReturn("/subcategory-test-path");
 
         BDDMockito.when(subcategoryServiceMock.createIncomingSubcategory(ArgumentMatchers.any()))
                 .thenReturn(subcategory);

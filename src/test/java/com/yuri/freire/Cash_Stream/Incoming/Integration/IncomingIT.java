@@ -1,7 +1,7 @@
 package com.yuri.freire.Cash_Stream.Incoming.Integration;
 
 import com.yuri.freire.Cash_Stream.Authentication.entities.User;
-import com.yuri.freire.Cash_Stream.Authentication.entities.repositories.UserRespository;
+import com.yuri.freire.Cash_Stream.Authentication.entities.repositories.UserRepository;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingRequest;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingResponse;
 import com.yuri.freire.Cash_Stream.Incoming.entities.Incoming;
@@ -38,7 +38,6 @@ import org.springframework.test.annotation.DirtiesContext;
 @AutoConfigureTestDatabase
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class IncomingIT {
-
     @Autowired
     @Qualifier(value = "testRestTemplateRoleUser")
     private TestRestTemplate testRestTemplate;
@@ -53,7 +52,7 @@ public class IncomingIT {
     private IncomingCategoryRepository categoryRepository;
 
     @Autowired
-    private UserRespository userRespository;
+    private UserRepository userRepository;
 
     private static final User userTest = User.builder()
             .firstname("Yuri")
@@ -80,7 +79,7 @@ public class IncomingIT {
     void createIncoming_ReturnsIncomingResponse_WhenSuccessfull(){
         this.categoryRepository.save(IncomingCategoryCreator.createCategoryToBeSaved());
         this.subcategoryRepository.save(IncomingSubcategoryCreator.createSubcategoryToBeSaved());
-        this.userRespository.save(userTest);
+        this.userRepository.save(userTest);
         IncomingResponse expcetedIncomingResponse = IncomingCreator.createValidIncomingResponse();
         IncomingRequest incomingRequest = IncomingRequestCreator.createIncomningRequest();
 
@@ -105,7 +104,7 @@ public class IncomingIT {
     void findAllIncomings_ReturnsIncomingListInsideOfPageObject_WhenSuccessful(){
         this.categoryRepository.save(IncomingCategoryCreator.createCategoryToBeSaved());
         this.subcategoryRepository.save(IncomingSubcategoryCreator.createSubcategoryToBeSaved());
-        this.userRespository.save(userTest);
+        this.userRepository.save(userTest);
         Incoming savedIncoming = this.incomingRepository.save(IncomingCreator.createValidIncomingToBeSaved());
         IncomingResponse expectedIncoming = IncomingCreator.createValidIncomingResponse();
 
@@ -135,7 +134,7 @@ public class IncomingIT {
     void findAllIncomingsByCategory_ReturnListOfIncomingsInsideOfPageObjectSelectedByCategoryName_WhenSuccessful(){
         this.categoryRepository.save(IncomingCategoryCreator.createCategoryToBeSaved());
         this.subcategoryRepository.save(IncomingSubcategoryCreator.createSubcategoryToBeSaved());
-        this.userRespository.save(userTest);
+        this.userRepository.save(userTest);
         Incoming savedIncoming = this.incomingRepository.save(IncomingCreator.createValidIncomingToBeSaved());
 
         ResponseEntity<ApiResponse<PageableResponse<IncomingResponse>>> incomingPage = testRestTemplate.exchange(
@@ -159,7 +158,7 @@ public class IncomingIT {
     void findAllIncomingsByCategory_ReturnEmptyListOfIncomings_WhenCategoryDoesNotExists(){
         this.categoryRepository.save(IncomingCategoryCreator.createCategoryToBeSaved());
         this.subcategoryRepository.save(IncomingSubcategoryCreator.createSubcategoryToBeSaved());
-        this.userRespository.save(userTest);
+        this.userRepository.save(userTest);
         Incoming savedIncoming = this.incomingRepository.save(IncomingCreator.createValidIncomingToBeSaved());
 
         ResponseEntity<ApiResponse<PageableResponse<IncomingResponse>>> incomingPage = testRestTemplate.exchange(
@@ -179,7 +178,7 @@ public class IncomingIT {
     void findAllIncomingsBySubcategory_ReturnListOfIncomingsInsideOfPageObjectSelectedBySubcategoryName_WhenSuccessful(){
         this.categoryRepository.save(IncomingCategoryCreator.createCategoryToBeSaved());
         this.subcategoryRepository.save(IncomingSubcategoryCreator.createSubcategoryToBeSaved());
-        this.userRespository.save(userTest);
+        this.userRepository.save(userTest);
         Incoming savedIncoming = this.incomingRepository.save(IncomingCreator.createValidIncomingToBeSaved());
 
         ResponseEntity<ApiResponse<PageableResponse<IncomingResponse>>> incomingPage = testRestTemplate.exchange(
@@ -203,7 +202,7 @@ public class IncomingIT {
     void findAllIncomingsBySubcategory_ReturnsEmptyList_WhenSubcategoryDoesNotExists(){
         this.categoryRepository.save(IncomingCategoryCreator.createCategoryToBeSaved());
         this.subcategoryRepository.save(IncomingSubcategoryCreator.createSubcategoryToBeSaved());
-        this.userRespository.save(userTest);
+        this.userRepository.save(userTest);
         Incoming savedIncoming = this.incomingRepository.save(IncomingCreator.createValidIncomingToBeSaved());
 
         ResponseEntity<ApiResponse<PageableResponse<IncomingResponse>>> incomingPage = testRestTemplate.exchange(
@@ -225,7 +224,7 @@ public class IncomingIT {
         String expctedIncomingDescription = IncomingCreator.createValidIncoming().getIncomingDescription();
         this.categoryRepository.save(IncomingCategoryCreator.createCategoryToBeSaved());
         this.subcategoryRepository.save(IncomingSubcategoryCreator.createSubcategoryToBeSaved());
-        this.userRespository.save(userTest);
+        this.userRepository.save(userTest);
         Incoming savedIncoming = this.incomingRepository.save(IncomingCreator.createValidIncomingToBeSaved());
 
         ResponseEntity<ApiResponse<String>> deletedIncoming = testRestTemplate.exchange("/incoming/delete-by-id?incomingId=" + savedIncoming.getIncomingId(),
@@ -247,7 +246,7 @@ public class IncomingIT {
     void deleteByIncomingId_ThrowsEntityNotFoundException_WhenIncomingIdDoesNotExists(){
         this.categoryRepository.save(IncomingCategoryCreator.createCategoryToBeSaved());
         this.subcategoryRepository.save(IncomingSubcategoryCreator.createSubcategoryToBeSaved());
-        this.userRespository.save(userTest);
+        this.userRepository.save(userTest);
         Incoming savedIncoming = this.incomingRepository.save(IncomingCreator.createValidIncomingToBeSaved());
         ResponseEntity<ApiResponse<String>> deletedIncoming = testRestTemplate.exchange("/incoming/delete-by-id?incomingId=1235",
                 HttpMethod.DELETE,

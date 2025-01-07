@@ -1,7 +1,7 @@
 package com.yuri.freire.Cash_Stream.Incoming.Integration;
 
 import com.yuri.freire.Cash_Stream.Authentication.entities.User;
-import com.yuri.freire.Cash_Stream.Authentication.entities.repositories.UserRespository;
+import com.yuri.freire.Cash_Stream.Authentication.entities.repositories.UserRepository;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingSubcategoryRequest;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingSubcategoryResponse;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
@@ -45,7 +45,7 @@ public class IncomingSubcategoryIT {
     @Autowired
     private IncomingCategoryRepository categoryRepository;
     @Autowired
-    private UserRespository userRespository;
+    private UserRepository userRepository;
     private static final User userTest = User.builder()
             .firstname("Yuri")
             .lastname("Freire")
@@ -71,7 +71,7 @@ public class IncomingSubcategoryIT {
     void findAll_ReturnsListOfIncomingSubcategoryInsidePageObject_WhenSuccessfull(){
         this.categoryRepository.save(IncomingCategoryCreator.createCategoryToBeSaved());
         IncomingSubcategory savedSubcategory = this.subcategoryRepository.save(IncomingSubcategoryCreator.createSubcategoryToBeSaved());
-        userRespository.save(userTest);
+        userRepository.save(userTest);
         String expectedCategoryName = savedSubcategory.getIncomingCategory().getCategoryName();
         String expectedSubcategoryName = savedSubcategory.getSubCategoryName();
         Integer expectedSubcategoryId = savedSubcategory.getIncomingSubcategoryId();
@@ -102,7 +102,7 @@ public class IncomingSubcategoryIT {
         IncomingCategory savedCategory = this.categoryRepository.save(IncomingCategoryCreator.createCategoryToBeSaved());
         this.subcategoryRepository.save(IncomingSubcategoryCreator.createSubcategoryToBeSaved());
         this.subcategoryRepository.save(IncomingSubcategoryCreator.createSubcategoryToBeSaved());
-        userRespository.save(userTest);
+        userRepository.save(userTest);
 
         ApiResponse<PageableResponse<IncomingSubcategoryResponse>> subcategoryPage = testRestTemplate.exchange("/incoming-subcategory/all-by-category?categoryName="+savedCategory.getCategoryName(), HttpMethod.GET, null,
                 new ParameterizedTypeReference<ApiResponse<PageableResponse<IncomingSubcategoryResponse>>>() {}).getBody();
@@ -119,7 +119,7 @@ public class IncomingSubcategoryIT {
     @DisplayName("findAllByCategoryName throw EntityNotFoundException when Category does not exist")
     void findAllByCategoryName_ThrowEntityNotFoundException_WhenCategoryDoesNotExist(){
         String incomingCategoryName = "Some rando categoryName";
-        userRespository.save(userTest);
+        userRepository.save(userTest);
 
         ResponseEntity<ApiResponse<PageableResponse<IncomingSubcategoryResponse>>> subcategoryPageResponse = testRestTemplate.exchange("/incoming-subcategory/all-by-category?categoryName=" + incomingCategoryName, HttpMethod.GET, null,
                 new ParameterizedTypeReference<ApiResponse<PageableResponse<IncomingSubcategoryResponse>>>() {
@@ -141,10 +141,13 @@ public class IncomingSubcategoryIT {
     @DisplayName("createIncomingSubcategory returns Incoming Subcategory when successfull")
     void createIncomingSubcategory_ReturnsIncomingSubcategory_WhenSuccessfull(){
         this.categoryRepository.save(IncomingCategoryCreator.createCategoryToBeSaved());
-        userRespository.save(userTest);
+        userRepository.save(userTest);
         IncomingSubcategoryRequest incomingSubcategoryRequest = IncomingSubcategoryRequestCreator.createIncomingSubcategoryRequest();
 
-        ResponseEntity<ApiResponse<IncomingSubcategoryResponse>> savedSubcategory = testRestTemplate.exchange("/incoming-subcategory/create", HttpMethod.POST, new HttpEntity<>(incomingSubcategoryRequest),
+        ResponseEntity<ApiResponse<IncomingSubcategoryResponse>> savedSubcategory = testRestTemplate.exchange(
+                "/incoming-subcategory/create",
+                HttpMethod.POST,
+                new HttpEntity<>(incomingSubcategoryRequest),
                 new ParameterizedTypeReference<>() {
                 });
 
@@ -163,7 +166,7 @@ public class IncomingSubcategoryIT {
     void deleteByCategoryId_RemovesCategory_WhenSuccessfull(){
         IncomingCategory savedCategory = this.categoryRepository.save(IncomingCategoryCreator.createCategoryToBeSaved());
         IncomingSubcategory savedSubcategory = this.subcategoryRepository.save(IncomingSubcategoryCreator.createSubcategoryToBeSaved());
-        userRespository.save(userTest);
+        userRepository.save(userTest);
 
         ResponseEntity<ApiResponse<String>> deletedSubcategory = testRestTemplate.exchange(
                 "/incoming-subcategory/delete-by-id?incomingSubcategoryId="+savedSubcategory.getIncomingSubcategoryId(),
@@ -180,7 +183,7 @@ public class IncomingSubcategoryIT {
     @Test
     @DisplayName("deleteBySubccategoryId throws EntityNotFoundException if subcategory was not found")
     void deleteByCategoryId_ThrowsEntityNotFounException_IfCategoryWasNotFound(){
-        userRespository.save(userTest);
+        userRepository.save(userTest);
         Integer subcategoryId = 325;
         ResponseEntity<ApiResponse<String>> deletedSubcategory = testRestTemplate.exchange("/incoming-subcategory/delete-by-id?incomingSubcategoryId=" + subcategoryId,
                 HttpMethod.DELETE,

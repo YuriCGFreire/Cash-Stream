@@ -14,11 +14,11 @@ import lombok.NoArgsConstructor;
 public class ExpenseSubcategoryRequest {
 
     @NotNull(message = "Category name cannot be null")
-    @Size(min = 3, max = 50)
+    @Size(min = 3, max = 50, message = "Subcategory name length must be between 3 and 50 characters")
     private String subcategoryName;
 
     @NotNull(message = "Category name cannot be null")
-    @Size(min = 3, max = 50)
+    @Size(min = 3, max = 50, message = "Category name length must be between 3 and 50 characters")
     private String categoryName;
 
 }

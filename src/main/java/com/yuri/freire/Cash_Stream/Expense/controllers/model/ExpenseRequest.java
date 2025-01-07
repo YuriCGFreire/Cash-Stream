@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 public class ExpenseRequest {
 
     @NotEmpty(message = "Expense description cannot be null")
-    @Size(min = 3, max = 50)
+    @Size(min = 3, max = 50, message = "Expense description length must be between 3 and 50 characters")
     private String expenseDescription;
 
     @NotNull(message = "Expense amount cannot be null")
@@ -38,8 +38,10 @@ public class ExpenseRequest {
     private RecurrenceType recurrence;
 
     @NotNull(message = "Expense category cannot be null")
+    @Size(min = 3, max = 50, message = "Expense category name length must be between 3 and 50 characters")
     private String expenseCategory;
 
     @NotNull(message = "Expense subcategory cannot be null")
+    @Size(min = 3, max = 50, message = "Expense subcategory name length must be between 3 and 50 characters")
     private String expenseSubcategory;
 }

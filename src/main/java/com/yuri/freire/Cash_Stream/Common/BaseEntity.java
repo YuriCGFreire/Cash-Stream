@@ -19,6 +19,9 @@ public class BaseEntity {
     @Column(name = "updated_at", insertable = false, updatable = true)
     private LocalDateTime updatedAt;
 
+    @Column(name = "deleted_at", updatable = true)
+    private LocalDateTime deletedAt;
+
     @PrePersist
     protected void onCreate(){
         this.createdAt = LocalDateTime.now();

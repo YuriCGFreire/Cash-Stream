@@ -42,8 +42,8 @@ public class ExpenseSubcategoryController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete-by-id")
-    public ResponseEntity<ApiResponse<String>> deleteSubcategoryById(@RequestParam Integer subcategoryId, HttpServletRequest request){
+    @DeleteMapping("/delete/{subcategoryId}")
+    public ResponseEntity<ApiResponse<String>> deleteSubcategoryById(@PathVariable Integer subcategoryId, HttpServletRequest request){
         String deletedSubcategory = expenseSubcategoryService.deleteBySubcategoryId(subcategoryId);
         ApiResponse<String> response = ResponseUtil.success(deletedSubcategory, "Subcategory deleted successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);

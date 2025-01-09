@@ -35,7 +35,7 @@ public class ExpenseCategoryService {
     }
 
     public String deleteByCategoryId(Integer categoryId){
-        ExpenseCategory expenseCategory = expenseCategoryRepository.findById(categoryId)
+        ExpenseCategory expenseCategory = expenseCategoryRepository.findByCategoryId(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found: " + categoryId));
         expenseCategoryRepository.deleteById(categoryId);
         return expenseCategory.getCategoryName();

@@ -34,8 +34,8 @@ public class ExpenseCategoryController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete-by-id")
-    public ResponseEntity<ApiResponse<String>> deleteByCategoryId(@RequestParam Integer categoryId, HttpServletRequest request){
+    @DeleteMapping("/delete/{categoryId}")
+    public ResponseEntity<ApiResponse<String>> deleteByCategoryId(@PathVariable Integer categoryId, HttpServletRequest request){
         String deletedExpenseCaategory = expenseCategoryService.deleteByCategoryId(categoryId);
         ApiResponse<String> response = ResponseUtil.success(deletedExpenseCaategory, "Category deleted successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);

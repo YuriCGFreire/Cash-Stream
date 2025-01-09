@@ -5,6 +5,7 @@ import com.yuri.freire.Cash_Stream.Common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLDelete;
 
 import java.util.List;
 @EqualsAndHashCode(callSuper = true)
@@ -14,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "tb_expense_subcategory")
+@SQLDelete(sql = "UPDATE tb_expense_subcategory SET deleted_at = CURRENT_TIMESTAMP WHERE expense_subcategory_id = ?")
 public class ExpenseSubcategory extends BaseEntity {
     @Id
     @GeneratedValue(

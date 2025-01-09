@@ -77,10 +77,10 @@ class ExpenseSubcategoryServiceTest {
         BDDMockito.when(expenseSubcategoryRepositoryMock.findAllSubcategoryExpensesByCategory(ArgumentMatchers.any(), ArgumentMatchers.any(PageRequest.class)))
                 .thenReturn(pageSubcategory);
 
-        BDDMockito.when(expenseSubcategoryRepositoryMock.findById(1))
+        BDDMockito.when(expenseSubcategoryRepositoryMock.findBySubcategoryId(ArgumentMatchers.eq(1)))
                 .thenReturn(Optional.of(expenseSubcategory));
 
-        BDDMockito.when(expenseSubcategoryRepositoryMock.findById(999))
+        BDDMockito.when(expenseSubcategoryRepositoryMock.findBySubcategoryId(ArgumentMatchers.eq(999)))
                 .thenReturn(Optional.empty());
     }
 
@@ -175,7 +175,7 @@ class ExpenseSubcategoryServiceTest {
     @DisplayName("deleteBySubcategoryId delete expense when successful")
     void deleteBySubcategoryId_DeleteExpense_WhenSuccessful(){
         String expcetedSubcategoryName = ExpenseSubcategoryCreator.createValidExpenseSubcategory().getSubCategoryName();
-        String subcategoryName = expenseSubcategoryService.deleteBySubcategoryId(1);
+        String subcategoryName = expenseSubcategoryService.deleteBySubcategoryId(ExpenseSubcategoryCreator.createValidExpenseSubcategory().getExpenseSubcategoryId());
         Assertions.assertThat(subcategoryName).isNotNull().isEqualTo(expcetedSubcategoryName);
     }
 

@@ -207,7 +207,7 @@ public class ExpenseSubcategoryIT {
         String expectedSubCategoryName = ExpenseSubcategoryCreator.createValidExpenseSubcategory().getSubCategoryName();
 
         ResponseEntity<ApiResponse<String>> deletedSubcategory = testRestTemplate.exchange(
-                "/expense-subcategory/delete-by-id?subcategoryId=" + savedSubcategory.getExpenseSubcategoryId(),
+                "/expense-subcategory/delete/" + savedSubcategory.getExpenseSubcategoryId(),
                 HttpMethod.DELETE,
                 null,
                 new ParameterizedTypeReference<ApiResponse<String>>() {
@@ -226,7 +226,7 @@ public class ExpenseSubcategoryIT {
     void deleteSubcategoryById_Return404NotFound_WhenSubcategoryDoesNotExist() {
         userRepository.save(userTest);
         ResponseEntity<ApiResponse<String>> deletedSubcategory = testRestTemplate.exchange(
-                "/expense-subcategory/delete-by-id?subcategoryId=12908",
+                "/expense-subcategory/delete/12908",
                 HttpMethod.DELETE,
                 null,
                 new ParameterizedTypeReference<ApiResponse<String>>() {

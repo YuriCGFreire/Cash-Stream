@@ -84,7 +84,7 @@ class ExpenseServiceTest {
                 .thenReturn(pageExpense);
 
         BDDMockito.when(expenseRepositoryMock.findExpenseById(ArgumentMatchers.eq(1)))
-                .thenReturn(Optional.of(ExpenseCreator.createValidExpense()));
+                .thenReturn(Optional.of(validExpense));
 
         BDDMockito.when(expenseRepositoryMock.findExpenseById(ArgumentMatchers.eq(999)))
                 .thenReturn(Optional.empty());

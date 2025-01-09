@@ -62,7 +62,7 @@ public class ExpenseController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{expenseId}/soft")
+    @DeleteMapping("/delete/{expenseId}")
     public ResponseEntity<ApiResponse<String>> softDeleteExpense(@PathVariable Integer expenseId, HttpServletRequest request){
         String softDeleteExpense = expenseService.softDeleteExpense(expenseId);
         ApiResponse<String> response = ResponseUtil.success(softDeleteExpense, "Expense deleted successfuly", request.getRequestURI());

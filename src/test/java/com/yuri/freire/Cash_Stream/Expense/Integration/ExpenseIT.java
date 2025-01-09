@@ -307,7 +307,7 @@ public class ExpenseIT {
         Expense savedExpense = expenseRepository.save(ExpenseCreator.createExpenseToBeSaved());
         userRepository.save(userTest);
         ResponseEntity<ApiResponse<String>> deletedExpense = testRestTemplate.exchange(
-                "/expense/delete/" + savedExpense.getExpenseId() + "/soft",
+                "/expense/delete/" + savedExpense.getExpenseId(),
                 HttpMethod.DELETE,
                 null,
                 new ParameterizedTypeReference<ApiResponse<String>>() {}
@@ -325,7 +325,7 @@ public class ExpenseIT {
     void softDeleteExpense_ThrowsEntityNotFoundException_WhenExpenseDoesNotExist(){
         userRepository.save(userTest);
         ResponseEntity<ApiResponse<String>> deletedExpense = testRestTemplate.exchange(
-                "/expense/delete/" + 999 + "/soft",
+                "/expense/delete/" + 999,
                 HttpMethod.DELETE,
                 null,
                 new ParameterizedTypeReference<ApiResponse<String>>() {}

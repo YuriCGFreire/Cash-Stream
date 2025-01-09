@@ -58,7 +58,4 @@ public class Expense extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "expense_subcategory_id")
     private ExpenseSubcategory expenseSubcategory;
-
-    @Column(name = "deleted_at", updatable = true)
-    private LocalDateTime deletedAt;
 }

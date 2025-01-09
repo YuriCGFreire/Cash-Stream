@@ -11,7 +11,21 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface ExpenseSubcategoryRepository extends JpaRepository<ExpenseSubcategory, Integer> {
-    Optional<ExpenseSubcategory> findBySubCategoryName(String expenseSubcategoryName);
+
+    @Query("""
+            SELECT esc
+            FROM ExpenseSubcategory esc
+            WHERE esc.expenseSubcategoryId = :expenseSubcategoryId
+            AND esc.deletedAt IS NULL
+            """)
+    Optional<ExpenseSubcategory> findBySubcategoryId(@Param("expenseSubcategoryId") Integer expenseSubcategoryId);
+    @Query("""
+            SELECT esc
+            FROM ExpenseSubcategory esc
+            WHERE esc.subCategoryName = :subCategoryName
+            AND esc.deletedAt IS NULL
+            """)
+    Optional<ExpenseSubcategory> findBySubCategoryName(@Param("subCategoryName") String subCategoryName);
 
     @Query("""
             SELECT new com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseSubcategoryResponse(
@@ -21,6 +35,7 @@ public interface ExpenseSubcategoryRepository extends JpaRepository<ExpenseSubca
             )
             FROM ExpenseSubcategory esc
             JOIN esc.expenseCategory 
+            WHERE esc.deletedAt IS NULL
             """)
     Page<ExpenseSubcategoryResponse> findAllSubcategoryExpenses(Pageable pageable);
 
@@ -33,6 +48,7 @@ public interface ExpenseSubcategoryRepository extends JpaRepository<ExpenseSubca
             FROM ExpenseSubcategory esc
             JOIN esc.expenseCategory exc
             WHERE exc.categoryName = :categoryName
+            AND esc.deletedAt IS NULL
             """)
     Page<ExpenseSubcategoryResponse> findAllSubcategoryExpensesByCategory(@Param("categoryName") String categoryName, Pageable pageable);
 }

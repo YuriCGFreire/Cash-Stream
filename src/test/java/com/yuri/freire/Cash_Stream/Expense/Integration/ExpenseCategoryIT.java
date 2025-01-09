@@ -138,7 +138,7 @@ public class ExpenseCategoryIT {
         userRepository.save(userTest);
 
         ResponseEntity<ApiResponse<String>> deletedExpenseCategoryResponse = testRestTemplate.exchange(
-                "/expense-category/delete-by-id?categoryId=1",
+                "/expense-category/delete/1",
                 HttpMethod.DELETE,
                 null,
                 new ParameterizedTypeReference<>() {}
@@ -157,7 +157,7 @@ public class ExpenseCategoryIT {
         userRepository.save(userTest);
 
         ResponseEntity<ApiResponse<String>> deletedExpenseCategoryResponse = testRestTemplate.exchange(
-                "/expense-category/delete-by-id?categoryId=432432",
+                "/expense-category/delete/432432",
                 HttpMethod.DELETE,
                 null,
                 new ParameterizedTypeReference<>() {}

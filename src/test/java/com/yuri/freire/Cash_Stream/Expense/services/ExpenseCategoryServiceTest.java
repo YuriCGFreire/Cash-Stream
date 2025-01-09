@@ -61,13 +61,13 @@ class ExpenseCategoryServiceTest {
         BDDMockito.when(expenseCategoryRepositoryMock.findByCategoryName("Some random categoryname"))
                 .thenReturn(Optional.empty());
 
-        BDDMockito.when(expenseCategoryRepositoryMock.findById(1))
-                .thenReturn(Optional.of(ExpenseCategoryCreator.createExpenseCategoryToBeSaved()));
+        BDDMockito.when(expenseCategoryRepositoryMock.findByCategoryId(ArgumentMatchers.eq(1)))
+                .thenReturn(Optional.of(expenseCategory));
 
-        BDDMockito.when(expenseCategoryRepositoryMock.findById(999))
+        BDDMockito.when(expenseCategoryRepositoryMock.findByCategoryId(ArgumentMatchers.eq(999)))
                 .thenReturn(Optional.empty());
 
-        BDDMockito.doNothing().when(expenseCategoryRepositoryMock).deleteById(ArgumentMatchers.anyInt());
+//        BDDMockito.doNothing().when(expenseCategoryRepositoryMock).deleteById(ArgumentMatchers.anyInt());
     }
 
     @Test
@@ -115,7 +115,7 @@ class ExpenseCategoryServiceTest {
     @Test
     @DisplayName("deleteByCategoryId removes category whem successful")
     void deleteByCategoryId_RemovesExpenseCategroy_WhenSuccessful(){
-        String deletedCategory = expenseCategoryService.deleteByCategoryId(1);
+        String deletedCategory = expenseCategoryService.deleteByCategoryId(ExpenseCategoryCreator.createValidExpenseCategory().getExpenseCategoryId());
 
         Assertions.assertThat(deletedCategory)
                 .isNotNull()

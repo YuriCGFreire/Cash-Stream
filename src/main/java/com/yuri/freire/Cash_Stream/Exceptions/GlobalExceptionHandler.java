@@ -4,9 +4,7 @@ import com.yuri.freire.Cash_Stream.Response.ApiResponse;
 import com.yuri.freire.Cash_Stream.Response.ResponseUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -35,7 +33,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiResponse<Void>> handleDataIntegrityViolationException(HttpServletRequest request, DataIntegrityViolationException dataIntegrityViolationException){
         ApiResponse<Void> response = ResponseUtil.error(dataIntegrityViolationException.getMessage(), "Data already exists. Unique constraint exception", 409, request.getRequestURI());
-        System.out.println("Root cause: " + dataIntegrityViolationException.getRootCause());
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 

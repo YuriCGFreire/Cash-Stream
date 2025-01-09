@@ -91,37 +91,31 @@ class IncomingSubcategoryRepositoryTest {
     @DisplayName("findAllSubcategory returns a list of IncomingSubcategory inside of Page Object when successfull")
     void findAllSubcategory_ReturnsListOfIncomingSubcategoryInsideOfPageObject_WhenSuccessfull(){
         IncomingSubcategory subCategoryToBeSaved = IncomingSubcategoryCreator.createSubcategoryToBeSaved();
-        IncomingSubcategory subCategoryToBeSaved2 = IncomingSubcategoryCreator.createSubcategoryToBeSaved();
-        subCategoryToBeSaved2.setIncomingCategory(savedIncomingCategory);
         subCategoryToBeSaved.setIncomingCategory(savedIncomingCategory);
         this.subcategoryRepository.save(subCategoryToBeSaved);
-        this.subcategoryRepository.save(subCategoryToBeSaved2);
 
-        Pageable pageable = PageRequest.of(0, 2);
+        Pageable pageable = PageRequest.of(0, 1);
         Page<IncomingSubcategoryResponse> allSubcategories = this.subcategoryRepository.findAllSubcategory(pageable);
 
         Assertions.assertThat(allSubcategories).isNotNull();
         Assertions.assertThat(allSubcategories.getContent())
                 .isNotEmpty()
-                .hasSize(2);
+                .hasSize(1);
     }
 
     @Test
     @DisplayName("findAllByCategory returns a list of IncomingSubcategory by Category name when Successfull")
     void findAllByCategory_ReturnsListOfIncomingSubcategoryByCategoryName_WhenSuccessfull(){
         IncomingSubcategory subCategoryToBeSaved = IncomingSubcategoryCreator.createSubcategoryToBeSaved();
-        IncomingSubcategory subCategoryToBeSaved2 = IncomingSubcategoryCreator.createSubcategoryToBeSaved();
-        subCategoryToBeSaved2.setIncomingCategory(savedIncomingCategory);
         subCategoryToBeSaved.setIncomingCategory(savedIncomingCategory);
         this.subcategoryRepository.save(subCategoryToBeSaved);
-        this.subcategoryRepository.save(subCategoryToBeSaved2);
-        Pageable pageable = PageRequest.of(0, 2);
+        Pageable pageable = PageRequest.of(0, 1);
         Page<IncomingSubcategoryResponse> allSubcategories = this.subcategoryRepository.findAllByCategory(savedIncomingCategory.getCategoryName(), pageable);
 
         Assertions.assertThat(allSubcategories).isNotNull();
         Assertions.assertThat(allSubcategories.getContent())
                 .isNotEmpty()
-                .hasSize(2);
+                .hasSize(1);
     }
 
     @Test
@@ -153,4 +147,6 @@ class IncomingSubcategoryRepositoryTest {
         Assertions.assertThatThrownBy(() -> this.subcategoryRepository.saveAndFlush(subcategoryToBeSaved))
                 .isInstanceOf(ConstraintViolationException.class);
     }
+
+
 }

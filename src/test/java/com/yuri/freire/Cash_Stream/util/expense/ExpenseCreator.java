@@ -14,8 +14,8 @@ public class ExpenseCreator {
                 .build();
         return Expense.builder()
                 .expenseId(1)
-                .expenseDescription("Pizza no ifood")
-                .expenseAmount(new BigDecimal("130.00"))
+                .expenseDescription("Pizza Calabresa")
+                .expenseAmount(new BigDecimal(130.00))
                 .expenseMethod(ExpenseMethodCreator.createValidExpenseMethod())
                 .recurrence(recurrence)
                 .isEssential(false)
@@ -43,8 +43,8 @@ public class ExpenseCreator {
                 .recurrenceFrequency(RecurrenceType.NONRECURRING)
                 .build();
         return Expense.builder()
-                .expenseDescription("Pizza no ifood")
-                .expenseAmount(new BigDecimal("130.00"))
+                .expenseDescription("Pizza Calabresa")
+                .expenseAmount(new BigDecimal(130.00))
                 .expenseMethod(ExpenseMethodCreator.createValidExpenseMethod())
                 .recurrence(recurrence)
                 .isEssential(false)

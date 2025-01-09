@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -81,6 +82,12 @@ class ExpenseServiceTest {
 
         BDDMockito.when(expenseRepositoryMock.findAllByEssentiality(ArgumentMatchers.anyBoolean(), ArgumentMatchers.any()))
                 .thenReturn(pageExpense);
+
+        BDDMockito.when(expenseRepositoryMock.findExpenseById(ArgumentMatchers.eq(1)))
+                .thenReturn(Optional.of(ExpenseCreator.createValidExpense()));
+
+        BDDMockito.when(expenseRepositoryMock.findExpenseById(ArgumentMatchers.eq(999)))
+                .thenReturn(Optional.empty());
 
     }
 
@@ -191,5 +198,24 @@ class ExpenseServiceTest {
         Assertions.assertThat(pageExpense.getContent())
                 .extracting(ExpenseResponse::isEssential)
                 .allMatch(isEssential -> isEssential.equals(expectedEssentiality));
+    }
+
+    @Test
+    @DisplayName("softDeleteExpense sofDelete expense when successful")
+    void softDeleteExpense_UpdateDeletedAtField_WhenSuccessful(){
+        String deletedExpense = expenseService.softDeleteExpense(ExpenseCreator.createValidExpenseResponse().getExpenseId());
+
+        Assertions.assertThat(deletedExpense)
+                .isNotNull()
+                .isEqualTo(ExpenseCreator.createValidExpenseResponse().getExpenseDescription());
+    }
+
+    @Test
+    @DisplayName("softDeleteExpense throw EntityNotFoundException when Expense does not exist(")
+    void softDeleteExpense_ThrowsEntityNotFoundException_WhenExpenseDoesNotExist(){
+        Integer expenseId = 999;
+        Assertions.assertThatThrownBy(() -> expenseService.softDeleteExpense(expenseId))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("Expense not found with id: " + expenseId);
     }
 }

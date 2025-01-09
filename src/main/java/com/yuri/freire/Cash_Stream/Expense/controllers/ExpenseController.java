@@ -28,7 +28,6 @@ public class ExpenseController {
         ApiResponse<ExpenseResponse> response = ResponseUtil.success(expense,"Expense created successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
-
     @GetMapping("/find-all")
     public ResponseEntity<ApiResponse<Page<ExpenseResponse>>> findAllExpenses(Pageable pageable, HttpServletRequest request){
         Page<ExpenseResponse> allExpenses = expenseService.findAllExpenses(pageable);
@@ -56,11 +55,17 @@ public class ExpenseController {
         ApiResponse<Page<ExpenseResponse>> response = ResponseUtil.success(allExpensesByCategory, "Expenses fetched by payment method successfuly", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
     @GetMapping("/isEssential")
     public ResponseEntity<ApiResponse<Page<ExpenseResponse>>> findAllByIsEssential(@RequestParam boolean isEssential, Pageable pageable, HttpServletRequest request){
         Page<ExpenseResponse> findByIsEssential = expenseService.findAllExpensesByIsEssential(isEssential,pageable);
         ApiResponse<Page<ExpenseResponse>> response = ResponseUtil.success(findByIsEssential, "Expenses fetched by essentiality successfully", request.getRequestURI());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{expenseId}/soft")
+    public ResponseEntity<ApiResponse<String>> softDeleteExpense(@PathVariable Integer expenseId, HttpServletRequest request){
+        String softDeleteExpense = expenseService.softDeleteExpense(expenseId);
+        ApiResponse<String> response = ResponseUtil.success(softDeleteExpense, "Expense deleted successfuly", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

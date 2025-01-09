@@ -2,6 +2,7 @@ package com.yuri.freire.Cash_Stream.Expense.controllers;
 
 import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseResponse;
 import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseSubcategoryResponse;
+import com.yuri.freire.Cash_Stream.Expense.entities.Expense;
 import com.yuri.freire.Cash_Stream.Expense.entities.entity_enum.ExpenseMethodType;
 import com.yuri.freire.Cash_Stream.Expense.services.ExpenseService;
 import com.yuri.freire.Cash_Stream.Response.ApiResponse;
@@ -70,6 +71,12 @@ class ExpenseControllerTest {
 
         BDDMockito.when(expenseServiceMock.findAllExpensesByIsEssential(ArgumentMatchers.anyBoolean(), ArgumentMatchers.any()))
                 .thenReturn(pageExpenses);
+
+        BDDMockito.when(expenseServiceMock.softDeleteExpense(ArgumentMatchers.eq(1)))
+                .thenReturn(validExpenseResponse.getExpenseDescription());
+
+        BDDMockito.when(expenseServiceMock.softDeleteExpense(999))
+                .thenThrow(new EntityNotFoundException("Expense not found with id: 999"));
     }
 
     @Test
@@ -199,5 +206,31 @@ class ExpenseControllerTest {
         Assertions.assertThat(allByIsEssential.getBody().getData().toList())
                 .extracting(ExpenseResponse::isEssential)
                 .allMatch(isEssential -> isEssential.equals(expectedEssentiality));
+    }
+
+    @Test
+    @DisplayName("softDeleteExpense update deletedAt field when successful")
+    void softDeleteExpense_UpdateDeletedAtField_WhenSuccessful(){
+        Expense expense = ExpenseCreator.createValidExpense();
+        ResponseEntity<ApiResponse<String>> deletedExpense = expenseController.softDeleteExpense(expense.getExpenseId(), requestMock);
+
+        Assertions.assertThat(deletedExpense).isNotNull();
+        Assertions.assertThat(deletedExpense.getBody().isSuccess()).isTrue();
+        Assertions.assertThat(deletedExpense.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(deletedExpense.getBody().getMessage()).isEqualTo("Expense deleted successfuly");
+        Assertions.assertThat(deletedExpense.getBody().getData()).isEqualTo(expense.getExpenseDescription());
+    }
+
+    @Test
+    @DisplayName("softDeleteExpense throw EntityNotFoundException when Expense does not exist(")
+    void softDeleteExpense_ThrowsEntityNotFoundException_WhenExpenseDoesNotExist(){
+        Integer someRandomId = 999;
+
+        Assertions.assertThatThrownBy(() ->
+                        expenseController.softDeleteExpense(someRandomId, requestMock)
+                )
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Expense not found with id: 999");
+
     }
 }

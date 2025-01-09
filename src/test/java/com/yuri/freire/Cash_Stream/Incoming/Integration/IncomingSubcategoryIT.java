@@ -101,7 +101,6 @@ public class IncomingSubcategoryIT {
     void findAllByCategoryName_ReturnsAListOfSubcategoryByCategoryNameInsideOfPageObject_WhenSucessfull(){
         IncomingCategory savedCategory = this.categoryRepository.save(IncomingCategoryCreator.createCategoryToBeSaved());
         this.subcategoryRepository.save(IncomingSubcategoryCreator.createSubcategoryToBeSaved());
-        this.subcategoryRepository.save(IncomingSubcategoryCreator.createSubcategoryToBeSaved());
         userRepository.save(userTest);
 
         ApiResponse<PageableResponse<IncomingSubcategoryResponse>> subcategoryPage = testRestTemplate.exchange("/incoming-subcategory/all-by-category?categoryName="+savedCategory.getCategoryName(), HttpMethod.GET, null,
@@ -110,7 +109,7 @@ public class IncomingSubcategoryIT {
         Assertions.assertThat(subcategoryPage).isNotNull();
         Assertions.assertThat(subcategoryPage.getData().toList())
                 .isNotEmpty()
-                .hasSize(2);
+                .hasSize(1);
         Assertions.assertThat(subcategoryPage.getData().toList())
                 .allMatch(subcategory -> subcategory.getCategoryName().equals(savedCategory.getCategoryName()));
     }

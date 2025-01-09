@@ -6,10 +6,13 @@ import com.yuri.freire.Cash_Stream.Expense.entities.Expense;
 import com.yuri.freire.Cash_Stream.Expense.entities.entity_enum.ExpenseMethodType;
 import com.yuri.freire.Cash_Stream.Expense.entities.repositories.ExpenseRepository;
 import com.yuri.freire.Cash_Stream.Expense.services.facade.ExpenseFacade;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -45,5 +48,12 @@ public class ExpenseService {
 
     public Page<ExpenseResponse> findAllExpensesByIsEssential(boolean isEssential, Pageable pageable){
         return expenseRepository.findAllByEssentiality(isEssential, pageable);
+    }
+
+    public String softDeleteExpense(Integer expenseId){
+        Expense expense = expenseRepository.findExpenseById(expenseId)
+                .orElseThrow(() -> new EntityNotFoundException("Expense not found with id: " + expenseId));
+        expenseRepository.delete(expense);
+        return expense.getExpenseDescription();
     }
 }

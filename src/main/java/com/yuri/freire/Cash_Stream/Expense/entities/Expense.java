@@ -5,6 +5,8 @@ import com.yuri.freire.Cash_Stream.Recurrence.entities.Recurrence;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "tb_expense")
+@SQLDelete(sql = "UPDATE tb_expense SET deleted_at = CURRENT_TIMESTAMP WHERE expense_id = ?")
 public class Expense extends BaseEntity {
     @Id
     @GeneratedValue(
@@ -55,14 +58,7 @@ public class Expense extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "expense_subcategory_id")
     private ExpenseSubcategory expenseSubcategory;
-    @Column(name = "deleted_at", insertable = false, updatable = true)
+
+    @Column(name = "deleted_at", updatable = true)
     private LocalDateTime deletedAt;
-
-    public void markAsDeleted(){
-        this.deletedAt = LocalDateTime.now();
-    }
-
-    public boolean isDeleted(){
-        return this.deletedAt != null;
-    }
 }

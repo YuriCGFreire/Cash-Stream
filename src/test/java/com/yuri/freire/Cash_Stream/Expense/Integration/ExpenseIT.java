@@ -32,8 +32,6 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -79,6 +77,7 @@ public class ExpenseIT {
             RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder()
                     .rootUri("http://localhost:"+port)
                     .basicAuthentication("Yuri Freire", "Ke6pqw84#");
+
             return new TestRestTemplate(restTemplateBuilder);
         }
     }
@@ -298,5 +297,45 @@ public class ExpenseIT {
         Assertions.assertThat(allByIsEssential.getBody().getData().toList())
                 .extracting(ExpenseResponse::isEssential)
                 .allMatch(isEssential -> isEssential.equals(savedExpense.isEssential()));
+    }
+
+    @Test
+    @DisplayName("softDeleteExpense update deletedAt field when successful")
+    void softDeleteExpense_UpdateDeletedAtField_WhenSuccessful(){
+        expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
+        expenseSubcategoryRepository.save(ExpenseSubcategoryCreator.createValidExpenseSubcategoryTobeSaved());
+        Expense savedExpense = expenseRepository.save(ExpenseCreator.createExpenseToBeSaved());
+        userRepository.save(userTest);
+        ResponseEntity<ApiResponse<String>> deletedExpense = testRestTemplate.exchange(
+                "/expense/delete/" + savedExpense.getExpenseId() + "/soft",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<ApiResponse<String>>() {}
+        );
+
+        Assertions.assertThat(deletedExpense).isNotNull();
+        Assertions.assertThat(deletedExpense.getBody().isSuccess()).isTrue();
+        Assertions.assertThat(deletedExpense.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(deletedExpense.getBody().getMessage()).isEqualTo("Expense deleted successfuly");
+        Assertions.assertThat(deletedExpense.getBody().getData()).isEqualTo(savedExpense.getExpenseDescription());
+    }
+
+    @Test
+    @DisplayName("softDeleteExpense throw EntityNotFoundException when Expense does not exist(")
+    void softDeleteExpense_ThrowsEntityNotFoundException_WhenExpenseDoesNotExist(){
+        userRepository.save(userTest);
+        ResponseEntity<ApiResponse<String>> deletedExpense = testRestTemplate.exchange(
+                "/expense/delete/" + 999 + "/soft",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<ApiResponse<String>>() {}
+        );
+
+        Assertions.assertThat(deletedExpense).isNotNull();
+        Assertions.assertThat(deletedExpense.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        Assertions.assertThat(deletedExpense.getBody().isSuccess()).isFalse();
+        Assertions.assertThat(deletedExpense.getBody().getMessage()).isEqualTo("Resource not found");
+        Assertions.assertThat(deletedExpense.getBody().getErrorCode()).isEqualTo(404);
+        Assertions.assertThat(deletedExpense.getBody().getErrors().get(0)).isEqualTo("Expense not found with id: 999");
     }
 }

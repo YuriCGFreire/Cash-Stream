@@ -31,7 +31,7 @@ public class ExpenseSubcategory extends BaseEntity {
     @Column(name = "expense_subcategory_id")
     private Integer expenseSubcategoryId;
 
-    @Column(name = "subcategory_name", nullable = false, length = 50, unique = true)
+    @Column(name = "subcategory_name", nullable = false, length = 50)
     private String subCategoryName;
 
     @OneToMany(mappedBy = "expenseSubcategory", orphanRemoval = true)

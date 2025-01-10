@@ -11,7 +11,21 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface IncomingSubcategoryRepository extends JpaRepository<IncomingSubcategory, Integer> {
-    Optional<IncomingSubcategory> findBySubCategoryName(String incomingSubcategoryName);
+    @Query("""
+            SELECT isc
+            FROM IncomingSubcategory isc
+            WHERE isc.incomingSubcategoryId = :incomingSubcategoryId
+            AND isc.deletedAt IS NULL
+            """)
+    Optional<IncomingSubcategory> findBySubcategoryId(@Param("incomingSubcategoryId") Integer incomingSubcategoryId);
+
+    @Query("""
+            SELECT isc
+            FROM IncomingSubcategory isc
+            WHERE isc.subCategoryName = :subCategoryName
+            AND isc.deletedAt IS NULL
+            """)
+    Optional<IncomingSubcategory> findBySubCategoryName(@Param("subCategoryName") String subCategoryName);
 
     @Query("""
             SELECT new com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingSubcategoryResponse(
@@ -21,6 +35,7 @@ public interface IncomingSubcategoryRepository extends JpaRepository<IncomingSub
             )
             FROM IncomingSubcategory isc
             JOIN isc.incomingCategory
+            WHERE isc.deletedAt IS NULL
             """)
     Page<IncomingSubcategoryResponse> findAllSubcategory(Pageable pageable);
 
@@ -32,7 +47,8 @@ public interface IncomingSubcategoryRepository extends JpaRepository<IncomingSub
             )
             FROM IncomingSubcategory isc
             JOIN isc.incomingCategory ic
-            WHERE ic.categoryName = :categoryName            
+            WHERE ic.categoryName = :categoryName    
+            AND isc.deletedAt IS NULL        
             """)
     Page<IncomingSubcategoryResponse> findAllByCategory(@Param("categoryName") String categoryName, Pageable pageable);
 }

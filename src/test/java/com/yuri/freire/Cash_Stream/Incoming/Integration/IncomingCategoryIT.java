@@ -103,7 +103,7 @@ public class IncomingCategoryIT {
         userRepository.save(userTest);
         this.categoryRepository.save(IncomingCategoryCreator.createCategoryToBeSaved());
 
-        ResponseEntity<ApiResponse<String>> deletedCategory = testRestTemplate.exchange("/incoming-category/delete-by-id?categoryId=1",
+        ResponseEntity<ApiResponse<String>> deletedCategory = testRestTemplate.exchange("/incoming-category/delete/1",
                 HttpMethod.DELETE,
                 null,
                 new ParameterizedTypeReference<>() {
@@ -119,7 +119,7 @@ public class IncomingCategoryIT {
     void deleteByCategoryId_ThrowsEntityNotFounException_IfCategoryWasNotFound(){
         userRepository.save(userTest);
         Integer categoryId = 325;
-        ResponseEntity<ApiResponse<String>> deletedCategory = testRestTemplate.exchange("/incoming-category/delete-by-id?categoryId=" + categoryId,
+        ResponseEntity<ApiResponse<String>> deletedCategory = testRestTemplate.exchange("/incoming-category/delete/" + categoryId,
                 HttpMethod.DELETE,
                 null,
                 new ParameterizedTypeReference<>() {});

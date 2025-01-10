@@ -1,5 +1,6 @@
 package com.yuri.freire.Cash_Stream.Expense.services;
 
+import com.yuri.freire.Cash_Stream.Exceptions.AlreadyExistsException;
 import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseCategoryRequest;
 import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseCategoryResponse;
 import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseCategory;
@@ -12,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ExpenseCategoryService {
@@ -19,6 +22,11 @@ public class ExpenseCategoryService {
     private final ExpenseFactory expenseFactory;
 
     public ExpenseCategoryResponse createExpenseCategory(@Valid ExpenseCategoryRequest expenseCategoryRequest){
+        Optional<ExpenseCategory> fetchedExpenseCategory = expenseCategoryRepository.findByCategoryName(expenseCategoryRequest.getCategoryName());
+        if(fetchedExpenseCategory.isPresent()){
+            throw new AlreadyExistsException("Expense category with name '"
+                    + expenseCategoryRequest.getCategoryName() + "' already exists");
+        }
         ExpenseCategory expenseCategory = expenseFactory.createExpenseCategory(expenseCategoryRequest);
         ExpenseCategory expenseCategorySaved = expenseCategoryRepository.save(expenseCategory);
         return expenseFactory.createExpenseCategoryResponse(expenseCategorySaved);

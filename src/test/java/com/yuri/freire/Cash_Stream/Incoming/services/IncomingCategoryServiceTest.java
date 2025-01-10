@@ -53,10 +53,10 @@ class IncomingCategoryServiceTest {
         BDDMockito.when(categoryRepositoryMock.save(ArgumentMatchers.any(IncomingCategory.class)))
                 .thenReturn(IncomingCategoryCreator.createValidCategoryForRepository());
 
-        BDDMockito.when(categoryRepositoryMock.findById(1))
+        BDDMockito.when(categoryRepositoryMock.findByCategoryId(ArgumentMatchers.eq(1)))
                 .thenReturn(Optional.of(IncomingCategoryCreator.createValidCategoryForRepository()));
 
-        BDDMockito.when(categoryRepositoryMock.findById(999))
+        BDDMockito.when(categoryRepositoryMock.findByCategoryId(ArgumentMatchers.eq(999)))
                         .thenReturn(Optional.empty());
 
         BDDMockito.doNothing().when(categoryRepositoryMock).deleteById(ArgumentMatchers.anyInt());

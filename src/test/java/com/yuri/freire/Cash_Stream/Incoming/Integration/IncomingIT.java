@@ -227,7 +227,7 @@ public class IncomingIT {
         this.userRepository.save(userTest);
         Incoming savedIncoming = this.incomingRepository.save(IncomingCreator.createValidIncomingToBeSaved());
 
-        ResponseEntity<ApiResponse<String>> deletedIncoming = testRestTemplate.exchange("/incoming/delete-by-id?incomingId=" + savedIncoming.getIncomingId(),
+        ResponseEntity<ApiResponse<String>> deletedIncoming = testRestTemplate.exchange("/incoming/delete/" + savedIncoming.getIncomingId(),
                 HttpMethod.DELETE,
                 null,
                 new ParameterizedTypeReference<>() {
@@ -248,7 +248,7 @@ public class IncomingIT {
         this.subcategoryRepository.save(IncomingSubcategoryCreator.createSubcategoryToBeSaved());
         this.userRepository.save(userTest);
         Incoming savedIncoming = this.incomingRepository.save(IncomingCreator.createValidIncomingToBeSaved());
-        ResponseEntity<ApiResponse<String>> deletedIncoming = testRestTemplate.exchange("/incoming/delete-by-id?incomingId=1235",
+        ResponseEntity<ApiResponse<String>> deletedIncoming = testRestTemplate.exchange("/incoming/delete/1235",
                 HttpMethod.DELETE,
                 null,
                 new ParameterizedTypeReference<>() {

@@ -168,7 +168,7 @@ public class IncomingSubcategoryIT {
         userRepository.save(userTest);
 
         ResponseEntity<ApiResponse<String>> deletedSubcategory = testRestTemplate.exchange(
-                "/incoming-subcategory/delete-by-id?incomingSubcategoryId="+savedSubcategory.getIncomingSubcategoryId(),
+                "/incoming-subcategory/delete/"+savedSubcategory.getIncomingSubcategoryId(),
                 HttpMethod.DELETE, null,
                 new ParameterizedTypeReference<>() {
                 }
@@ -184,7 +184,7 @@ public class IncomingSubcategoryIT {
     void deleteByCategoryId_ThrowsEntityNotFounException_IfCategoryWasNotFound(){
         userRepository.save(userTest);
         Integer subcategoryId = 325;
-        ResponseEntity<ApiResponse<String>> deletedSubcategory = testRestTemplate.exchange("/incoming-subcategory/delete-by-id?incomingSubcategoryId=" + subcategoryId,
+        ResponseEntity<ApiResponse<String>> deletedSubcategory = testRestTemplate.exchange("/incoming-subcategory/delete/" + subcategoryId,
                 HttpMethod.DELETE,
                 null,
                 new ParameterizedTypeReference<>() {

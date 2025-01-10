@@ -71,10 +71,10 @@ class IncomingSubcategoryServiceTest {
         BDDMockito.when(categoryServiceMock.findByCategoryName("Some random categoryname"))
                 .thenThrow(new EntityNotFoundException("Category not found: Some random categoryname"));
 
-        BDDMockito.when(subcategoryRepositoryMock.findById(1))
+        BDDMockito.when(subcategoryRepositoryMock.findBySubcategoryId(ArgumentMatchers.eq(1)))
                         .thenReturn(Optional.of(subcategory));
 
-        BDDMockito.when(subcategoryRepositoryMock.findById(999))
+        BDDMockito.when(subcategoryRepositoryMock.findBySubcategoryId(ArgumentMatchers.eq(999)))
                         .thenReturn(Optional.empty());
 
         BDDMockito.doNothing().when(subcategoryRepositoryMock).deleteById(ArgumentMatchers.anyInt());

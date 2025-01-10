@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLDelete;
 
 import java.util.List;
 @EqualsAndHashCode(callSuper = true)
@@ -14,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "tb_incoming_subcategory")
+@SQLDelete(sql = "UPDATE tb_incoming_subcategory SET deleted_at = CURRENT_TIMESTAMP WHERE incoming_subcategory_id = ?")
 public class IncomingSubcategory extends BaseEntity {
     @Id
     @GeneratedValue(
@@ -29,14 +31,12 @@ public class IncomingSubcategory extends BaseEntity {
     @Column(name = "incoming_subcategory_id")
     private Integer incomingSubcategoryId;
 
-    @NotNull(message = "Incoming subcategory name cannot be null")
-    @Column(name = "subcategory_name", nullable = false, length = 50, unique = true)
+    @Column(name = "subcategory_name", nullable = false, length = 50)
     private String subCategoryName;
 
     @OneToMany(mappedBy = "incomingSubcategory", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Incoming> incomings;
 
-//    @NotNull(message = "Incoming category cannot be null")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "incoming_category_id")
     private IncomingCategory incomingCategory;

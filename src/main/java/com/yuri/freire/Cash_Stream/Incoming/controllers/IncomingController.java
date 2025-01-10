@@ -49,8 +49,8 @@ public class IncomingController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete-by-id")
-    public ResponseEntity<ApiResponse<String>> deleteByIncomingId(@RequestParam Integer incomingId, HttpServletRequest request){
+    @DeleteMapping("/delete/{incomingId}")
+    public ResponseEntity<ApiResponse<String>> deleteByIncomingId(@PathVariable Integer incomingId, HttpServletRequest request){
         String deletedCategory = incomingService.deleteByIncomingId(incomingId);
         ApiResponse<String> response = ResponseUtil.success(deletedCategory, "Incoming deleted successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);

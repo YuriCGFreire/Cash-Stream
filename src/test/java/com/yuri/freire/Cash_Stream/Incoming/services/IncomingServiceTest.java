@@ -71,13 +71,13 @@ class IncomingServiceTest {
         ).thenReturn(incoming);
 
         BDDMockito.when(
-                this.incomingRepositoryMock.findById(ArgumentMatchers.anyInt())
+                this.incomingRepositoryMock.findIncomingById(ArgumentMatchers.anyInt())
         ).thenReturn(Optional.of(incoming));
 
-        BDDMockito.doNothing().when(this.incomingRepositoryMock).deleteById(ArgumentMatchers.anyInt());
+        BDDMockito.doNothing().when(this.incomingRepositoryMock).deleteById(ArgumentMatchers.eq(1));
 
         BDDMockito.when(
-                this.incomingRepositoryMock.findById(999)
+                this.incomingRepositoryMock.findIncomingById(ArgumentMatchers.eq(999))
         ).thenThrow(new EntityNotFoundException("Incoming not found: 999"));
 
         BDDMockito.when(incomingFacadeMock.createIncoming(ArgumentMatchers.any()))

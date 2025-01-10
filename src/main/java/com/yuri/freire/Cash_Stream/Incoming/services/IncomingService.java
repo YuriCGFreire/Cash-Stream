@@ -38,7 +38,7 @@ public class IncomingService {
     }
 
     public String deleteByIncomingId(Integer incomingId){
-        Incoming incoming = incomingRepository.findById(incomingId)
+        Incoming incoming = incomingRepository.findIncomingById(incomingId)
                 .orElseThrow(() -> new EntityNotFoundException("Incoming not found: " + incomingId));
         incomingRepository.deleteById(incomingId);
         return incoming.getIncomingDescription();

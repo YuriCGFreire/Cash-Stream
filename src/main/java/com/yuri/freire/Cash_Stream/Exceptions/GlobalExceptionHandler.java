@@ -30,9 +30,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ApiResponse<Void>> handleDataIntegrityViolationException(HttpServletRequest request, DataIntegrityViolationException dataIntegrityViolationException){
-        ApiResponse<Void> response = ResponseUtil.error(dataIntegrityViolationException.getMessage(), "Data already exists. Unique constraint exception", 409, request.getRequestURI());
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAlreadyExistException(HttpServletRequest request, AlreadyExistsException alreadyExistsException){
+        ApiResponse<Void> response = ResponseUtil.error(alreadyExistsException.getMessage(), "Data already exists.", 409, request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 

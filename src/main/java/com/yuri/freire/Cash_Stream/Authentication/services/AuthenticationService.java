@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +46,10 @@ public class AuthenticationService {
     private final JwtService jwtService;
 
     public AuthenticationResponse register(RegisterRequest request){
+        Optional<User> fetchedUser = userRepository.findByUsername(request.getUsername());
+        if(fetchedUser.isPresent()){
+
+        }
         User user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())

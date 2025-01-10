@@ -4,10 +4,14 @@ import com.yuri.freire.Cash_Stream.Authentication.controllers.model.Authenticati
 import com.yuri.freire.Cash_Stream.Authentication.controllers.model.AuthenticationResponse;
 import com.yuri.freire.Cash_Stream.Authentication.controllers.model.RegisterRequest;
 import com.yuri.freire.Cash_Stream.Authentication.services.AuthenticationService;
+import com.yuri.freire.Cash_Stream.Response.ApiResponse;
+import com.yuri.freire.Cash_Stream.Response.ResponseUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,8 +31,10 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request){
-        return ResponseEntity.ok(authenticationService.register(request));
+    public ResponseEntity<ApiResponse<AuthenticationResponse>> register(@Valid @RequestBody RegisterRequest request, HttpServletRequest servletRequestrequest){
+        AuthenticationResponse registeredUser = authenticationService.register(request);
+        ApiResponse<AuthenticationResponse> response = ResponseUtil.success(registeredUser, "User registered successfuly", servletRequestrequest.getRequestURI());
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/authenticate")

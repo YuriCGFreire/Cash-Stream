@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
@@ -36,14 +37,14 @@ public class Incoming extends BaseEntity {
     @Column(name = "incoming_description", nullable = false, length = 50)
     private String incomingDescription;
 
-    @Column(name = "incoming_source", nullable = true, length = 50)
-    private String incomingSource;
-
     @Column(name = "gross_incoming", nullable = false, precision = 10, scale = 2)
     private BigDecimal grossIncoming;
 
     @Column(name = "net_incoming", nullable = false, precision = 10, scale = 2)
     private BigDecimal netIncoming;
+
+    @Column(name = "incoming_date", nullable = false)
+    private LocalDate incomingDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "incoming_category_id")

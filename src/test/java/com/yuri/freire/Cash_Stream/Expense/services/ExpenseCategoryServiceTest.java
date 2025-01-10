@@ -55,8 +55,11 @@ class ExpenseCategoryServiceTest {
         BDDMockito.when(expenseCategoryRepositoryMock.findAllCategoryExpenses(ArgumentMatchers.any(PageRequest.class)))
                 .thenReturn(categoryPage);
 
-        BDDMockito.when(expenseCategoryRepositoryMock.findByCategoryName(ArgumentMatchers.anyString()))
+        BDDMockito.when(expenseCategoryRepositoryMock.findByCategoryName(ArgumentMatchers.eq("Alimentação")))
                 .thenReturn(Optional.of(ExpenseCategoryCreator.createValidExpenseCategory()));
+
+        BDDMockito.when(expenseCategoryRepositoryMock.findByCategoryName(ArgumentMatchers.eq("Magic")))
+                .thenReturn(Optional.empty());
 
         BDDMockito.when(expenseCategoryRepositoryMock.findByCategoryName("Some random categoryname"))
                 .thenReturn(Optional.empty());

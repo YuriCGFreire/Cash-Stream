@@ -9,6 +9,8 @@ import com.yuri.freire.Cash_Stream.Recurrence.entities.Recurrence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.format.DateTimeFormatter;
+
 @Component
 @RequiredArgsConstructor
 public class ExpenseFactory {
@@ -21,6 +23,7 @@ public class ExpenseFactory {
         return Expense.builder()
                 .expenseDescription(expenseRequest.getExpenseDescription())
                 .expenseAmount(expenseRequest.getExpenseAmount())
+                .expenseDate(expenseRequest.getExpenseDate())
                 .isEssential(expenseRequest.isEssential())
                 .expenseMethod(expenseMethod)
                 .recurrence(recurrence)
@@ -43,10 +46,12 @@ public class ExpenseFactory {
     }
 
     public ExpenseResponse createExpenseResponse(Expense expense){
+
         return ExpenseResponse.builder()
                 .expenseId(expense.getExpenseId())
                 .expenseDescription(expense.getExpenseDescription())
                 .expenseAmount(expense.getExpenseAmount())
+                .expenseDate(expense.getExpenseDate())
                 .expenseMethod(expense.getExpenseMethod().getExpenseMethodName())
                 .recurrence(expense.getRecurrence().getRecurrenceFrequency())
                 .categoryName(expense.getExpenseCategory().getCategoryName())

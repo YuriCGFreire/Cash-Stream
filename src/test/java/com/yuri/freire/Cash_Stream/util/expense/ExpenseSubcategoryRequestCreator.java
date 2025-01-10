@@ -6,7 +6,7 @@ import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseSubcategoryR
 public class ExpenseSubcategoryRequestCreator {
     public static ExpenseSubcategoryRequest createExpenseSubcategoryRequest(){
         return ExpenseSubcategoryRequest.builder()
-                .subcategoryName(ExpenseSubcategoryCreator.createValidExpenseSubcategory().getSubCategoryName())
+                .subcategoryName("McDonalds")
                 .categoryName(ExpenseCategoryCreator.createValidExpenseCategory().getCategoryName())
                 .build();
     }

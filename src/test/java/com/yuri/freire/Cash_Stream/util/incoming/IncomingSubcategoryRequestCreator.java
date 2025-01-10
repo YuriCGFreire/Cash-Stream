@@ -6,7 +6,7 @@ import com.yuri.freire.Cash_Stream.util.incoming.IncomingSubcategoryCreator;
 public class IncomingSubcategoryRequestCreator {
     public static IncomingSubcategoryRequest createIncomingSubcategoryRequest(){
         return IncomingSubcategoryRequest.builder()
-                .subcategoryName(IncomingSubcategoryCreator.createValidSubcategoryResponse().getSubCategoryName())
+                .subcategoryName("Bonus do trabalho")
                 .incomingCategoryName(IncomingSubcategoryCreator.createValidSubcategoryResponse().getCategoryName())
                 .build();
     }

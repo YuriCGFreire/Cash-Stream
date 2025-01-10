@@ -5,7 +5,7 @@ import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseCategoryRequ
 public class ExpenseCategoryRequestCreator {
     public static ExpenseCategoryRequest createExpenseCategoryRequest(){
         return ExpenseCategoryRequest.builder()
-                .categoryName(ExpenseCategoryCreator.createValidExpenseCategory().getCategoryName())
+                .categoryName("Magic")
                 .build();
     }
 

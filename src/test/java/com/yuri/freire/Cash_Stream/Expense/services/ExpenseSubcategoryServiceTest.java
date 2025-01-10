@@ -1,5 +1,7 @@
 package com.yuri.freire.Cash_Stream.Expense.services;
 
+import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseCategoryRequest;
+import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseSubcategoryRequest;
 import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseSubcategoryResponse;
 import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseCategory;
 import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseSubcategory;
@@ -62,8 +64,11 @@ class ExpenseSubcategoryServiceTest {
         BDDMockito.when(expenseSubcategoryRepositoryMock.findAllSubcategoryExpenses(ArgumentMatchers.any(PageRequest.class)))
                 .thenReturn(pageSubcategory);
 
-        BDDMockito.when(expenseSubcategoryRepositoryMock.findBySubCategoryName(ArgumentMatchers.any()))
+        BDDMockito.when(expenseSubcategoryRepositoryMock.findBySubCategoryName(ArgumentMatchers.eq("Ifood")))
                 .thenReturn(Optional.ofNullable(expenseSubcategory));
+
+        BDDMockito.when(expenseSubcategoryRepositoryMock.findBySubCategoryName(ArgumentMatchers.eq("McDonalds")))
+                .thenReturn(Optional.empty());
 
         BDDMockito.when(expenseSubcategoryRepositoryMock.findBySubCategoryName("Some random subcategoryname"))
                 .thenReturn(Optional.empty());

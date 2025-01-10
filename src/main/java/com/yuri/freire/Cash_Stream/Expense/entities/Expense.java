@@ -3,13 +3,15 @@ package com.yuri.freire.Cash_Stream.Expense.entities;
 import com.yuri.freire.Cash_Stream.Common.BaseEntity;
 import com.yuri.freire.Cash_Stream.Recurrence.entities.Recurrence;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -39,6 +41,9 @@ public class Expense extends BaseEntity {
 
     @Column(name = "expense_amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal expenseAmount;
+
+    @Column(name = "expense_date", nullable = false)
+    private LocalDate expenseDate;
 
     @Column(name = "is_essential", nullable = false)
     private boolean isEssential;

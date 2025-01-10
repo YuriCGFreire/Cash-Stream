@@ -70,7 +70,8 @@ public class ExpenseCategoryIT {
     void createExpenseCategory_PersistExpenseCategory_WhenSuccessful() {
         userRepository.save(userTest);
         ExpenseCategoryRequest expenseCategoryRequest = ExpenseCategoryRequestCreator.createExpenseCategoryRequest();
-        ExpenseCategoryResponse expectedCategoryResponse = ExpenseCategoryCreator.createValidExpenseCategoryResponse();
+        ExpenseCategoryResponse expectedResponse = ExpenseCategoryCreator.createValidExpenseCategoryResponse();
+        expectedResponse.setCategoryName("Magic");
         ResponseEntity<ApiResponse<ExpenseCategoryResponse>> categoryResponse = testRestTemplate.exchange(
                 "/expense-category/create",
                 HttpMethod.POST,
@@ -82,7 +83,7 @@ public class ExpenseCategoryIT {
         Assertions.assertThat(categoryResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         Assertions.assertThat(categoryResponse.getBody()).isNotNull();
         Assertions.assertThat(categoryResponse.getBody().getData().getExpenseCategoryId()).isNotNull();
-        Assertions.assertThat(categoryResponse.getBody().getData()).isEqualTo(expectedCategoryResponse);
+        Assertions.assertThat(categoryResponse.getBody().getData()).isEqualTo(expectedResponse);
     }
 
     @Test

@@ -6,7 +6,7 @@ import com.yuri.freire.Cash_Stream.util.incoming.IncomingCategoryCreator;
 public class IncomingCategoryRequestCreator {
     public static IncomingCategoryRequest createIncomingCategoryRequest(){
         return IncomingCategoryRequest.builder()
-                .categoryName(IncomingCategoryCreator.createCategoryToBeSaved().getCategoryName())
+                .categoryName("Trabalho")
                 .build();
     }
 }

@@ -61,8 +61,11 @@ class IncomingCategoryServiceTest {
 
         BDDMockito.doNothing().when(categoryRepositoryMock).deleteById(ArgumentMatchers.anyInt());
 
-        BDDMockito.when(categoryRepositoryMock.findByCategoryName(ArgumentMatchers.anyString()))
+        BDDMockito.when(categoryRepositoryMock.findByCategoryName(ArgumentMatchers.eq(incomingCategory.getCategoryName())))
                 .thenReturn(Optional.of(IncomingCategoryCreator.createValidCategoryForRepository()));
+
+        BDDMockito.when(categoryRepositoryMock.findByCategoryName(ArgumentMatchers.eq("Trabalho")))
+                .thenReturn(Optional.empty());
 
         BDDMockito.when(categoryRepositoryMock.findByCategoryName("Some random categoryname"))
                 .thenReturn(Optional.empty());

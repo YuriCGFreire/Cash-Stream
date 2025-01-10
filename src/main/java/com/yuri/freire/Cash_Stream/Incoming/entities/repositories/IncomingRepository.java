@@ -25,6 +25,7 @@ public interface IncomingRepository extends JpaRepository<Incoming, Integer> {
             i.incomingDescription,
             i.grossIncoming,
             i.netIncoming,
+            i.incomingDate,
             i.recurrence.recurrenceFrequency,
             i.incomingCategory.categoryName,
             i.incomingSubcategory.subCategoryName            
@@ -43,6 +44,7 @@ public interface IncomingRepository extends JpaRepository<Incoming, Integer> {
             i.incomingDescription,
             i.grossIncoming,
             i.netIncoming,
+            i.incomingDate,
             i.recurrence.recurrenceFrequency,
             i.incomingCategory.categoryName,
             i.incomingSubcategory.subCategoryName            
@@ -62,6 +64,7 @@ public interface IncomingRepository extends JpaRepository<Incoming, Integer> {
             i.incomingDescription,
             i.grossIncoming,
             i.netIncoming,
+            i.incomingDate,
             i.recurrence.recurrenceFrequency,
             i.incomingCategory.categoryName,
             i.incomingSubcategory.subCategoryName            

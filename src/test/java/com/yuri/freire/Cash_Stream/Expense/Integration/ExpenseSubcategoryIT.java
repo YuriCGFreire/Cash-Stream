@@ -2,6 +2,7 @@ package com.yuri.freire.Cash_Stream.Expense.Integration;
 
 import com.yuri.freire.Cash_Stream.Authentication.entities.User;
 import com.yuri.freire.Cash_Stream.Authentication.entities.repositories.UserRepository;
+import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseCategoryResponse;
 import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseSubcategoryRequest;
 import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseSubcategoryResponse;
 import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseCategory;
@@ -74,7 +75,8 @@ public class ExpenseSubcategoryIT {
         expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
         userRepository.save(userTest);
         ExpenseSubcategoryRequest expenseSubcategoryRequest = ExpenseSubcategoryRequestCreator.createExpenseSubcategoryRequest();
-        ExpenseSubcategoryResponse expectedSubcategory = ExpenseSubcategoryCreator.createValidExpenseSubcategoryResponse();
+        ExpenseSubcategoryResponse expectedResponse = ExpenseSubcategoryCreator.createValidExpenseSubcategoryResponse();
+        expectedResponse.setSubCategoryName("McDonalds");
         ResponseEntity<ApiResponse<ExpenseSubcategoryResponse>> expenseSubcategoryResponse = testRestTemplate.exchange(
                 "/expense-subcategory/create",
                 HttpMethod.POST,
@@ -88,7 +90,7 @@ public class ExpenseSubcategoryIT {
         Assertions.assertThat(expenseSubcategoryResponse.getBody().getMessage()).isEqualTo("Subcategory created successfully");
         Assertions.assertThat(expenseSubcategoryResponse.getBody().isSuccess()).isTrue();
         Assertions.assertThat(expenseSubcategoryResponse.getBody().getErrors()).isNull();
-        Assertions.assertThat(expenseSubcategoryResponse.getBody().getData()).isNotNull().isEqualTo(expectedSubcategory);
+        Assertions.assertThat(expenseSubcategoryResponse.getBody().getData()).isNotNull().isEqualTo(expectedResponse);
     }
 
     @Test

@@ -56,6 +56,10 @@ class IncomingSubcategoryServiceTest {
         ).thenReturn(Optional.of(subcategory));
 
         BDDMockito.when(
+                subcategoryRepositoryMock.findBySubCategoryName("Bonus do trabalho")
+        ).thenReturn(Optional.empty());
+
+        BDDMockito.when(
                 subcategoryRepositoryMock.findBySubCategoryName("Some random subcategoryname")
         ).thenReturn(Optional.empty());
 
@@ -64,6 +68,9 @@ class IncomingSubcategoryServiceTest {
 
         BDDMockito.when(subcategoryRepositoryMock.findAllByCategory(IncomingCategoryCreator.createValidCategory().getCategoryName(), PageRequest.of(0, 2)))
                 .thenReturn(subcategoryPage);
+
+        BDDMockito.when(categoryServiceMock.findByCategoryName(ArgumentMatchers.anyString()))
+                .thenReturn(IncomingCategoryCreator.createValidCategoryForRepository());
 
         BDDMockito.when(categoryServiceMock.findByCategoryName(ArgumentMatchers.anyString()))
                 .thenReturn(IncomingCategoryCreator.createValidCategoryForRepository());

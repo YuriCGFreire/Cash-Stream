@@ -1,7 +1,7 @@
 package com.yuri.freire.Cash_Stream.Expense.controllers.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseMethod;
 import com.yuri.freire.Cash_Stream.Expense.entities.entity_enum.ExpenseMethodType;
 import com.yuri.freire.Cash_Stream.Recurrence.entities.entitie_enum.RecurrenceType;
 import jakarta.validation.constraints.*;
@@ -11,6 +11,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Calendar;
 
 @Data
 @Builder
@@ -26,6 +28,10 @@ public class ExpenseRequest {
     @DecimalMin(value = "0.0", inclusive = false, message = "Expense amount must be greater than 0")
     @Digits(integer = 10, fraction = 2, message = "Expense amount must be a valid monetary value")
     private BigDecimal expenseAmount;
+
+    @NotNull(message = "Expense date cannot be null")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate expenseDate;
 
     @NotNull(message = "Expense essentiality cannot be null")
     @JsonProperty("isEssential")

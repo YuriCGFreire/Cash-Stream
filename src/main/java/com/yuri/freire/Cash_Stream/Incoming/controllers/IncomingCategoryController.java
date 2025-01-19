@@ -23,21 +23,21 @@ public class IncomingCategoryController {
 
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<IncomingCategoryResponse>> createIncomingCategory(@Valid @RequestBody IncomingCategoryRequest incomingCategoryRequest, HttpServletRequest request){
-        IncomingCategoryResponse incomingCategory = incomingCategoryService.createIncomingCategory(incomingCategoryRequest);
+        IncomingCategoryResponse incomingCategory = incomingCategoryService.createIncomingCategory(incomingCategoryRequest, request);
         ApiResponse<IncomingCategoryResponse> response = ResponseUtil.success(incomingCategory, "Category created successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/find-all")
     public ResponseEntity<ApiResponse<Page<IncomingCategoryResponse>>> findAllIncomingCategory(Pageable pageable, HttpServletRequest request){
-        Page<IncomingCategoryResponse> incomingCategories = incomingCategoryService.findAll(pageable);
+        Page<IncomingCategoryResponse> incomingCategories = incomingCategoryService.findAll(pageable, request);
         ApiResponse<Page<IncomingCategoryResponse>> response = ResponseUtil.success(incomingCategories, "List of categories fetched successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{categoryId}")
     public ResponseEntity<ApiResponse<String>> deleteByCategoryId(@PathVariable Integer categoryId, HttpServletRequest request){
-        String deletedCategory = incomingCategoryService.deleteByCategoryId(categoryId);
+        String deletedCategory = incomingCategoryService.deleteByCategoryId(categoryId, request);
         ApiResponse<String> response = ResponseUtil.success(deletedCategory, "Category deleted successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

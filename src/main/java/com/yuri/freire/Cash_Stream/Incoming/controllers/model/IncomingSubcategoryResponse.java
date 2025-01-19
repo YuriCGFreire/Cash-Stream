@@ -17,4 +17,5 @@ public class IncomingSubcategoryResponse {
     private Integer incomingSubcategoryId;
     private String subCategoryName;
     private String categoryName;
+    private String username;
 }

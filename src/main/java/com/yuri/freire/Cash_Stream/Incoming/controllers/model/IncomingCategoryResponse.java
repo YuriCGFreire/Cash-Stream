@@ -14,4 +14,5 @@ import java.util.List;
 public class IncomingCategoryResponse {
     private Integer incomingCategoryId;
     private String categoryName;
+    private String username;
 }

@@ -22,28 +22,28 @@ public class IncomingSubcatergoyController {
 
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<IncomingSubcategoryResponse>> createIncomingSubcategory(@Valid @RequestBody IncomingSubcategoryRequest incomingSubcategoryRequest, HttpServletRequest request){
-        IncomingSubcategoryResponse createdSubcategory = incomingSubcategoryService.createIncomingSubcategory(incomingSubcategoryRequest);
+        IncomingSubcategoryResponse createdSubcategory = incomingSubcategoryService.createIncomingSubcategory(incomingSubcategoryRequest, request);
         ApiResponse<IncomingSubcategoryResponse> response = ResponseUtil.success(createdSubcategory, "Subcategory created successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/find-all")
     public ResponseEntity<ApiResponse<Page<IncomingSubcategoryResponse>>>findAllIncomingSubcategory(Pageable pageable, HttpServletRequest request){
-        Page<IncomingSubcategoryResponse> incomingSubcategories = incomingSubcategoryService.findAllSubcategory(pageable);
+        Page<IncomingSubcategoryResponse> incomingSubcategories = incomingSubcategoryService.findAllSubcategory(pageable, request);
         ApiResponse<Page<IncomingSubcategoryResponse>> response = ResponseUtil.success(incomingSubcategories, "List of subcategories fetched successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/all-by-category")
     public ResponseEntity<ApiResponse<Page<IncomingSubcategoryResponse>>> findAllByCategoryName(@RequestParam String categoryName, Pageable pageable, HttpServletRequest request){
-        Page<IncomingSubcategoryResponse> incomingSubcategories = incomingSubcategoryService.findAllByCategoryName(categoryName, pageable);
+        Page<IncomingSubcategoryResponse> incomingSubcategories = incomingSubcategoryService.findAllByCategoryName(categoryName, pageable, request);
         ApiResponse<Page<IncomingSubcategoryResponse>> response = ResponseUtil.success(incomingSubcategories, "list of subcategories by category name fetched successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{incomingSubcategoryId}")
     public ResponseEntity<ApiResponse<String>> deleteByIncomingSubcategoryId(@PathVariable Integer incomingSubcategoryId, HttpServletRequest request){
-        String deletedSubcategory = incomingSubcategoryService.deleteBySubcategoryId(incomingSubcategoryId);
+        String deletedSubcategory = incomingSubcategoryService.deleteBySubcategoryId(incomingSubcategoryId, request);
         ApiResponse<String> response = ResponseUtil.success(deletedSubcategory,"Subcategory deleted successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

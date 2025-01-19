@@ -25,7 +25,7 @@ class ExpenseCategoryRepositoryTest {
     @DisplayName("findByCategoryName returns ExpenseCategory when successful")
     void findByCategoryName_ReturnsExpenseCategory_WhenSuccessful(){
         ExpenseCategory savedExpenseCategory = expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
-        Optional<ExpenseCategory> fetchedExpenseCategory = expenseCategoryRepository.findByCategoryName(savedExpenseCategory.getCategoryName());
+        Optional<ExpenseCategory> fetchedExpenseCategory = expenseCategoryRepository.findByCategoryName("username", savedExpenseCategory.getCategoryName());
         Assertions.assertThat(fetchedExpenseCategory)
                 .isNotEmpty()
                 .contains(savedExpenseCategory);
@@ -36,7 +36,7 @@ class ExpenseCategoryRepositoryTest {
     void findAllCategoryExpenses_ReturnsListOfExpenseCategoryInsidePageObject_WhenSuccessful(){
         ExpenseCategory savedExpenseCategory = expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
         Pageable pageable = PageRequest.of(0, 1);
-        Page<ExpenseCategoryResponse> pageExpenseCategoryResponse = this.expenseCategoryRepository.findAllCategoryExpenses(pageable);
+        Page<ExpenseCategoryResponse> pageExpenseCategoryResponse = this.expenseCategoryRepository.findAllCategoryExpenses("username", pageable);
 
         Assertions.assertThat(pageExpenseCategoryResponse).isNotNull();
         Assertions.assertThat(pageExpenseCategoryResponse.getContent())

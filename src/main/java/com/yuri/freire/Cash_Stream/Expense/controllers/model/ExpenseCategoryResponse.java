@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class ExpenseCategoryResponse {
     private Integer expenseCategoryId;
     private String categoryName;
+    private String username;
 }

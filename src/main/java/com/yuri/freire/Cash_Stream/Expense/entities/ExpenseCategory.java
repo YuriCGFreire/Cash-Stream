@@ -1,5 +1,6 @@
 package com.yuri.freire.Cash_Stream.Expense.entities;
 
+import com.yuri.freire.Cash_Stream.Authentication.entities.User;
 import com.yuri.freire.Cash_Stream.Common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,6 +33,10 @@ public class ExpenseCategory extends BaseEntity {
 
     @Column(name = "category_name", nullable = false, length = 50)
     private String categoryName;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @OneToMany(mappedBy = "expenseCategory", orphanRemoval = true)
     private List<ExpenseSubcategory> expenseSubcategories;

@@ -1,7 +1,5 @@
 package com.yuri.freire.Cash_Stream.Expense.services;
 
-import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseCategoryRequest;
-import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseSubcategoryRequest;
 import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseSubcategoryResponse;
 import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseCategory;
 import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseSubcategory;
@@ -10,8 +8,8 @@ import com.yuri.freire.Cash_Stream.Expense.services.factory.ExpenseFactory;
 import com.yuri.freire.Cash_Stream.util.expense.ExpenseCategoryCreator;
 import com.yuri.freire.Cash_Stream.util.expense.ExpenseSubcategoryCreator;
 import com.yuri.freire.Cash_Stream.util.expense.ExpenseSubcategoryRequestCreator;
-import com.yuri.freire.Cash_Stream.util.incoming.IncomingSubcategoryCreator;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,6 +40,9 @@ class ExpenseSubcategoryServiceTest {
     @Mock
     private ExpenseFactory expenseFactoryMock;
 
+    @Mock
+    private HttpServletRequest requestMock;
+
     @BeforeEach
     void setUp(){
         ExpenseCategory expenseCategory = ExpenseCategoryCreator.createValidExpenseCategory();
@@ -52,40 +53,40 @@ class ExpenseSubcategoryServiceTest {
         BDDMockito.when(expenseSubcategoryRepositoryMock.save(ArgumentMatchers.any(ExpenseSubcategory.class)))
                 .thenReturn(expenseSubcategory);
 
-        BDDMockito.when(expenseCategoryServiceMock.findByCategoryName(ArgumentMatchers.any()))
+        BDDMockito.when(expenseCategoryServiceMock.findByCategoryName(ArgumentMatchers.any(), ArgumentMatchers.any()))
                         .thenReturn(ExpenseCategoryCreator.createValidExpenseCategory());
 
-        BDDMockito.when(expenseFactoryMock.createExpenseSubcategory(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        BDDMockito.when(expenseFactoryMock.createExpenseSubcategory(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(expenseSubcategory);
 
         BDDMockito.when(expenseFactoryMock.createExpenseSubcategoryResponse(ArgumentMatchers.any()))
                 .thenReturn(expenseSubcategoryResponse);
 
-        BDDMockito.when(expenseSubcategoryRepositoryMock.findAllSubcategoryExpenses(ArgumentMatchers.any(PageRequest.class)))
+        BDDMockito.when(expenseSubcategoryRepositoryMock.findAllSubcategoryExpenses(ArgumentMatchers.any(), ArgumentMatchers.any(PageRequest.class)))
                 .thenReturn(pageSubcategory);
 
-        BDDMockito.when(expenseSubcategoryRepositoryMock.findBySubCategoryName(ArgumentMatchers.eq("Ifood")))
+        BDDMockito.when(expenseSubcategoryRepositoryMock.findBySubCategoryName(ArgumentMatchers.any(), ArgumentMatchers.eq("Ifood")))
                 .thenReturn(Optional.ofNullable(expenseSubcategory));
 
-        BDDMockito.when(expenseSubcategoryRepositoryMock.findBySubCategoryName(ArgumentMatchers.eq("McDonalds")))
+        BDDMockito.when(expenseSubcategoryRepositoryMock.findBySubCategoryName(ArgumentMatchers.any(), ArgumentMatchers.eq("McDonalds")))
                 .thenReturn(Optional.empty());
 
-        BDDMockito.when(expenseSubcategoryRepositoryMock.findBySubCategoryName("Some random subcategoryname"))
+        BDDMockito.when(expenseSubcategoryRepositoryMock.findBySubCategoryName(ArgumentMatchers.any(), ArgumentMatchers.eq("Some random subcategoryname")))
                 .thenReturn(Optional.empty());
 
-        BDDMockito.when(expenseCategoryServiceMock.findByCategoryName(ArgumentMatchers.anyString()))
+        BDDMockito.when(expenseCategoryServiceMock.findByCategoryName(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
                 .thenReturn(expenseCategory);
 
-        BDDMockito.when(expenseCategoryServiceMock.findByCategoryName("Some random categoryname"))
+        BDDMockito.when(expenseCategoryServiceMock.findByCategoryName(ArgumentMatchers.eq("Some random categoryname"), ArgumentMatchers.any()))
                 .thenThrow(new EntityNotFoundException("Category not found: Some random categoryname"));
 
-        BDDMockito.when(expenseSubcategoryRepositoryMock.findAllSubcategoryExpensesByCategory(ArgumentMatchers.any(), ArgumentMatchers.any(PageRequest.class)))
+        BDDMockito.when(expenseSubcategoryRepositoryMock.findAllSubcategoryExpensesByCategory(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(PageRequest.class)))
                 .thenReturn(pageSubcategory);
 
-        BDDMockito.when(expenseSubcategoryRepositoryMock.findBySubcategoryId(ArgumentMatchers.eq(1)))
+        BDDMockito.when(expenseSubcategoryRepositoryMock.findBySubcategoryId(ArgumentMatchers.any(), ArgumentMatchers.eq(1)))
                 .thenReturn(Optional.of(expenseSubcategory));
 
-        BDDMockito.when(expenseSubcategoryRepositoryMock.findBySubcategoryId(ArgumentMatchers.eq(999)))
+        BDDMockito.when(expenseSubcategoryRepositoryMock.findBySubcategoryId(ArgumentMatchers.any(), ArgumentMatchers.eq(999)))
                 .thenReturn(Optional.empty());
     }
 
@@ -93,7 +94,7 @@ class ExpenseSubcategoryServiceTest {
     @DisplayName("createExpenseSubcategory persist data and returns ExpenseSubcategoryResponse when successfull")
     void createExpenseSubcategory_PersistDataAndReturnExpenseSubcategoryResponse_WhenSuccessful(){
         ExpenseSubcategoryResponse validSubcategoryResponse = ExpenseSubcategoryCreator.createValidExpenseSubcategoryResponse();
-        ExpenseSubcategoryResponse savedExpenseSubcategoryResponse = expenseSubcategoryService.createExpenseSubcategory(ExpenseSubcategoryRequestCreator.createExpenseSubcategoryRequest());
+        ExpenseSubcategoryResponse savedExpenseSubcategoryResponse = expenseSubcategoryService.createExpenseSubcategory(ExpenseSubcategoryRequestCreator.createExpenseSubcategoryRequest(), requestMock);
 
         Assertions.assertThat(savedExpenseSubcategoryResponse)
                 .isNotNull()
@@ -109,7 +110,7 @@ class ExpenseSubcategoryServiceTest {
     @DisplayName("findBySubcategoryName returns ExpenseSubcategory by name when successful")
     void findBySubcategoryName_ReturnsExpenseSubcategoryByName_WhenSuccessful(){
         ExpenseSubcategory expectedExpenseSubcategory = ExpenseSubcategoryCreator.createValidExpenseSubcategory();
-        ExpenseSubcategory fetchedExpenseSubcategory = expenseSubcategoryService.findBySubcategoryName(expectedExpenseSubcategory.getSubCategoryName());
+        ExpenseSubcategory fetchedExpenseSubcategory = expenseSubcategoryService.findBySubcategoryName(expectedExpenseSubcategory.getSubCategoryName(), requestMock);
 
         Assertions.assertThat(fetchedExpenseSubcategory)
                 .isNotNull()
@@ -130,7 +131,7 @@ class ExpenseSubcategoryServiceTest {
     @DisplayName("findBySubcategoryName throw EntityNotFoundException when subcategory does not exist")
     void findBySubcategoryName_ThrowEntityNotFoundException_WhenSubcategoryDoesNotExist(){
         String subcategoryName = "Some random subcategoryname";
-        Assertions.assertThatThrownBy(() -> expenseSubcategoryService.findBySubcategoryName(subcategoryName))
+        Assertions.assertThatThrownBy(() -> expenseSubcategoryService.findBySubcategoryName(subcategoryName, requestMock))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("Subcategory not found: " + subcategoryName);
     }
@@ -139,7 +140,7 @@ class ExpenseSubcategoryServiceTest {
     @DisplayName("findAllSubcategoryExpenses returns list of Expense Subcategory inside of Page Object When successful")
     void findAllSubcategoryExpenses_ReturnsListOfExpensesSubcategoryInsideOfPageObject_WhenSuccessful(){
         ExpenseSubcategoryResponse expectedSubcategoryResponse = ExpenseSubcategoryCreator.createValidExpenseSubcategoryResponse();
-        Page<ExpenseSubcategoryResponse> pageSubcategory = expenseSubcategoryService.findAllSubcategoryExpenses(PageRequest.of(0, 1));
+        Page<ExpenseSubcategoryResponse> pageSubcategory = expenseSubcategoryService.findAllSubcategoryExpenses(PageRequest.of(0, 1), requestMock);
 
         Assertions.assertThat(pageSubcategory).isNotNull();
         Assertions.assertThat(pageSubcategory.toList())
@@ -155,7 +156,7 @@ class ExpenseSubcategoryServiceTest {
     @DisplayName("findAllSubcategoryExpensesByCategory returns list of Expense Subcategory by Category name inside of Page Object When successful")
     void findAllSubcategoryExpensesByCategory_ReturnsListOfExpenseSubcategoryByCategoryName_WhenSuccessful(){
         ExpenseSubcategoryResponse expenseSubcategoryResponse = ExpenseSubcategoryCreator.createValidExpenseSubcategoryResponse();
-        Page<ExpenseSubcategoryResponse> pageSubcategory = expenseSubcategoryService.findAllSubcategoryExpensesByCategory(expenseSubcategoryResponse.getCategoryName(), PageRequest.of(0, 1));
+        Page<ExpenseSubcategoryResponse> pageSubcategory = expenseSubcategoryService.findAllSubcategoryExpensesByCategory(expenseSubcategoryResponse.getCategoryName(), PageRequest.of(0, 1), requestMock);
 
         Assertions.assertThat(pageSubcategory).isNotNull();
         Assertions.assertThat(pageSubcategory.toList())
@@ -171,7 +172,7 @@ class ExpenseSubcategoryServiceTest {
     @DisplayName("findAllSubcategoryExpensesByCategory throw EntityNotFounException when Category does not exist")
     void findAllSubcategoryExpensesByCategory_ThrowEntityNotFounException_WhenCategoryDoesNotExist(){
         String categoryName = "Some random categoryname";
-        Assertions.assertThatThrownBy(() -> expenseSubcategoryService.findAllSubcategoryExpensesByCategory(categoryName, PageRequest.of(0, 1)))
+        Assertions.assertThatThrownBy(() -> expenseSubcategoryService.findAllSubcategoryExpensesByCategory(categoryName, PageRequest.of(0, 1), requestMock))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("Category not found: " + categoryName);
     }
@@ -180,7 +181,7 @@ class ExpenseSubcategoryServiceTest {
     @DisplayName("deleteBySubcategoryId delete expense when successful")
     void deleteBySubcategoryId_DeleteExpense_WhenSuccessful(){
         String expcetedSubcategoryName = ExpenseSubcategoryCreator.createValidExpenseSubcategory().getSubCategoryName();
-        String subcategoryName = expenseSubcategoryService.deleteBySubcategoryId(ExpenseSubcategoryCreator.createValidExpenseSubcategory().getExpenseSubcategoryId());
+        String subcategoryName = expenseSubcategoryService.deleteBySubcategoryId(ExpenseSubcategoryCreator.createValidExpenseSubcategory().getExpenseSubcategoryId(), requestMock);
         Assertions.assertThat(subcategoryName).isNotNull().isEqualTo(expcetedSubcategoryName);
     }
 
@@ -188,7 +189,7 @@ class ExpenseSubcategoryServiceTest {
     @DisplayName("deleteBySubcategoryId throw EntityNotFoundException when subcategory does not exist")
     void deleteBySubcategoryId_ThrowEntityNotFoundException_WhenSubcategoryDoesNotExists(){
         Integer anyRandomSubcategoryId = 999;
-        Assertions.assertThatThrownBy(() -> expenseSubcategoryService.deleteBySubcategoryId(anyRandomSubcategoryId))
+        Assertions.assertThatThrownBy(() -> expenseSubcategoryService.deleteBySubcategoryId(anyRandomSubcategoryId, requestMock))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("Subcategory not found: " + anyRandomSubcategoryId);
     }

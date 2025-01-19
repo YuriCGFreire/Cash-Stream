@@ -17,38 +17,46 @@ public interface ExpenseSubcategoryRepository extends JpaRepository<ExpenseSubca
             FROM ExpenseSubcategory esc
             WHERE esc.expenseSubcategoryId = :expenseSubcategoryId
             AND esc.deletedAt IS NULL
+            AND esc.user.username = :username
             """)
-    Optional<ExpenseSubcategory> findBySubcategoryId(@Param("expenseSubcategoryId") Integer expenseSubcategoryId);
+    Optional<ExpenseSubcategory> findBySubcategoryId(@Param("username") String username, @Param("expenseSubcategoryId") Integer expenseSubcategoryId);
     @Query("""
             SELECT esc
             FROM ExpenseSubcategory esc
             WHERE esc.subCategoryName = :subCategoryName
             AND esc.deletedAt IS NULL
+            AND esc.user.username = :username
             """)
-    Optional<ExpenseSubcategory> findBySubCategoryName(@Param("subCategoryName") String subCategoryName);
+    Optional<ExpenseSubcategory> findBySubCategoryName(@Param("username") String username, @Param("subCategoryName") String subCategoryName);
 
     @Query("""
             SELECT new com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseSubcategoryResponse(
             esc.expenseSubcategoryId,
             esc.subCategoryName,
-            esc.expenseCategory.categoryName
+            esc.expenseCategory.categoryName,
+            esc.user.username
             )
             FROM ExpenseSubcategory esc
             JOIN esc.expenseCategory 
+            JOIN esc.user
             WHERE esc.deletedAt IS NULL
+            AND esc.user.username = :username
             """)
-    Page<ExpenseSubcategoryResponse> findAllSubcategoryExpenses(Pageable pageable);
+    Page<ExpenseSubcategoryResponse> findAllSubcategoryExpenses(@Param("username") String username, Pageable pageable);
 
     @Query("""
             select new com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseSubcategoryResponse(
             esc.expenseSubcategoryId,
             esc.subCategoryName,
-            esc.expenseCategory.categoryName
+            esc.expenseCategory.categoryName,
+            esc.user.username
             ) 
             FROM ExpenseSubcategory esc
             JOIN esc.expenseCategory exc
+            JOIN esc.user
             WHERE exc.categoryName = :categoryName
             AND esc.deletedAt IS NULL
+            AND esc.user.username = :username
             """)
-    Page<ExpenseSubcategoryResponse> findAllSubcategoryExpensesByCategory(@Param("categoryName") String categoryName, Pageable pageable);
+    Page<ExpenseSubcategoryResponse> findAllSubcategoryExpensesByCategory(@Param("username") String username, @Param("categoryName") String categoryName, Pageable pageable);
 }

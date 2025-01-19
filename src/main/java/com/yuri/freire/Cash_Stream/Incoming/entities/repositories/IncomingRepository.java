@@ -16,8 +16,9 @@ public interface IncomingRepository extends JpaRepository<Incoming, Integer> {
             FROM Incoming i
             WHERE i.incomingId = :incomingId
             AND i.deletedAt IS NULL
+            AND i.user.username = :username
             """)
-    Optional<Incoming> findIncomingById(@Param("incomingId") Integer incomingId);
+    Optional<Incoming> findIncomingById(@Param("username") String username, @Param("incomingId") Integer incomingId);
 
     @Query("""
             SELECT new com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingResponse(
@@ -28,15 +29,18 @@ public interface IncomingRepository extends JpaRepository<Incoming, Integer> {
             i.incomingDate,
             i.recurrence.recurrenceFrequency,
             i.incomingCategory.categoryName,
-            i.incomingSubcategory.subCategoryName            
+            i.incomingSubcategory.subCategoryName,
+            i.user.username        
             )
             FROM Incoming i
             JOIN i.recurrence
             JOIN i.incomingCategory
             JOIN i.incomingSubcategory
+            JOIN i.user
             WHERE i.deletedAt IS NULL
+            AND i.user.username = :username
             """)
-    Page<IncomingResponse> findAllIncomings(Pageable pageable);
+    Page<IncomingResponse> findAllIncomings(@Param("username") String username ,Pageable pageable);
 
     @Query("""
             SELECT new com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingResponse(
@@ -47,16 +51,19 @@ public interface IncomingRepository extends JpaRepository<Incoming, Integer> {
             i.incomingDate,
             i.recurrence.recurrenceFrequency,
             i.incomingCategory.categoryName,
-            i.incomingSubcategory.subCategoryName            
+            i.incomingSubcategory.subCategoryName,
+            i.user.username            
             )
             FROM Incoming i
             JOIN i.recurrence
             JOIN i.incomingCategory ic
             JOIN i.incomingSubcategory
+            JOIN i.user
             WHERE ic.categoryName = :categoryName
             AND i.deletedAt IS NULL
+            AND i.user.username = :username
             """)
-    Page<IncomingResponse> findAllByCategory(@Param("categoryName") String categoryName, Pageable pageable);
+    Page<IncomingResponse> findAllByCategory(@Param("username") String username, @Param("categoryName") String categoryName, Pageable pageable);
 
     @Query("""
             SELECT new com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingResponse(
@@ -67,14 +74,17 @@ public interface IncomingRepository extends JpaRepository<Incoming, Integer> {
             i.incomingDate,
             i.recurrence.recurrenceFrequency,
             i.incomingCategory.categoryName,
-            i.incomingSubcategory.subCategoryName            
+            i.incomingSubcategory.subCategoryName,
+            i.user.username           
             )
             FROM Incoming i
             JOIN i.recurrence
             JOIN i.incomingCategory
             JOIN i.incomingSubcategory isc
+            JOIN i.user
             WHERE isc.subCategoryName = :subCategoryName
             AND i.deletedAt IS NULL
+            AND i.user.username = :username
             """)
-    Page<IncomingResponse> findAllBySubcategory(@Param("subCategoryName") String subcategoryName, Pageable pageable);
+    Page<IncomingResponse> findAllBySubcategory(@Param("username") String username, @Param("subCategoryName") String subcategoryName, Pageable pageable);
 }

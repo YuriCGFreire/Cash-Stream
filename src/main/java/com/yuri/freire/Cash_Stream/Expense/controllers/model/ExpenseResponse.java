@@ -28,4 +28,5 @@ public class ExpenseResponse {
     private RecurrenceType recurrence;
     private String categoryName;
     private String subCategoryName;
+    private String username;
 }

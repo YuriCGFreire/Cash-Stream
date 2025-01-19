@@ -16,39 +16,46 @@ public interface IncomingSubcategoryRepository extends JpaRepository<IncomingSub
             FROM IncomingSubcategory isc
             WHERE isc.incomingSubcategoryId = :incomingSubcategoryId
             AND isc.deletedAt IS NULL
+            AND isc.user.username = :username
             """)
-    Optional<IncomingSubcategory> findBySubcategoryId(@Param("incomingSubcategoryId") Integer incomingSubcategoryId);
+    Optional<IncomingSubcategory> findBySubcategoryId(@Param("username") String username, @Param("incomingSubcategoryId") Integer incomingSubcategoryId);
 
     @Query("""
             SELECT isc
             FROM IncomingSubcategory isc
             WHERE isc.subCategoryName = :subCategoryName
             AND isc.deletedAt IS NULL
+            AND isc.user.username = :username
             """)
-    Optional<IncomingSubcategory> findBySubCategoryName(@Param("subCategoryName") String subCategoryName);
+    Optional<IncomingSubcategory> findBySubCategoryName(@Param("username") String username, @Param("subCategoryName") String subCategoryName);
 
     @Query("""
             SELECT new com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingSubcategoryResponse(
             isc.incomingSubcategoryId,
             isc.subCategoryName,
-            isc.incomingCategory.categoryName
+            isc.incomingCategory.categoryName,
+            isc.user.username
             )
             FROM IncomingSubcategory isc
             JOIN isc.incomingCategory
+            JOIN isc.user
             WHERE isc.deletedAt IS NULL
+            AND isc.user.username = :username
             """)
-    Page<IncomingSubcategoryResponse> findAllSubcategory(Pageable pageable);
+    Page<IncomingSubcategoryResponse> findAllSubcategory(@Param("username") String username, Pageable pageable);
 
     @Query("""
             SELECT new com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingSubcategoryResponse(
             isc.incomingSubcategoryId,
             isc.subCategoryName,
-            isc.incomingCategory.categoryName
+            isc.incomingCategory.categoryName,
+            isc.user.username
             )
             FROM IncomingSubcategory isc
             JOIN isc.incomingCategory ic
             WHERE ic.categoryName = :categoryName    
-            AND isc.deletedAt IS NULL        
+            AND isc.deletedAt IS NULL    
+            AND isc.user.username = :username
             """)
-    Page<IncomingSubcategoryResponse> findAllByCategory(@Param("categoryName") String categoryName, Pageable pageable);
+    Page<IncomingSubcategoryResponse> findAllByCategory(@Param("username") String username, @Param("categoryName") String categoryName, Pageable pageable);
 }

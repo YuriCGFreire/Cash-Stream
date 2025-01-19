@@ -23,28 +23,28 @@ public class ExpenseSubcategoryController {
 
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<ExpenseSubcategoryResponse>> createExpenseSubcategory(@Valid @RequestBody ExpenseSubcategoryRequest expenseSubcategoryRequest, HttpServletRequest request){
-        ExpenseSubcategoryResponse expenseSubcategory = expenseSubcategoryService.createExpenseSubcategory(expenseSubcategoryRequest);
+        ExpenseSubcategoryResponse expenseSubcategory = expenseSubcategoryService.createExpenseSubcategory(expenseSubcategoryRequest, request);
         ApiResponse<ExpenseSubcategoryResponse> response = ResponseUtil.success(expenseSubcategory,"Subcategory created successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/find-all")
     public ResponseEntity<ApiResponse<Page<ExpenseSubcategoryResponse>>> findAllSubcategoryExpenses(Pageable pageable, HttpServletRequest request){
-        Page<ExpenseSubcategoryResponse> expenseSubcategories = expenseSubcategoryService.findAllSubcategoryExpenses(pageable);
+        Page<ExpenseSubcategoryResponse> expenseSubcategories = expenseSubcategoryService.findAllSubcategoryExpenses(pageable, request);
         ApiResponse<Page<ExpenseSubcategoryResponse>> response = ResponseUtil.success(expenseSubcategories, "Subcategories fetched successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/all-by-category")
     public ResponseEntity<ApiResponse<Page<ExpenseSubcategoryResponse>>> findAllSubcategoryExpensesByCategory(@RequestParam String categoryName, Pageable pageable, HttpServletRequest request){
-        Page<ExpenseSubcategoryResponse> expenseSubcategories = expenseSubcategoryService.findAllSubcategoryExpensesByCategory(categoryName, pageable);
+        Page<ExpenseSubcategoryResponse> expenseSubcategories = expenseSubcategoryService.findAllSubcategoryExpensesByCategory(categoryName, pageable, request);
         ApiResponse<Page<ExpenseSubcategoryResponse>> response = ResponseUtil.success(expenseSubcategories, "Subcategories fetched by category successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{subcategoryId}")
     public ResponseEntity<ApiResponse<String>> deleteSubcategoryById(@PathVariable Integer subcategoryId, HttpServletRequest request){
-        String deletedSubcategory = expenseSubcategoryService.deleteBySubcategoryId(subcategoryId);
+        String deletedSubcategory = expenseSubcategoryService.deleteBySubcategoryId(subcategoryId, request);
         ApiResponse<String> response = ResponseUtil.success(deletedSubcategory, "Subcategory deleted successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

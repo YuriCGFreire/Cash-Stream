@@ -17,24 +17,29 @@ public interface IncomingCategoryRepository extends JpaRepository<IncomingCatego
             FROM IncomingCategory ic
             WHERE ic.incomingCategoryId = :incomingCategoryId
             AND ic.deletedAt IS NULL
+            AND ic.user.username = :username
             """)
-    Optional<IncomingCategory> findByCategoryId(@Param("incomingCategoryId") Integer incomingCategoryId);
+    Optional<IncomingCategory> findByCategoryId(@Param("username") String username, @Param("incomingCategoryId") Integer incomingCategoryId);
 
     @Query("""
             SELECT ic 
             FROM IncomingCategory ic
             WHERE ic.categoryName = :categoryName
             AND ic.deletedAt IS NULL
+            AND ic.user.username = :username
             """)
-    Optional<IncomingCategory> findByCategoryName(@Param("categoryName") String incomingCategory);
+    Optional<IncomingCategory> findByCategoryName(@Param("username") String username, @Param("categoryName") String incomingCategory);
 
     @Query("""
             SELECT new com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingCategoryResponse(
             ic.incomingCategoryId,
-            ic.categoryName
+            ic.categoryName,
+            ic.user.username
             )
             FROM IncomingCategory ic
+            JOIN ic.user
             WHERE ic.deletedAt IS NULL
+            AND ic.user.username = :username
             """)
-    Page<IncomingCategoryResponse> findAllIncomingCategory(Pageable pageable);
+    Page<IncomingCategoryResponse> findAllIncomingCategory(@Param("username") String username, Pageable pageable);
 }

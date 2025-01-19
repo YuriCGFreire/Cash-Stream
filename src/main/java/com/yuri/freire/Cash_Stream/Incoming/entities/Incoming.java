@@ -1,5 +1,7 @@
 package com.yuri.freire.Cash_Stream.Incoming.entities;
 
+import com.yuri.freire.Cash_Stream.Authentication.entities.User;
+import com.yuri.freire.Cash_Stream.Cashflow.entities.Cashflow;
 import com.yuri.freire.Cash_Stream.Common.BaseEntity;
 import com.yuri.freire.Cash_Stream.Recurrence.entities.Recurrence;
 import jakarta.persistence.*;
@@ -57,4 +59,12 @@ public class Incoming extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recurrence_id")
     private Recurrence recurrence;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cash_flow_id")
+    private Cashflow cashFlow;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

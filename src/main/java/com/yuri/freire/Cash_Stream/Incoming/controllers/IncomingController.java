@@ -23,35 +23,35 @@ public class IncomingController {
 
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<IncomingResponse>> createIncoming(@Valid @RequestBody IncomingRequest incomingRequest, HttpServletRequest request){
-        IncomingResponse incomingCreated = incomingService.createIncoming(incomingRequest);
+        IncomingResponse incomingCreated = incomingService.createIncoming(incomingRequest, request);
         ApiResponse<IncomingResponse> response = ResponseUtil.success(incomingCreated, "Incoming created successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/all-incomings")
+    @GetMapping("/find-all")
     public ResponseEntity<ApiResponse<Page<IncomingResponse>>> findAllIncomings(HttpServletRequest request, Pageable pageable){
-        Page<IncomingResponse> fetchedIncomings = incomingService.findAllIncomings(pageable);
+        Page<IncomingResponse> fetchedIncomings = incomingService.findAllIncomings(pageable, request);
         ApiResponse<Page<IncomingResponse>> response = ResponseUtil.success(fetchedIncomings, "List of incomings fetched successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/all-by-category")
     public ResponseEntity<ApiResponse<Page<IncomingResponse>>> findAllIncomingsByCategory(@RequestParam String categoryName, HttpServletRequest request, Pageable pageable){
-        Page<IncomingResponse> fetchedIncomings = incomingService.findAllIncomingsByCategory(categoryName, pageable);
+        Page<IncomingResponse> fetchedIncomings = incomingService.findAllIncomingsByCategory(categoryName, pageable, request);
         ApiResponse<Page<IncomingResponse>> response = ResponseUtil.success(fetchedIncomings, "List of incomings by category fetched successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/all-by-subcategory")
     public ResponseEntity<ApiResponse<Page<IncomingResponse>>> findAllIncomingsBySubcategory(@RequestParam String subcategoryName, HttpServletRequest request, Pageable pageable){
-        Page<IncomingResponse> fetchedIncomings = incomingService.findAllIncomingsBySubcategory(subcategoryName, pageable);
+        Page<IncomingResponse> fetchedIncomings = incomingService.findAllIncomingsBySubcategory(subcategoryName, pageable, request);
         ApiResponse<Page<IncomingResponse>> response = ResponseUtil.success(fetchedIncomings, "List of incomings by subcategory fetched successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{incomingId}")
     public ResponseEntity<ApiResponse<String>> deleteByIncomingId(@PathVariable Integer incomingId, HttpServletRequest request){
-        String deletedCategory = incomingService.deleteByIncomingId(incomingId);
+        String deletedCategory = incomingService.deleteByIncomingId(incomingId, request);
         ApiResponse<String> response = ResponseUtil.success(deletedCategory, "Incoming deleted successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

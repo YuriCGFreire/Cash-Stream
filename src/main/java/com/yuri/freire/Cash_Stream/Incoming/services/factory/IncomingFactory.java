@@ -1,5 +1,6 @@
 package com.yuri.freire.Cash_Stream.Incoming.services.factory;
 
+import com.yuri.freire.Cash_Stream.Authentication.entities.User;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.*;
 import com.yuri.freire.Cash_Stream.Incoming.entities.Incoming;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
@@ -15,7 +16,8 @@ public class IncomingFactory {
     public Incoming createIncoming(IncomingRequest incomingRequest,
                                    IncomingCategory incomingCategory,
                                    IncomingSubcategory incomingSubcategory,
-                                   Recurrence recurrence){
+                                   Recurrence recurrence,
+                                   User user){
         return Incoming.builder()
                 .incomingDescription(incomingRequest.getIncomingDescription())
                 .grossIncoming(incomingRequest.getGrossIncoming())
@@ -24,6 +26,7 @@ public class IncomingFactory {
                 .incomingCategory(incomingCategory)
                 .incomingSubcategory(incomingSubcategory)
                 .recurrence(recurrence)
+                .user(user)
                 .build();
     }
 
@@ -37,13 +40,15 @@ public class IncomingFactory {
                 .recurrence(incoming.getRecurrence().getRecurrenceFrequency())
                 .categoryName(incoming.getIncomingCategory().getCategoryName())
                 .subCategoryName(incoming.getIncomingSubcategory().getSubCategoryName())
+                .username(incoming.getUser().getUsername())
                 .build();
     }
 
-    public IncomingSubcategory createIncomingSubcategory(IncomingSubcategoryRequest incomingSubcategoryRequest, IncomingCategory incomingCategory){
+    public IncomingSubcategory createIncomingSubcategory(IncomingSubcategoryRequest incomingSubcategoryRequest, IncomingCategory incomingCategory, User user){
         return IncomingSubcategory.builder()
                 .subCategoryName(incomingSubcategoryRequest.getSubcategoryName())
                 .incomingCategory(incomingCategory)
+                .user(user)
                 .build();
     }
 
@@ -52,11 +57,13 @@ public class IncomingFactory {
                 .incomingSubcategoryId(incomingSubcategory.getIncomingSubcategoryId())
                 .subCategoryName(incomingSubcategory.getSubCategoryName())
                 .categoryName(incomingSubcategory.getIncomingCategory().getCategoryName())
+                .username(incomingSubcategory.getUser().getUsername())
                 .build();
     }
-    public IncomingCategory createIncomingCategory(IncomingCategoryRequest incomingCategoryRequest){
+    public IncomingCategory createIncomingCategory(IncomingCategoryRequest incomingCategoryRequest, User user){
         return IncomingCategory.builder()
                 .categoryName(incomingCategoryRequest.getCategoryName())
+                .user(user)
                 .build();
     }
 
@@ -64,6 +71,7 @@ public class IncomingFactory {
         return IncomingCategoryResponse.builder()
                 .incomingCategoryId(incomingCategory.getIncomingCategoryId())
                 .categoryName(incomingCategory.getCategoryName())
+                .username(incomingCategory.getUser().getUsername())
                 .build();
     }
 

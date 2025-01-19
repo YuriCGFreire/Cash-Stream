@@ -13,4 +13,5 @@ public class ExpenseSubcategoryResponse {
     private Integer expenseSubcategoryId;
     private String subCategoryName;
     private String categoryName;
+    private String username;
 }

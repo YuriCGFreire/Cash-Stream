@@ -24,47 +24,47 @@ public class ExpenseController {
 
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<ExpenseResponse>> createExpense(@Valid @RequestBody ExpenseRequest expenseRequest, HttpServletRequest request){
-        ExpenseResponse expense = expenseService.createExpense(expenseRequest);
+        ExpenseResponse expense = expenseService.createExpense(expenseRequest, request);
         ApiResponse<ExpenseResponse> response = ResponseUtil.success(expense,"Expense created successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     @GetMapping("/find-all")
     public ResponseEntity<ApiResponse<Page<ExpenseResponse>>> findAllExpenses(Pageable pageable, HttpServletRequest request){
-        Page<ExpenseResponse> allExpenses = expenseService.findAllExpenses(pageable);
+        Page<ExpenseResponse> allExpenses = expenseService.findAllExpenses(pageable, request);
         ApiResponse<Page<ExpenseResponse>> response = ResponseUtil.success(allExpenses, "Expenses fetched successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/find-by-category")
     public ResponseEntity<ApiResponse<Page<ExpenseResponse>>> findAllExpensesByCategoryName(@RequestParam String categoryName, Pageable pageable, HttpServletRequest request){
-        Page<ExpenseResponse> allExpensesByCategory = expenseService.findAllExpensesByCategoryName(categoryName, pageable);
+        Page<ExpenseResponse> allExpensesByCategory = expenseService.findAllExpensesByCategoryName(request,categoryName, pageable);
         ApiResponse<Page<ExpenseResponse>> response = ResponseUtil.success(allExpensesByCategory, "Expenses fetched by category successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/find-by-subcategory")
     public ResponseEntity<ApiResponse<Page<ExpenseResponse>>> findAllExpensesBySubcategoryName(@RequestParam String subcategoryName, Pageable pageable, HttpServletRequest request){
-        Page<ExpenseResponse> allExpensesByCategory = expenseService.findAllBySubcategoryName(subcategoryName, pageable);
+        Page<ExpenseResponse> allExpensesByCategory = expenseService.findAllBySubcategoryName(request, subcategoryName, pageable);
         ApiResponse<Page<ExpenseResponse>> response = ResponseUtil.success(allExpensesByCategory,  "Expenses fetched by subcategory successfuly", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/find-by-method")
     public ResponseEntity<ApiResponse<Page<ExpenseResponse>>> findAllExpensesByPaymentMethod(@RequestParam ExpenseMethodType expenseMethodType, Pageable pageable, HttpServletRequest request){
-        Page<ExpenseResponse> allExpensesByCategory = expenseService.findAllExpensesByPaymentMethod(expenseMethodType, pageable);
+        Page<ExpenseResponse> allExpensesByCategory = expenseService.findAllExpensesByPaymentMethod(request, expenseMethodType, pageable);
         ApiResponse<Page<ExpenseResponse>> response = ResponseUtil.success(allExpensesByCategory, "Expenses fetched by payment method successfuly", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping("/isEssential")
     public ResponseEntity<ApiResponse<Page<ExpenseResponse>>> findAllByIsEssential(@RequestParam boolean isEssential, Pageable pageable, HttpServletRequest request){
-        Page<ExpenseResponse> findByIsEssential = expenseService.findAllExpensesByIsEssential(isEssential,pageable);
+        Page<ExpenseResponse> findByIsEssential = expenseService.findAllExpensesByIsEssential(request, isEssential,pageable);
         ApiResponse<Page<ExpenseResponse>> response = ResponseUtil.success(findByIsEssential, "Expenses fetched by essentiality successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{expenseId}")
     public ResponseEntity<ApiResponse<String>> softDeleteExpense(@PathVariable Integer expenseId, HttpServletRequest request){
-        String softDeleteExpense = expenseService.softDeleteExpense(expenseId);
+        String softDeleteExpense = expenseService.softDeleteExpense(request, expenseId);
         ApiResponse<String> response = ResponseUtil.success(softDeleteExpense, "Expense deleted successfuly", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

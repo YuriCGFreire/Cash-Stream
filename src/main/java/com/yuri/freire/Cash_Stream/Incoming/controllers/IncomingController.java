@@ -28,7 +28,7 @@ public class IncomingController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/all-incomings")
+    @GetMapping("/find-all")
     public ResponseEntity<ApiResponse<Page<IncomingResponse>>> findAllIncomings(HttpServletRequest request, Pageable pageable){
         Page<IncomingResponse> fetchedIncomings = incomingService.findAllIncomings(pageable);
         ApiResponse<Page<IncomingResponse>> response = ResponseUtil.success(fetchedIncomings, "List of incomings fetched successfully", request.getRequestURI());

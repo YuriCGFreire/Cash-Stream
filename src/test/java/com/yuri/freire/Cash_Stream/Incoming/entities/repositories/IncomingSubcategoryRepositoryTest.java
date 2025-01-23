@@ -96,7 +96,7 @@ class IncomingSubcategoryRepositoryTest {
         this.subcategoryRepository.save(subCategoryToBeSaved);
 
         Pageable pageable = PageRequest.of(0, 1);
-        Page<IncomingSubcategoryResponse> allSubcategories = this.subcategoryRepository.findAllSubcategory(pageable);
+        Page<IncomingSubcategoryResponse> allSubcategories = this.subcategoryRepository.findAllSubcategory(pageable, "username");
 
         Assertions.assertThat(allSubcategories).isNotNull();
         Assertions.assertThat(allSubcategories.getContent())
@@ -111,7 +111,7 @@ class IncomingSubcategoryRepositoryTest {
         subCategoryToBeSaved.setIncomingCategory(savedIncomingCategory);
         this.subcategoryRepository.save(subCategoryToBeSaved);
         Pageable pageable = PageRequest.of(0, 1);
-        Page<IncomingSubcategoryResponse> allSubcategories = this.subcategoryRepository.findAllByCategory(savedIncomingCategory.getCategoryName(), pageable);
+        Page<IncomingSubcategoryResponse> allSubcategories = this.subcategoryRepository.findAllByCategory(savedIncomingCategory.getCategoryName(), pageable, "username");
 
         Assertions.assertThat(allSubcategories).isNotNull();
         Assertions.assertThat(allSubcategories.getContent())
@@ -126,7 +126,7 @@ class IncomingSubcategoryRepositoryTest {
         subCategoryToBeSaved.setIncomingCategory(savedIncomingCategory);
         IncomingSubcategory subcategorySaved = this.subcategoryRepository.save(subCategoryToBeSaved);
 
-        Optional<IncomingSubcategory> fetchedSubcategory = this.subcategoryRepository.findBySubCategoryName(subcategorySaved.getSubCategoryName());
+        Optional<IncomingSubcategory> fetchedSubcategory = this.subcategoryRepository.findBySubCategoryName(subcategorySaved.getSubCategoryName(), "username");
 
         Assertions.assertThat(fetchedSubcategory)
                 .isNotEmpty()
@@ -137,7 +137,7 @@ class IncomingSubcategoryRepositoryTest {
     @DisplayName("findBySubCategoryName returns empty when no IncomingSubcategory is not found")
     void findBySubcategoryName_ReturnsEmpty_WhenIncomingSubcategoryIsNotFound(){
 
-        Optional<IncomingSubcategory> fetchedSubcategory = this.subcategoryRepository.findBySubCategoryName("Subcategoria qualquer");
+        Optional<IncomingSubcategory> fetchedSubcategory = this.subcategoryRepository.findBySubCategoryName("Subcategoria qualquer", "username");
         Assertions.assertThat(fetchedSubcategory).isEmpty();
     }
 

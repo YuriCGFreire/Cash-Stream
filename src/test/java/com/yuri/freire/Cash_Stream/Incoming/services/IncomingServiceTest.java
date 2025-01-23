@@ -47,23 +47,23 @@ class IncomingServiceTest {
         PageImpl<IncomingResponse> incomingPage = new PageImpl<>(List.of(incoming1, incoming2));
 
         BDDMockito.when(
-                this.incomingRepositoryMock.findAllIncomings(ArgumentMatchers.any(PageRequest.class))
+                this.incomingRepositoryMock.findAllIncomings(ArgumentMatchers.any(PageRequest.class), ArgumentMatchers.any())
         ).thenReturn(incomingPage);
 
         BDDMockito.when(
-                this.incomingRepositoryMock.findAllByCategory(ArgumentMatchers.anyString(), ArgumentMatchers.any(PageRequest.class))
+                this.incomingRepositoryMock.findAllByCategory(ArgumentMatchers.anyString(), ArgumentMatchers.any(PageRequest.class), ArgumentMatchers.any())
         ).thenReturn(incomingPage);
 
         BDDMockito.when(
-                this.incomingRepositoryMock.findAllByCategory(ArgumentMatchers.contains("Some random category name"), ArgumentMatchers.any(PageRequest.class))
+                this.incomingRepositoryMock.findAllByCategory(ArgumentMatchers.contains("Some random category name"), ArgumentMatchers.any(PageRequest.class), ArgumentMatchers.any())
         ).thenReturn(Page.empty());
 
         BDDMockito.when(
-                this.incomingRepositoryMock.findAllBySubcategory(ArgumentMatchers.anyString(), ArgumentMatchers.any(PageRequest.class))
+                this.incomingRepositoryMock.findAllBySubcategory(ArgumentMatchers.anyString(), ArgumentMatchers.any(PageRequest.class), ArgumentMatchers.any())
         ).thenReturn(incomingPage);
 
         BDDMockito.when(
-                this.incomingRepositoryMock.findAllBySubcategory(ArgumentMatchers.contains("Some random subcategory name"), ArgumentMatchers.any(PageRequest.class))
+                this.incomingRepositoryMock.findAllBySubcategory(ArgumentMatchers.contains("Some random subcategory name"), ArgumentMatchers.any(PageRequest.class), ArgumentMatchers.any())
         ).thenReturn(Page.empty());
 
         BDDMockito.when(
@@ -71,13 +71,13 @@ class IncomingServiceTest {
         ).thenReturn(incoming);
 
         BDDMockito.when(
-                this.incomingRepositoryMock.findIncomingById(ArgumentMatchers.anyInt())
+                this.incomingRepositoryMock.findIncomingById(ArgumentMatchers.anyInt(), ArgumentMatchers.any())
         ).thenReturn(Optional.of(incoming));
 
         BDDMockito.doNothing().when(this.incomingRepositoryMock).deleteById(ArgumentMatchers.eq(1));
 
         BDDMockito.when(
-                this.incomingRepositoryMock.findIncomingById(ArgumentMatchers.eq(999))
+                this.incomingRepositoryMock.findIncomingById(ArgumentMatchers.eq(999), ArgumentMatchers.any())
         ).thenThrow(new EntityNotFoundException("Incoming not found: 999"));
 
         BDDMockito.when(incomingFacadeMock.createIncoming(ArgumentMatchers.any()))

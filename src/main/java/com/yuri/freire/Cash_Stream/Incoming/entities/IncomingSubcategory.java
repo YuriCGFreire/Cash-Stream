@@ -1,5 +1,6 @@
 package com.yuri.freire.Cash_Stream.Incoming.entities;
 
+import com.yuri.freire.Cash_Stream.Authentication.entities.User;
 import com.yuri.freire.Cash_Stream.Common.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -40,4 +41,8 @@ public class IncomingSubcategory extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "incoming_category_id")
     private IncomingCategory incomingCategory;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

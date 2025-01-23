@@ -41,33 +41,33 @@ class IncomingCategoryServiceTest {
         IncomingCategory incomingCategory = IncomingCategoryCreator.createValidCategoryForRepository();
         IncomingCategoryResponse incomingCategoryResponse = IncomingCategoryCreator.createValidCategory();
 
-        BDDMockito.when(incomingFactory.createIncomingCategory(ArgumentMatchers.any()))
+        BDDMockito.when(incomingFactory.createIncomingCategory(ArgumentMatchers.any(), ArgumentMatchers.any()))
                         .thenReturn(incomingCategory);
 
         BDDMockito.when(incomingFactory.createIncomingCategoryResponse(ArgumentMatchers.any()))
                 .thenReturn(incomingCategoryResponse);
 
-        BDDMockito.when(categoryRepositoryMock.findAllIncomingCategory(ArgumentMatchers.any(PageRequest.class)))
+        BDDMockito.when(categoryRepositoryMock.findAllIncomingCategory(ArgumentMatchers.any(PageRequest.class), ArgumentMatchers.any()))
                 .thenReturn(categoryPage);
 
         BDDMockito.when(categoryRepositoryMock.save(ArgumentMatchers.any(IncomingCategory.class)))
                 .thenReturn(IncomingCategoryCreator.createValidCategoryForRepository());
 
-        BDDMockito.when(categoryRepositoryMock.findByCategoryId(ArgumentMatchers.eq(1)))
+        BDDMockito.when(categoryRepositoryMock.findByCategoryId(ArgumentMatchers.eq(1), ArgumentMatchers.any()))
                 .thenReturn(Optional.of(IncomingCategoryCreator.createValidCategoryForRepository()));
 
-        BDDMockito.when(categoryRepositoryMock.findByCategoryId(ArgumentMatchers.eq(999)))
+        BDDMockito.when(categoryRepositoryMock.findByCategoryId(ArgumentMatchers.eq(999), ArgumentMatchers.any()))
                         .thenReturn(Optional.empty());
 
         BDDMockito.doNothing().when(categoryRepositoryMock).deleteById(ArgumentMatchers.anyInt());
 
-        BDDMockito.when(categoryRepositoryMock.findByCategoryName(ArgumentMatchers.eq(incomingCategory.getCategoryName())))
+        BDDMockito.when(categoryRepositoryMock.findByCategoryName(ArgumentMatchers.eq(incomingCategory.getCategoryName()), ArgumentMatchers.any()))
                 .thenReturn(Optional.of(IncomingCategoryCreator.createValidCategoryForRepository()));
 
-        BDDMockito.when(categoryRepositoryMock.findByCategoryName(ArgumentMatchers.eq("Trabalho")))
+        BDDMockito.when(categoryRepositoryMock.findByCategoryName(ArgumentMatchers.eq("Trabalho"), ArgumentMatchers.any()))
                 .thenReturn(Optional.empty());
 
-        BDDMockito.when(categoryRepositoryMock.findByCategoryName("Some random categoryname"))
+        BDDMockito.when(categoryRepositoryMock.findByCategoryName("Some random categoryname", ArgumentMatchers.any()))
                 .thenReturn(Optional.empty());
     }
 

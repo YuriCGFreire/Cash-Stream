@@ -99,7 +99,7 @@ class IncomingRepositoryTest {
         this.incomingRepository.save(incomingToBeSaved);
 
         Pageable pageable = PageRequest.of(0, 1);
-        Page<IncomingResponse> incomingPage = this.incomingRepository.findAllIncomings(pageable);
+        Page<IncomingResponse> incomingPage = this.incomingRepository.findAllIncomings(pageable, "username");
 
 
         Assertions.assertThat(incomingPage).isNotNull();
@@ -118,7 +118,7 @@ class IncomingRepositoryTest {
 
         this.incomingRepository.save(incomingToBeSaved);
         Pageable pageable = PageRequest.of(0, 1);
-        Page<IncomingResponse> incomingPage = this.incomingRepository.findAllByCategory(savedCategory.getCategoryName(), pageable);
+        Page<IncomingResponse> incomingPage = this.incomingRepository.findAllByCategory(savedCategory.getCategoryName(), pageable, "username");
 
         Assertions.assertThat(incomingPage).isNotNull();
         Assertions.assertThat(incomingPage.getContent())
@@ -138,7 +138,7 @@ class IncomingRepositoryTest {
         incomingToBeSaved.setRecurrence(savedRecurrence);
         this.incomingRepository.save(incomingToBeSaved);
         Pageable pageable = PageRequest.of(0, 1);
-        Page<IncomingResponse> incomingPage = this.incomingRepository.findAllBySubcategory(savedSubcategory.getSubCategoryName(), pageable);
+        Page<IncomingResponse> incomingPage = this.incomingRepository.findAllBySubcategory(savedSubcategory.getSubCategoryName(), pageable, "username");
 
         Assertions.assertThat(incomingPage).isNotNull();
         Assertions.assertThat(incomingPage.getContent())

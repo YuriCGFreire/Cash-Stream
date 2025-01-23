@@ -52,21 +52,21 @@ class IncomingSubcategoryServiceTest {
         ).thenReturn(subcategory);
 
         BDDMockito.when(
-                subcategoryRepositoryMock.findBySubCategoryName(ArgumentMatchers.anyString())
+                subcategoryRepositoryMock.findBySubCategoryName(ArgumentMatchers.anyString(), ArgumentMatchers.any())
         ).thenReturn(Optional.of(subcategory));
 
         BDDMockito.when(
-                subcategoryRepositoryMock.findBySubCategoryName("Bonus do trabalho")
+                subcategoryRepositoryMock.findBySubCategoryName("Bonus do trabalho", ArgumentMatchers.any())
         ).thenReturn(Optional.empty());
 
         BDDMockito.when(
-                subcategoryRepositoryMock.findBySubCategoryName("Some random subcategoryname")
+                subcategoryRepositoryMock.findBySubCategoryName("Some random subcategoryname", ArgumentMatchers.any())
         ).thenReturn(Optional.empty());
 
-        BDDMockito.when(subcategoryRepositoryMock.findAllSubcategory(ArgumentMatchers.any(PageRequest.class)))
+        BDDMockito.when(subcategoryRepositoryMock.findAllSubcategory(ArgumentMatchers.any(PageRequest.class), ArgumentMatchers.any()))
                 .thenReturn(subcategoryPage);
 
-        BDDMockito.when(subcategoryRepositoryMock.findAllByCategory(IncomingCategoryCreator.createValidCategory().getCategoryName(), PageRequest.of(0, 2)))
+        BDDMockito.when(subcategoryRepositoryMock.findAllByCategory(IncomingCategoryCreator.createValidCategory().getCategoryName(), PageRequest.of(0, 2), ArgumentMatchers.any()))
                 .thenReturn(subcategoryPage);
 
         BDDMockito.when(categoryServiceMock.findByCategoryName(ArgumentMatchers.anyString()))
@@ -78,15 +78,15 @@ class IncomingSubcategoryServiceTest {
         BDDMockito.when(categoryServiceMock.findByCategoryName("Some random categoryname"))
                 .thenThrow(new EntityNotFoundException("Category not found: Some random categoryname"));
 
-        BDDMockito.when(subcategoryRepositoryMock.findBySubcategoryId(ArgumentMatchers.eq(1)))
+        BDDMockito.when(subcategoryRepositoryMock.findBySubcategoryId(ArgumentMatchers.eq(1), ArgumentMatchers.any()))
                         .thenReturn(Optional.of(subcategory));
 
-        BDDMockito.when(subcategoryRepositoryMock.findBySubcategoryId(ArgumentMatchers.eq(999)))
+        BDDMockito.when(subcategoryRepositoryMock.findBySubcategoryId(ArgumentMatchers.eq(999), ArgumentMatchers.any()))
                         .thenReturn(Optional.empty());
 
         BDDMockito.doNothing().when(subcategoryRepositoryMock).deleteById(ArgumentMatchers.anyInt());
 
-        BDDMockito.when(incomingFactory.createIncomingSubcategory(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        BDDMockito.when(incomingFactory.createIncomingSubcategory(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(subcategory);
 
         BDDMockito.when(incomingFactory.createIncomingSubcategoryResponse(ArgumentMatchers.any()))

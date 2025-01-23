@@ -69,7 +69,7 @@ class IncomingCategoryRepositoryTest {
 
         IncomingCategory categorySaved = this.categoryRepository.save(categoryToBeSaved);
 
-        Optional<IncomingCategory> fetchedCategory = this.categoryRepository.findByCategoryName(categorySaved.getCategoryName());
+        Optional<IncomingCategory> fetchedCategory = this.categoryRepository.findByCategoryName(categorySaved.getCategoryName(), "username");
 
         Assertions.assertThat(fetchedCategory)
                 .isNotEmpty()
@@ -80,7 +80,7 @@ class IncomingCategoryRepositoryTest {
     @DisplayName("Find by name returns empty list of Incoming Category when no IncomingCategory is not found")
     void find_by_name_ReturnEmptyListofIncominfCategory_WhenIncomingCategoryIsNotFound(){
 
-        Optional<IncomingCategory> fetchedCategory = this.categoryRepository.findByCategoryName("Categoria qualquer");
+        Optional<IncomingCategory> fetchedCategory = this.categoryRepository.findByCategoryName("Categoria qualquer", "username");
 
         Assertions.assertThat(fetchedCategory).isEmpty();
     }

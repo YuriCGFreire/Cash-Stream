@@ -2,6 +2,12 @@ package com.yuri.freire.Cash_Stream.Authentication.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yuri.freire.Cash_Stream.Common.BaseEntity;
+import com.yuri.freire.Cash_Stream.Expense.entities.Expense;
+import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseCategory;
+import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseSubcategory;
+import com.yuri.freire.Cash_Stream.Incoming.entities.Incoming;
+import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
+import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingSubcategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -50,6 +56,24 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "password", nullable = false)
     @JsonIgnore
     private String password;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<Expense> expenses;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<ExpenseCategory> expenseCategories;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<ExpenseSubcategory> expenseSubcategories;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<Incoming> incomings;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<IncomingCategory> incomingCategories;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<IncomingSubcategory> incomingSubcategories;
 
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;

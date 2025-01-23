@@ -1,5 +1,6 @@
 package com.yuri.freire.Cash_Stream.Expense.entities;
 
+import com.yuri.freire.Cash_Stream.Authentication.entities.User;
 import com.yuri.freire.Cash_Stream.Common.BaseEntity;
 import com.yuri.freire.Cash_Stream.Recurrence.entities.Recurrence;
 import jakarta.persistence.*;
@@ -63,4 +64,8 @@ public class Expense extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "expense_subcategory_id")
     private ExpenseSubcategory expenseSubcategory;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

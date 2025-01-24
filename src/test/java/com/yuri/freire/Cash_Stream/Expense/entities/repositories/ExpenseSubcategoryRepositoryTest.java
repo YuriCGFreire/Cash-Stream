@@ -43,7 +43,7 @@ class ExpenseSubcategoryRepositoryTest {
         ExpenseSubcategory tobeSaved = ExpenseSubcategoryCreator.createValidExpenseSubcategoryTobeSaved();
         tobeSaved.setExpenseCategory(savedExpenseCategory);
         ExpenseSubcategory savedExpenseSubcategory = expenseSubcategoryRepository.save(tobeSaved);
-        Optional<ExpenseSubcategory> fetchedExpenseSubcategory = expenseSubcategoryRepository.findBySubCategoryName(savedExpenseSubcategory.getSubCategoryName());
+        Optional<ExpenseSubcategory> fetchedExpenseSubcategory = expenseSubcategoryRepository.findBySubCategoryName("username", savedExpenseSubcategory.getSubCategoryName());
         Assertions.assertThat(fetchedExpenseSubcategory)
                 .isNotEmpty()
                 .contains(savedExpenseSubcategory);
@@ -56,7 +56,7 @@ class ExpenseSubcategoryRepositoryTest {
         tobeSaved.setExpenseCategory(savedExpenseCategory);
         ExpenseSubcategory savedExpenseSubcategory = expenseSubcategoryRepository.save(tobeSaved);
         Pageable pageable = PageRequest.of(0, 1);
-        Page<ExpenseSubcategoryResponse> pageExpenseSubcategoryResponse = this.expenseSubcategoryRepository.findAllSubcategoryExpenses(pageable);
+        Page<ExpenseSubcategoryResponse> pageExpenseSubcategoryResponse = this.expenseSubcategoryRepository.findAllSubcategoryExpenses("username", pageable);
 
         Assertions.assertThat(pageExpenseSubcategoryResponse).isNotNull();
         Assertions.assertThat(pageExpenseSubcategoryResponse.getContent())
@@ -72,7 +72,7 @@ class ExpenseSubcategoryRepositoryTest {
         ExpenseSubcategory savedExpenseSubcategory = expenseSubcategoryRepository.save(tobeSaved);
         Pageable pageable = PageRequest.of(0, 1);
         Page<ExpenseSubcategoryResponse> pageExpenseSubcategoryResponse = this.expenseSubcategoryRepository
-                .findAllSubcategoryExpensesByCategory(savedExpenseCategory.getCategoryName(), pageable);
+                .findAllSubcategoryExpensesByCategory("username", savedExpenseCategory.getCategoryName(), pageable);
 
         Assertions.assertThat(pageExpenseSubcategoryResponse).isNotNull();
         Assertions.assertThat(pageExpenseSubcategoryResponse.getContent())

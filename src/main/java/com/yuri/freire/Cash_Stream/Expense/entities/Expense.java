@@ -62,10 +62,10 @@ public class Expense extends BaseEntity {
     private ExpenseCategory expenseCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "expense_subcategory_id")
-    private ExpenseSubcategory expenseSubcategory;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "expense_subcategory_id")
+    private ExpenseSubcategory expenseSubcategory;
 }

@@ -1,5 +1,4 @@
 package com.yuri.freire.Cash_Stream.Incoming.services.facade;
-
 import com.yuri.freire.Cash_Stream.Authentication.entities.User;
 import com.yuri.freire.Cash_Stream.Authentication.services.UserService;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingRequest;
@@ -11,6 +10,7 @@ import com.yuri.freire.Cash_Stream.Incoming.services.IncomingCategoryService;
 import com.yuri.freire.Cash_Stream.Incoming.services.IncomingSubcategoryService;
 import com.yuri.freire.Cash_Stream.Incoming.services.factory.IncomingFactory;
 import com.yuri.freire.Cash_Stream.Recurrence.entities.Recurrence;
+import com.yuri.freire.Cash_Stream.Recurrence.entities.entitie_enum.RecurrenceType;
 import com.yuri.freire.Cash_Stream.Recurrence.services.RecurrenceService;
 import com.yuri.freire.Cash_Stream.Utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
@@ -40,4 +40,19 @@ public class IncomingFacade {
         return incomingFactory.createIncomingResponse(incoming);
     }
 
+    public IncomingSubcategory findIncomingSubcategoryByName(String incomingSubcategoryName, String username){
+        return incomingSubcategoryService.findBySubcategoryName(incomingSubcategoryName);
+    }
+
+    public IncomingCategory findIncomingCategoryByName(String incomingCategoryName, String username){
+        return incomingCategoryService.findByCategoryName(incomingCategoryName);
+    }
+
+    public Recurrence findByRecurrenFrequency(RecurrenceType recurrenceType){
+        return recurrenceService.findByRecurrenFrequency(recurrenceType);
+    }
+
+    public User findUserByName(String username){
+        return userService.findUserByUsername(username);
+    }
 }

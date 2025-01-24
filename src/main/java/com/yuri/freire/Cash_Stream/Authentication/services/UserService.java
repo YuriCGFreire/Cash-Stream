@@ -12,8 +12,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User findUserByUsername(String username){
-        User user = userRepository.findByUsername(username)
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
-        return user;
     }
 }

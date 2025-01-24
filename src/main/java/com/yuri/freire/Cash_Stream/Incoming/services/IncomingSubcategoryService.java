@@ -28,7 +28,6 @@ public class IncomingSubcategoryService {
     private final IncomingFactory incomingFactory;
     private final UserService userService;
 
-
     public IncomingSubcategoryResponse createIncomingSubcategory(IncomingSubcategoryRequest incomingSubcategoryRequest){
         String currentUsername = SecurityUtils.getCurrentUsername();
         User user = userService.findUserByUsername(currentUsername);
@@ -67,6 +66,4 @@ public class IncomingSubcategoryService {
         incomingSubcategoryRepository.deleteById(subcategory.getIncomingSubcategoryId());
         return subcategory.getSubCategoryName();
     }
-
-
 }

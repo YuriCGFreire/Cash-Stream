@@ -22,21 +22,21 @@ public class ExpenseCategoryController {
 
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<ExpenseCategoryResponse>> createExpenseCategory(@Valid @RequestBody ExpenseCategoryRequest expenseCategoryRequest, HttpServletRequest request){
-        ExpenseCategoryResponse expenseCategoryResponse = expenseCategoryService.createExpenseCategory(expenseCategoryRequest);
+        ExpenseCategoryResponse expenseCategoryResponse = expenseCategoryService.createExpenseCategory(expenseCategoryRequest, request);
         ApiResponse<ExpenseCategoryResponse> response = ResponseUtil.success(expenseCategoryResponse,"Category created successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/find-all")
     public ResponseEntity<ApiResponse<Page<ExpenseCategoryResponse>>> findAllExpenses(Pageable pageable, HttpServletRequest request){
-        Page<ExpenseCategoryResponse> expenseCategoriesResponse = expenseCategoryService.findAllCategoryExpenses(pageable);
+        Page<ExpenseCategoryResponse> expenseCategoriesResponse = expenseCategoryService.findAllCategoryExpenses(pageable, request);
         ApiResponse<Page<ExpenseCategoryResponse>> response = ResponseUtil.success(expenseCategoriesResponse, "List of categories fetched successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{categoryId}")
     public ResponseEntity<ApiResponse<String>> deleteByCategoryId(@PathVariable Integer categoryId, HttpServletRequest request){
-        String deletedExpenseCaategory = expenseCategoryService.deleteByCategoryId(categoryId);
+        String deletedExpenseCaategory = expenseCategoryService.deleteByCategoryId(categoryId, request);
         ApiResponse<String> response = ResponseUtil.success(deletedExpenseCaategory, "Category deleted successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

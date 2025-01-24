@@ -1,5 +1,6 @@
 package com.yuri.freire.Cash_Stream.Expense.services.factory;
 
+import com.yuri.freire.Cash_Stream.Authentication.entities.User;
 import com.yuri.freire.Cash_Stream.Expense.controllers.model.*;
 import com.yuri.freire.Cash_Stream.Expense.entities.Expense;
 import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseCategory;
@@ -19,7 +20,8 @@ public class ExpenseFactory {
                                  ExpenseCategory expenseCategory,
                                  ExpenseSubcategory expenseSubcategory,
                                  ExpenseMethod expenseMethod,
-                                 Recurrence recurrence){
+                                 Recurrence recurrence,
+                                 User user){
         return Expense.builder()
                 .expenseDescription(expenseRequest.getExpenseDescription())
                 .expenseAmount(expenseRequest.getExpenseAmount())
@@ -29,19 +31,22 @@ public class ExpenseFactory {
                 .recurrence(recurrence)
                 .expenseCategory(expenseCategory)
                 .expenseSubcategory(expenseSubcategory)
+                .user(user)
                 .build();
     }
 
-    public ExpenseCategory createExpenseCategory(ExpenseCategoryRequest expenseCategoryRequest){
+    public ExpenseCategory createExpenseCategory(ExpenseCategoryRequest expenseCategoryRequest, User user){
         return ExpenseCategory.builder()
                 .categoryName(expenseCategoryRequest.getCategoryName())
+                .user(user)
                 .build();
     }
 
-    public ExpenseSubcategory createExpenseSubcategory(ExpenseSubcategoryRequest expenseSubcategoryRequest, ExpenseCategory expenseCategory){
+    public ExpenseSubcategory createExpenseSubcategory(ExpenseSubcategoryRequest expenseSubcategoryRequest, ExpenseCategory expenseCategory, User user){
         return ExpenseSubcategory.builder()
                 .subCategoryName(expenseSubcategoryRequest.getSubcategoryName())
                 .expenseCategory(expenseCategory)
+                .user(user)
                 .build();
     }
 
@@ -56,6 +61,7 @@ public class ExpenseFactory {
                 .recurrence(expense.getRecurrence().getRecurrenceFrequency())
                 .categoryName(expense.getExpenseCategory().getCategoryName())
                 .subCategoryName(expense.getExpenseSubcategory().getSubCategoryName())
+                .username(expense.getUser().getUsername())
                 .build();
     }
 
@@ -63,6 +69,7 @@ public class ExpenseFactory {
         return ExpenseCategoryResponse.builder()
                 .expenseCategoryId(expenseCategory.getExpenseCategoryId())
                 .categoryName(expenseCategory.getCategoryName())
+                .username(expenseCategory.getUser().getUsername())
                 .build();
     }
 
@@ -71,6 +78,7 @@ public class ExpenseFactory {
                 .expenseSubcategoryId(expenseSubcategory.getExpenseSubcategoryId())
                 .subCategoryName(expenseSubcategory.getSubCategoryName())
                 .categoryName(expenseSubcategory.getExpenseCategory().getCategoryName())
+                .username(expenseSubcategory.getUser().getUsername())
                 .build();
     }
 

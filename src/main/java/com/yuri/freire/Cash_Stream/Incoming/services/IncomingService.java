@@ -7,6 +7,7 @@ import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingReposi
 import com.yuri.freire.Cash_Stream.Incoming.services.facade.IncomingFacade;
 import com.yuri.freire.Cash_Stream.Utils.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

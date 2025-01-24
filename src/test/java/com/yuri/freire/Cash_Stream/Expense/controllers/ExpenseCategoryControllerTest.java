@@ -41,16 +41,16 @@ class ExpenseCategoryControllerTest {
         ExpenseCategoryResponse expenseCategoryResponse = ExpenseCategoryCreator.createValidExpenseCategoryResponse();
         PageImpl<ExpenseCategoryResponse> categoryPage = new PageImpl<>(List.of(expenseCategoryResponse));
 
-        BDDMockito.when(expenseCategoryServiceMock.createExpenseCategory(ArgumentMatchers.any()))
+        BDDMockito.when(expenseCategoryServiceMock.createExpenseCategory(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(expenseCategoryResponse);
 
-        BDDMockito.when(expenseCategoryServiceMock.findAllCategoryExpenses(ArgumentMatchers.any()))
+        BDDMockito.when(expenseCategoryServiceMock.findAllCategoryExpenses(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(categoryPage);
 
-        BDDMockito.when(expenseCategoryServiceMock.deleteByCategoryId(ArgumentMatchers.anyInt()))
+        BDDMockito.when(expenseCategoryServiceMock.deleteByCategoryId(ArgumentMatchers.anyInt(), ArgumentMatchers.any()))
                 .thenReturn(expenseCategoryResponse.getCategoryName());
 
-        BDDMockito.when(expenseCategoryServiceMock.deleteByCategoryId(1298))
+        BDDMockito.when(expenseCategoryServiceMock.deleteByCategoryId(ArgumentMatchers.eq(1298), ArgumentMatchers.any()))
                 .thenThrow(new EntityNotFoundException("Category not found: 1298"));
 
         BDDMockito.when(servletRequestMock.getRequestURI())

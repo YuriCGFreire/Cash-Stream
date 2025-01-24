@@ -10,6 +10,7 @@ import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingCatego
 import com.yuri.freire.Cash_Stream.Incoming.services.factory.IncomingFactory;
 import com.yuri.freire.Cash_Stream.Utils.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

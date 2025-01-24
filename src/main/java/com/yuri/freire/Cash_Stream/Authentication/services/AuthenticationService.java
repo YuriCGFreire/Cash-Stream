@@ -46,10 +46,6 @@ public class AuthenticationService {
     private final JwtService jwtService;
 
     public AuthenticationResponse register(RegisterRequest request){
-        Optional<User> fetchedUser = userRepository.findByUsername(request.getUsername());
-        if(fetchedUser.isPresent()){
-
-        }
         User user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())

@@ -41,19 +41,20 @@ class ExpenseSubcategoryRepositoryTest {
 
     @BeforeEach
     void setUp(){
+        User user = UserCreator.createUserToBeSaved();
+        savedUser = userRepositoryMock.save(user);
         ExpenseCategory category = ExpenseCategoryCreator.createExpenseCategoryToBeSaved();
+        category.setUser(savedUser);
         savedExpenseCategory = expenseCategoryRepository.save(category);
 
-        User user = UserCreator.createValidUser();
-        savedUser = userRepositoryMock.save(user);
     }
 
     @Test
     @DisplayName("findBySubCategoryName returns expenseSubcategory when successful")
     void findBySubCategoryName_ReturnsExpenseSubcategory_WhenSuccessful(){
         ExpenseSubcategory tobeSaved = ExpenseSubcategoryCreator.createValidExpenseSubcategoryTobeSaved();
-        tobeSaved.setExpenseCategory(savedExpenseCategory);
-        tobeSaved.setUser(savedUser);
+        tobeSaved.setExpenseCategory(this.savedExpenseCategory);
+        tobeSaved.setUser(this.savedUser);
         ExpenseSubcategory savedExpenseSubcategory = expenseSubcategoryRepository.save(tobeSaved);
         Optional<ExpenseSubcategory> fetchedExpenseSubcategory = expenseSubcategoryRepository.findBySubCategoryName(savedExpenseSubcategory.getSubCategoryName(), savedUser.getUsername());
         Assertions.assertThat(fetchedExpenseSubcategory)

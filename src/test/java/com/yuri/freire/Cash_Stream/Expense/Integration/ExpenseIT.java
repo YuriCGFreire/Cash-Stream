@@ -85,9 +85,9 @@ public class ExpenseIT {
     @Test
     @DisplayName("createExpense persist Expense when successful")
     void createExpense_PersistExpense_WhenSuccessful() {
+        userRepository.save(userTest);
         expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
         expenseSubcategoryRepository.save(ExpenseSubcategoryCreator.createValidExpenseSubcategoryTobeSaved());
-        userRepository.save(userTest);
         ExpenseResponse expectedExpenseResponse = ExpenseCreator.createValidExpenseResponse();
         ExpenseRequest expenseRequest = ExpenseRequestCreator.createExpenseRequest();
 
@@ -143,10 +143,10 @@ public class ExpenseIT {
     @Test
     @DisplayName("findAllExpenses return list of Expenses inside page object when successful")
     void findAllExpenses_ReturnListOfExpensesInsidePageObject_WhenSuccessful() {
+        userRepository.save(userTest);
         expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
         expenseSubcategoryRepository.save(ExpenseSubcategoryCreator.createValidExpenseSubcategoryTobeSaved());
         expenseRepository.save(ExpenseCreator.createExpenseToBeSaved());
-        userRepository.save(userTest);
 
         ResponseEntity<ApiResponse<PageableResponse<ExpenseResponse>>> allExpenses = testRestTemplate.exchange(
                 "/expense/find-all",
@@ -169,10 +169,10 @@ public class ExpenseIT {
     @Test
     @DisplayName("indAllExpensesByCategoryName return list of Expenses inside page object by categoryName when successful")
     void findAllExpensesByCategoryName_ReturnListOfExpensesInsidePageObjectByCategoryName_WhenSuccessful() {
+        userRepository.save(userTest);
         ExpenseCategory expectedCategory = expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
         expenseSubcategoryRepository.save(ExpenseSubcategoryCreator.createValidExpenseSubcategoryTobeSaved());
         expenseRepository.save(ExpenseCreator.createExpenseToBeSaved());
-        userRepository.save(userTest);
         ResponseEntity<ApiResponse<PageableResponse<ExpenseResponse>>> allExpensesByCategoryName = testRestTemplate.exchange(
                 "/expense/find-by-category?categoryName="+expectedCategory.getCategoryName(),
                 HttpMethod.GET,
@@ -193,8 +193,8 @@ public class ExpenseIT {
     @Test
     @DisplayName("indAllExpensesByCategoryName return return 404 NotFound when Expense Category does not exist")
     void findAllExpensesByCategoryName_Return404NotFound_WhenExpenseCategoryDoesNotExist() {
-        String expectedCategory = "someRandomCategoryName";
         userRepository.save(userTest);
+        String expectedCategory = "someRandomCategoryName";
         ResponseEntity<ApiResponse<PageableResponse<ExpenseResponse>>> allExpensesByCategoryName = testRestTemplate.exchange(
                 "/expense/find-by-category?categoryName="+expectedCategory,
                 HttpMethod.GET,
@@ -212,10 +212,10 @@ public class ExpenseIT {
     @Test
     @DisplayName("findAllExpensesBySubcategoryName return list of Expenses inside Page Object by subcategoryName when successful")
     void findAllExpensesBySubcategoryName_ReturnListOfExpensesInsidePageObjectBySubcategoryName_WhenSuccessful() {
+        userRepository.save(userTest);
         expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
         ExpenseSubcategory expectedSubcategory = expenseSubcategoryRepository.save(ExpenseSubcategoryCreator.createValidExpenseSubcategoryTobeSaved());
         expenseRepository.save(ExpenseCreator.createExpenseToBeSaved());
-        userRepository.save(userTest);
         ResponseEntity<ApiResponse<PageableResponse<ExpenseResponse>>> allExpensesBySubcategoryName = testRestTemplate.exchange(
                 "/expense/find-by-subcategory?subcategoryName="+expectedSubcategory.getSubCategoryName(),
                 HttpMethod.GET,
@@ -236,8 +236,8 @@ public class ExpenseIT {
     @Test
     @DisplayName("findAllExpensesBySubcategoryName return 404 NotFound when Expense subcategory does mot exist")
     void findAllExpensesBySubcategoryName_Return404NotFound_WhenExpensesubcategoryDoesNotExist() {
-        String expectedSubcategory = "someRandomSubcategoryName";
         userRepository.save(userTest);
+        String expectedSubcategory = "someRandomSubcategoryName";
         ResponseEntity<ApiResponse<PageableResponse<ExpenseResponse>>> allExpensesBySubcategoryName = testRestTemplate.exchange(
                 "/expense/find-by-subcategory?subcategoryName="+expectedSubcategory,
                 HttpMethod.GET,
@@ -255,10 +255,10 @@ public class ExpenseIT {
     @Test
     @DisplayName("findAllExpensesByPaymentMethod return list of Expenses inside Page object by paymentMethod when successful")
     void findAllExpensesByPaymentMethod_ReturnListOfExpensesInsidePageObjectByPaymentMethod_WhenSuccessful() {
+        userRepository.save(userTest);
         expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
         expenseSubcategoryRepository.save(ExpenseSubcategoryCreator.createValidExpenseSubcategoryTobeSaved());
         expenseRepository.save(ExpenseCreator.createExpenseToBeSaved());
-        userRepository.save(userTest);
         ResponseEntity<ApiResponse<PageableResponse<ExpenseResponse>>> allExpensesByPaymentMethod = testRestTemplate.exchange(
                 "/expense/find-by-method?expenseMethodType=" + ExpenseMethodType.CREDIT,
                 HttpMethod.GET,
@@ -278,10 +278,10 @@ public class ExpenseIT {
     @Test
     @DisplayName("findAllByIsEssential return list of Expenses inside Page object by it essentiality when successful")
     void findAllByIsEssential_ReturnListOfExpensesInsidePageObjectByItEssentiality_WhenSuccessful() {
+        userRepository.save(userTest);
         expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
         expenseSubcategoryRepository.save(ExpenseSubcategoryCreator.createValidExpenseSubcategoryTobeSaved());
         Expense savedExpense = expenseRepository.save(ExpenseCreator.createExpenseToBeSaved());
-        userRepository.save(userTest);
         ResponseEntity<ApiResponse<PageableResponse<ExpenseResponse>>> allByIsEssential = testRestTemplate.exchange(
                 "/expense/isEssential?isEssential=" + savedExpense.isEssential(),
                 HttpMethod.GET,
@@ -302,10 +302,10 @@ public class ExpenseIT {
     @Test
     @DisplayName("softDeleteExpense update deletedAt field when successful")
     void softDeleteExpense_UpdateDeletedAtField_WhenSuccessful(){
+        userRepository.save(userTest);
         expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
         expenseSubcategoryRepository.save(ExpenseSubcategoryCreator.createValidExpenseSubcategoryTobeSaved());
         Expense savedExpense = expenseRepository.save(ExpenseCreator.createExpenseToBeSaved());
-        userRepository.save(userTest);
         ResponseEntity<ApiResponse<String>> deletedExpense = testRestTemplate.exchange(
                 "/expense/delete/" + savedExpense.getExpenseId(),
                 HttpMethod.DELETE,

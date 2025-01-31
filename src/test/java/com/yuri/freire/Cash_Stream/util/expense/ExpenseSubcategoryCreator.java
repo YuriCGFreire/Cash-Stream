@@ -2,6 +2,7 @@ package com.yuri.freire.Cash_Stream.util.expense;
 
 import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseSubcategoryResponse;
 import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseSubcategory;
+import com.yuri.freire.Cash_Stream.util.user.UserCreator;
 
 public class ExpenseSubcategoryCreator {
     public static ExpenseSubcategory createValidExpenseSubcategory(){
@@ -9,6 +10,7 @@ public class ExpenseSubcategoryCreator {
                 .expenseSubcategoryId(1)
                 .subCategoryName("Ifood")
                 .expenseCategory(ExpenseCategoryCreator.createValidExpenseCategory())
+                .user(UserCreator.createValidUser())
                 .build();
     }
 
@@ -17,6 +19,7 @@ public class ExpenseSubcategoryCreator {
                 .expenseSubcategoryId(1)
                 .subCategoryName("Ifood")
                 .categoryName(ExpenseCategoryCreator.createValidExpenseCategory().getCategoryName())
+                .username(UserCreator.createValidUser().getUsername())
                 .build();
     }
 
@@ -24,6 +27,7 @@ public class ExpenseSubcategoryCreator {
         return ExpenseSubcategory.builder()
                 .subCategoryName("Ifood")
                 .expenseCategory(ExpenseCategoryCreator.createValidExpenseCategory())
+                .user(UserCreator.createValidUser())
                 .build();
     }
 }

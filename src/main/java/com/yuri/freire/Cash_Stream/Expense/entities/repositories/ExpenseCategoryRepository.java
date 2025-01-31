@@ -19,7 +19,7 @@ public interface ExpenseCategoryRepository extends JpaRepository<ExpenseCategory
        AND exc.deletedAt IS NULL
        AND exc.user.username = :username
        """)
-    Optional<ExpenseCategory> findByCategoryId(@Param("username") String username, @Param("expenseCategoryId") Integer expenseCategoryId);
+    Optional<ExpenseCategory> findByCategoryId(@Param("expenseCategoryId") Integer expenseCategoryId, @Param("username") String username);
 
     @Query("""
        SELECT exc
@@ -28,7 +28,7 @@ public interface ExpenseCategoryRepository extends JpaRepository<ExpenseCategory
        AND exc.deletedAt IS NULL
        AND exc.user.username = :username
        """)
-    Optional<ExpenseCategory> findByCategoryName(@Param("username") String username, @Param("categoryName") String categoryName);
+    Optional<ExpenseCategory> findByCategoryName(@Param("categoryName") String categoryName, @Param("username") String username);
 
     @Query("""
        SELECT new com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseCategoryResponse(
@@ -40,5 +40,5 @@ public interface ExpenseCategoryRepository extends JpaRepository<ExpenseCategory
        WHERE exc.deletedAt IS NULL
        AND exc.user.username = :username
        """)
-    Page<ExpenseCategoryResponse> findAllCategoryExpenses(@Param("username") String username, Pageable pageable);
+    Page<ExpenseCategoryResponse> findAllCategoryExpenses(Pageable pageable, @Param("username") String username);
 }

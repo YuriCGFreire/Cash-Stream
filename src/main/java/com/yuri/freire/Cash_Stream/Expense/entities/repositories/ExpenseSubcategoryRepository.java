@@ -19,7 +19,7 @@ public interface ExpenseSubcategoryRepository extends JpaRepository<ExpenseSubca
             AND esc.deletedAt IS NULL
             AND esc.user.username = :username
             """)
-    Optional<ExpenseSubcategory> findBySubcategoryId(@Param("username") String username, @Param("expenseSubcategoryId") Integer expenseSubcategoryId);
+    Optional<ExpenseSubcategory> findBySubcategoryId(@Param("expenseSubcategoryId") Integer expenseSubcategoryId, @Param("username") String username);
     @Query("""
             SELECT esc
             FROM ExpenseSubcategory esc
@@ -27,7 +27,7 @@ public interface ExpenseSubcategoryRepository extends JpaRepository<ExpenseSubca
             AND esc.deletedAt IS NULL
             AND esc.user.username = :username
             """)
-    Optional<ExpenseSubcategory> findBySubCategoryName(@Param("username") String username, @Param("subCategoryName") String subCategoryName);
+    Optional<ExpenseSubcategory> findBySubCategoryName(@Param("subCategoryName") String subCategoryName, @Param("username") String username);
 
     @Query("""
             SELECT new com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseSubcategoryResponse(
@@ -42,7 +42,7 @@ public interface ExpenseSubcategoryRepository extends JpaRepository<ExpenseSubca
             WHERE esc.deletedAt IS NULL
             AND esc.user.username = :username
             """)
-    Page<ExpenseSubcategoryResponse> findAllSubcategoryExpenses(@Param("username") String username, Pageable pageable);
+    Page<ExpenseSubcategoryResponse> findAllSubcategoryExpenses(Pageable pageable, @Param("username") String username);
 
     @Query("""
             select new com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseSubcategoryResponse(
@@ -58,5 +58,5 @@ public interface ExpenseSubcategoryRepository extends JpaRepository<ExpenseSubca
             AND esc.deletedAt IS NULL
             AND esc.user.username = :username
             """)
-    Page<ExpenseSubcategoryResponse> findAllSubcategoryExpensesByCategory(@Param("username") String username, @Param("categoryName") String categoryName, Pageable pageable);
+    Page<ExpenseSubcategoryResponse> findAllSubcategoryExpensesByCategory(@Param("categoryName") String categoryName, Pageable pageable, @Param("username") String username);
 }

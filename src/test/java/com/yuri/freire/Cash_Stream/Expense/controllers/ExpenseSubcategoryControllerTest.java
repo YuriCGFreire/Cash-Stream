@@ -27,6 +27,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -42,28 +43,32 @@ class ExpenseSubcategoryControllerTest {
     private ExpenseSubcategoryService expenseSubcategoryServiceMock;
     @Mock
     private HttpServletRequest requestMock;
+    @Mock
+    private UserDetails userDetailsMock;
 
     @BeforeEach
     void setUp(){
         ExpenseSubcategoryResponse expenseSubcategoryResponse = ExpenseSubcategoryCreator.createValidExpenseSubcategoryResponse();
         PageImpl<ExpenseSubcategoryResponse> expenseSubcategoryResponsePage = new PageImpl<>(List.of(expenseSubcategoryResponse));
 
-        BDDMockito.when(expenseSubcategoryServiceMock.createExpenseSubcategory(ArgumentMatchers.any()))
+        BDDMockito.when(userDetailsMock.getUsername()).thenReturn("Yuri Freire");
+
+        BDDMockito.when(expenseSubcategoryServiceMock.createExpenseSubcategory(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(expenseSubcategoryResponse);
 
-        BDDMockito.when(expenseSubcategoryServiceMock.findAllSubcategoryExpenses(ArgumentMatchers.any()))
+        BDDMockito.when(expenseSubcategoryServiceMock.findAllSubcategoryExpenses(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(expenseSubcategoryResponsePage);
 
-        BDDMockito.when(expenseSubcategoryServiceMock.findAllSubcategoryExpensesByCategory(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        BDDMockito.when(expenseSubcategoryServiceMock.findAllSubcategoryExpensesByCategory(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(expenseSubcategoryResponsePage);
 
-        BDDMockito.when(expenseSubcategoryServiceMock.findAllSubcategoryExpensesByCategory(ArgumentMatchers.eq("someRandomcategoryName"), ArgumentMatchers.any()))
+        BDDMockito.when(expenseSubcategoryServiceMock.findAllSubcategoryExpensesByCategory(ArgumentMatchers.eq("someRandomcategoryName"), ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenThrow(new EntityNotFoundException("Category not found: someRandomcategoryName"));
 
-        BDDMockito.when(expenseSubcategoryServiceMock.deleteBySubcategoryId(ArgumentMatchers.anyInt()))
+        BDDMockito.when(expenseSubcategoryServiceMock.deleteBySubcategoryId(ArgumentMatchers.anyInt(), ArgumentMatchers.any()))
                 .thenReturn(expenseSubcategoryResponse.getSubCategoryName());
 
-        BDDMockito.when(expenseSubcategoryServiceMock.deleteBySubcategoryId(ArgumentMatchers.eq(1298)))
+        BDDMockito.when(expenseSubcategoryServiceMock.deleteBySubcategoryId(ArgumentMatchers.eq(1298), ArgumentMatchers.any()))
                         .thenThrow(new EntityNotFoundException("Subcategory not found: 1298"));
 
         BDDMockito.when(requestMock.getRequestURI())
@@ -75,7 +80,7 @@ class ExpenseSubcategoryControllerTest {
     void createExpenseSubcategory_PersistExpenseSubcategory_WhenSuccessful() {
         ExpenseSubcategoryResponse expectedSubcategory = ExpenseSubcategoryCreator.createValidExpenseSubcategoryResponse();
         ResponseEntity<ApiResponse<ExpenseSubcategoryResponse>> expenseSubcategory = expenseSubcategoryController.createExpenseSubcategory(
-                ExpenseSubcategoryRequestCreator.createExpenseSubcategoryRequest(), requestMock
+                ExpenseSubcategoryRequestCreator.createExpenseSubcategoryRequest(), requestMock, userDetailsMock
         );
 
         Assertions.assertThat(expenseSubcategory.getBody().getErrors()).isNull();
@@ -90,7 +95,8 @@ class ExpenseSubcategoryControllerTest {
     void findAllSubcategoryExpenses_ReturnListOfExpenseSubcategoryResponseInsidePageObject_WhenSuccessful() {
         ResponseEntity<ApiResponse<Page<ExpenseSubcategoryResponse>>> allSubcategoryExpenses = expenseSubcategoryController.findAllSubcategoryExpenses(
                 PageRequest.of(0, 1),
-                requestMock
+                requestMock,
+                userDetailsMock
         );
         Assertions.assertThat(allSubcategoryExpenses).isNotNull();
 
@@ -110,7 +116,8 @@ class ExpenseSubcategoryControllerTest {
         ResponseEntity<ApiResponse<Page<ExpenseSubcategoryResponse>>> allSubcategoryExpensesByCategory = expenseSubcategoryController.findAllSubcategoryExpensesByCategory(
                 expectedCategoryName,
                 PageRequest.of(0, 1),
-                requestMock
+                requestMock,
+                userDetailsMock
         );
         Assertions.assertThat(allSubcategoryExpensesByCategory.getBody().getData().toList())
                 .isNotEmpty()
@@ -127,7 +134,7 @@ class ExpenseSubcategoryControllerTest {
     void findAllSubcategoryExpensesByCategory_ThrowEntityNotFoundException_WhenCategoryDoesNotExist() {
         String randomCategoryName = "someRandomcategoryName";
         Assertions.assertThatThrownBy(() ->
-                expenseSubcategoryController.findAllSubcategoryExpensesByCategory(randomCategoryName, PageRequest.of(0, 1), requestMock)
+                expenseSubcategoryController.findAllSubcategoryExpensesByCategory(randomCategoryName, PageRequest.of(0, 1), requestMock, userDetailsMock)
         )
         .hasMessage("Category not found: someRandomcategoryName")
         .isInstanceOf(EntityNotFoundException.class);
@@ -139,7 +146,8 @@ class ExpenseSubcategoryControllerTest {
         String expectedSubCategoryName = ExpenseSubcategoryCreator.createValidExpenseSubcategory().getSubCategoryName();
         ResponseEntity<ApiResponse<String>> deletedSubcategory = expenseSubcategoryController.deleteSubcategoryById(
                 ExpenseSubcategoryCreator.createValidExpenseSubcategory().getExpenseSubcategoryId(),
-                requestMock
+                requestMock,
+                userDetailsMock
         );
 
         Assertions.assertThat(deletedSubcategory).isNotNull();
@@ -155,7 +163,7 @@ class ExpenseSubcategoryControllerTest {
         Integer someRandomId = 1298;
 
         Assertions.assertThatThrownBy(() ->
-                        expenseSubcategoryController.deleteSubcategoryById(someRandomId, requestMock)
+                        expenseSubcategoryController.deleteSubcategoryById(someRandomId, requestMock, userDetailsMock)
                 )
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessageContaining("Subcategory not found: 1298");

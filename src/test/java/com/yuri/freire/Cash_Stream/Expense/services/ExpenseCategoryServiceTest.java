@@ -2,6 +2,7 @@ package com.yuri.freire.Cash_Stream.Expense.services;
 
 
 import com.yuri.freire.Cash_Stream.Authentication.entities.User;
+import com.yuri.freire.Cash_Stream.Authentication.services.UserService;
 import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseCategoryResponse;
 import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseCategory;
 import com.yuri.freire.Cash_Stream.Expense.entities.repositories.ExpenseCategoryRepository;
@@ -48,20 +49,18 @@ class ExpenseCategoryServiceTest {
     private ExpenseCategoryRepository expenseCategoryRepositoryMock;
     @Mock
     private ExpenseFactory expenseFactoryMock;
+    @Mock
+    private UserService userServiceMock;
 
     @BeforeEach
     void setUp(){
 
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Authentication authentication = Mockito.mock(Authentication.class);
-
-        BDDMockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-        BDDMockito.when(authentication.getName()).thenReturn("Yuri Freire");
-        SecurityContextHolder.setContext(securityContext);
-
         PageImpl<ExpenseCategoryResponse> categoryPage = new PageImpl<>(List.of(ExpenseCategoryCreator.createValidExpenseCategoryResponse()));
         ExpenseCategory expenseCategory = ExpenseCategoryCreator.createValidExpenseCategory();
         ExpenseCategoryResponse expenseCategoryResponse = ExpenseCategoryCreator.createValidExpenseCategoryResponse();
+
+        BDDMockito.when(userServiceMock.findUserByUsername(ArgumentMatchers.any()))
+                        .thenReturn(UserCreator.createValidUser());
 
         BDDMockito.when(expenseFactoryMock.createExpenseCategory(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(expenseCategory);
@@ -72,7 +71,7 @@ class ExpenseCategoryServiceTest {
         BDDMockito.when(expenseCategoryRepositoryMock.findAllCategoryExpenses(ArgumentMatchers.any(PageRequest.class), ArgumentMatchers.any()))
                 .thenReturn(categoryPage);
 
-        BDDMockito.when(expenseCategoryRepositoryMock.findByCategoryName(ArgumentMatchers.any(), ArgumentMatchers.eq("Alimentação")))
+        BDDMockito.when(expenseCategoryRepositoryMock.findByCategoryName(ArgumentMatchers.eq("Alimentação"), ArgumentMatchers.any()))
                 .thenReturn(Optional.of(ExpenseCategoryCreator.createValidExpenseCategory()));
 
         BDDMockito.when(expenseCategoryRepositoryMock.findByCategoryName(ArgumentMatchers.any(), ArgumentMatchers.eq("Magic")))
@@ -93,7 +92,7 @@ class ExpenseCategoryServiceTest {
     @Test
     @DisplayName("createExpenseCategory persist expensecategory when successful")
     void createExpenseCategory_PersistExpenseCategory_WhenSuccessful(){
-        ExpenseCategoryResponse expenseCategory = expenseCategoryService.createExpenseCategory(ExpenseCategoryRequestCreator.createExpenseCategoryRequest());
+        ExpenseCategoryResponse expenseCategory = expenseCategoryService.createExpenseCategory(ExpenseCategoryRequestCreator.createExpenseCategoryRequest(), UserCreator.createValidUser().getUsername());
 
         Assertions.assertThat(expenseCategory).isNotNull().isEqualTo(ExpenseCategoryCreator.createValidExpenseCategoryResponse());
         Assertions.assertThat(expenseCategory.getCategoryName()).isNotNull().isEqualTo(ExpenseCategoryCreator.createValidExpenseCategoryResponse().getCategoryName());
@@ -103,7 +102,7 @@ class ExpenseCategoryServiceTest {
     @Test
     @DisplayName("findAllCategoryExpenses returns list of ExpenseCategory inside Page Object when successful")
     void findAllCategoryExpenses_ReturnsListOfExpenseCategoryInsidePageObject_WhenSuccessful(){
-        Page<ExpenseCategoryResponse> categoryPage = expenseCategoryService.findAllCategoryExpenses(PageRequest.of(0, 1));
+        Page<ExpenseCategoryResponse> categoryPage = expenseCategoryService.findAllCategoryExpenses(PageRequest.of(0, 1), UserCreator.createValidUser().getUsername());
         Assertions.assertThat(categoryPage).isNotNull();
         Assertions.assertThat(categoryPage.toList())
                 .isNotEmpty()
@@ -114,7 +113,7 @@ class ExpenseCategoryServiceTest {
     @DisplayName("findByCategoryName return ExpenseCategory when successful")
     void findByCategoryName_ReturnExpenseCategory_WhenSuccessful(){
         ExpenseCategory expectedExpenseCategory = ExpenseCategoryCreator.createValidExpenseCategory();
-        ExpenseCategory fetchedExpenseCategory = expenseCategoryService.findByCategoryName(expectedExpenseCategory.getCategoryName(), "username");
+        ExpenseCategory fetchedExpenseCategory = expenseCategoryService.findByCategoryName(expectedExpenseCategory.getCategoryName(), UserCreator.createValidUser().getUsername());
 
         Assertions.assertThat(fetchedExpenseCategory)
                 .isNotNull()
@@ -127,7 +126,7 @@ class ExpenseCategoryServiceTest {
     @DisplayName("findByCategoryName throw EntityNotFoundException when category does not exist")
     void findByCategoryName_ThrowsEntityNotFoundException_WhenCategoryDoesNotExiste(){
         String categoryName = "Some random categoryname";
-        Assertions.assertThatThrownBy(() -> expenseCategoryService.findByCategoryName(categoryName, "username"))
+        Assertions.assertThatThrownBy(() -> expenseCategoryService.findByCategoryName(categoryName, UserCreator.createValidUser().getUsername()))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("Category not found: " + categoryName);
     }
@@ -135,7 +134,7 @@ class ExpenseCategoryServiceTest {
     @Test
     @DisplayName("deleteByCategoryId removes category whem successful")
     void deleteByCategoryId_RemovesExpenseCategroy_WhenSuccessful(){
-        String deletedCategory = expenseCategoryService.deleteByCategoryId(ExpenseCategoryCreator.createValidExpenseCategory().getExpenseCategoryId());
+        String deletedCategory = expenseCategoryService.deleteByCategoryId(ExpenseCategoryCreator.createValidExpenseCategory().getExpenseCategoryId(), UserCreator.createValidUser().getUsername());
 
         Assertions.assertThat(deletedCategory)
                 .isNotNull()
@@ -146,7 +145,7 @@ class ExpenseCategoryServiceTest {
     @DisplayName("deleteByCategoryId throws EntityNotFoundException when category does not exist")
     void deleteByCategoryId_ThrowsEntityNotFoundException_WhenCategoryDoesNotExiste(){
         Integer categoryId = 999;
-        Assertions.assertThatThrownBy(() -> expenseCategoryService.deleteByCategoryId(categoryId))
+        Assertions.assertThatThrownBy(() -> expenseCategoryService.deleteByCategoryId(categoryId, UserCreator.createValidUser().getUsername()))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("Category not found: " + categoryId);
     }

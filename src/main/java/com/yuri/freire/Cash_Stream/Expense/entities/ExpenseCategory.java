@@ -43,8 +43,4 @@ public class ExpenseCategory extends BaseEntity {
 
     @OneToMany(mappedBy = "expenseCategory", orphanRemoval = true)
     private List<Expense> expenses;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
 }

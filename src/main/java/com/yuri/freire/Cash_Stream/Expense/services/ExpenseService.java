@@ -8,6 +8,7 @@ import com.yuri.freire.Cash_Stream.Expense.entities.entity_enum.ExpenseMethodTyp
 import com.yuri.freire.Cash_Stream.Expense.entities.repositories.ExpenseRepository;
 import com.yuri.freire.Cash_Stream.Expense.services.facade.ExpenseFacade;
 import com.yuri.freire.Cash_Stream.Utils.CookieUtils;
+import com.yuri.freire.Cash_Stream.Utils.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -22,45 +23,39 @@ import java.time.LocalDateTime;
 public class ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final ExpenseFacade expenseFacade;
-    public ExpenseResponse createExpense(ExpenseRequest expenseRequest, HttpServletRequest request){
-        Expense expense = expenseFacade.createExpense(expenseRequest, request);
+    public ExpenseResponse createExpense(ExpenseRequest expenseRequest, String username){
+        Expense expense = expenseFacade.createExpense(expenseRequest, username);
         Expense savedExpense = expenseRepository.save(expense);
         return expenseFacade.createExpenseResponse(savedExpense);
     }
 
-    public Page<ExpenseResponse> findAllExpenses(Pageable pageable, HttpServletRequest request ){
-        String username = expenseFacade.extractUsernameFromCookie(request);
-        return expenseRepository.findAllExpenses(username, pageable);
+    public Page<ExpenseResponse> findAllExpenses(Pageable pageable, String username){
+        return expenseRepository.findAllExpenses(pageable, username);
     }
 
-    public Page<ExpenseResponse> findAllExpensesByCategoryName(HttpServletRequest request, String categoryName, Pageable pageable){
+    public Page<ExpenseResponse> findAllExpensesByCategoryName(String categoryName, Pageable pageable, String username){
 //      Validação da category
-        String username = expenseFacade.extractUsernameFromCookie(request);
         String expenseCategoryName = expenseFacade.findExpenseCategoryByName(categoryName, username).getCategoryName();
-        return expenseRepository.findAllByCategory(username, expenseCategoryName, pageable);
+        return expenseRepository.findAllByCategory(expenseCategoryName, pageable, username);
     }
 
-    public Page<ExpenseResponse> findAllBySubcategoryName(HttpServletRequest request, String subcategoryName, Pageable pageable){
+    public Page<ExpenseResponse> findAllBySubcategoryName(String subcategoryName, Pageable pageable, String username){
 //      Validação de subcategory
-        String username = expenseFacade.extractUsernameFromCookie(request);
-        String expenseSubcategoryByName = expenseFacade.findExpenseSubcategoryByName(subcategoryName, request).getSubCategoryName();
-        return expenseRepository.findAllBySubcategory(username, expenseSubcategoryByName, pageable);
+        String expenseSubcategoryByName = expenseFacade.findExpenseSubcategoryByName(subcategoryName, username).getSubCategoryName();
+        return expenseRepository.findAllBySubcategory(expenseSubcategoryByName, pageable, username);
     }
 
-    public Page<ExpenseResponse> findAllExpensesByPaymentMethod(HttpServletRequest request, ExpenseMethodType methodType, Pageable pageable){
-        String username = expenseFacade.extractUsernameFromCookie(request);
+    public Page<ExpenseResponse> findAllExpensesByPaymentMethod(ExpenseMethodType methodType, Pageable pageable, String username){
         ExpenseMethodType expenseMethodType = expenseFacade.findExpenseMethod(methodType).getExpenseMethodName();
-        return expenseRepository.findAllBYPaymentMethod(username, expenseMethodType, pageable);
+        return expenseRepository.findAllBYPaymentMethod(expenseMethodType, pageable, username);
     }
 
-    public Page<ExpenseResponse> findAllExpensesByIsEssential(HttpServletRequest request, boolean isEssential, Pageable pageable){
-        String username = expenseFacade.extractUsernameFromCookie(request);
-        return expenseRepository.findAllByEssentiality(username, isEssential, pageable);
+    public Page<ExpenseResponse> findAllExpensesByIsEssential(boolean isEssential, Pageable pageable, String username){
+        return expenseRepository.findAllByEssentiality(isEssential, pageable, username);
     }
 
-    public String softDeleteExpense(HttpServletRequest request, Integer expenseId){
-        String username = expenseFacade.extractUsernameFromCookie(request);
-        Expense expense = expenseRepository.findExpenseById(username, expenseId)
+    public String softDeleteExpense(Integer expenseId, String username){
+        Expense expense = expenseRepository.findExpenseById(expenseId, username)
                 .orElseThrow(() -> new EntityNotFoundException("Expense not found with id: " + expenseId));
         expenseRepository.delete(expense);
         return expense.getExpenseDescription();

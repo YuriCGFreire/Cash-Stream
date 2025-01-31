@@ -45,11 +45,8 @@ class ExpenseServiceTest {
         ExpenseResponse validExpenseResponse = ExpenseCreator.createValidExpenseResponse();
         PageImpl<ExpenseResponse> pageExpense = new PageImpl<>(List.of(validExpenseResponse));
 
-        BDDMockito.when(expenseFacadeMock.createExpense(ArgumentMatchers.any()))
+        BDDMockito.when(expenseFacadeMock.createExpense(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(validExpense);
-
-        BDDMockito.when(expenseFacadeMock.getCurrentUsername())
-                        .thenReturn(UserCreator.createValidUser().getUsername());
 
         BDDMockito.when(expenseRepositoryMock.save(ArgumentMatchers.any()))
                 .thenReturn(validExpense);
@@ -72,10 +69,10 @@ class ExpenseServiceTest {
         BDDMockito.when(expenseRepositoryMock.findAllBySubcategory(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(pageExpense);
 
-        BDDMockito.when(expenseFacadeMock.findExpenseSubcategoryByName(ArgumentMatchers.anyString()))
+        BDDMockito.when(expenseFacadeMock.findExpenseSubcategoryByName(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
                 .thenReturn(ExpenseSubcategoryCreator.createValidExpenseSubcategory());
 
-        BDDMockito.when(expenseFacadeMock.findExpenseSubcategoryByName(ArgumentMatchers.eq("Some random subcategoryname")))
+        BDDMockito.when(expenseFacadeMock.findExpenseSubcategoryByName(ArgumentMatchers.eq("Some random subcategoryname"), ArgumentMatchers.any()))
                 .thenThrow(new EntityNotFoundException("Subcategory not found: Some random subcategoryname"));
 
         BDDMockito.when(expenseRepositoryMock.findAllBYPaymentMethod(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
@@ -99,7 +96,7 @@ class ExpenseServiceTest {
     @DisplayName("createExpense oersist expense when successful")
     void createExpense_PersistExpense_WhenSuccessful() {
         ExpenseResponse expecetedExpenseResponse = ExpenseCreator.createValidExpenseResponse();
-        ExpenseResponse savedExpense = expenseService.createExpense(ExpenseRequestCreator.createExpenseRequest());
+        ExpenseResponse savedExpense = expenseService.createExpense(ExpenseRequestCreator.createExpenseRequest(), UserCreator.createValidUser().getUsername());
 
         Assertions.assertThat(savedExpense).isNotNull().isInstanceOf(ExpenseResponse.class);
 
@@ -114,7 +111,7 @@ class ExpenseServiceTest {
     @Test
     @DisplayName("findAllExpenses return list of Expenses inside page object when successful")
     void findAllExpenses_ReturnListOfExpenseInsidePageObject_WhenSuccessful() {
-        Page<ExpenseResponse> pageExpense = expenseService.findAllExpenses(PageRequest.of(0, 1));
+        Page<ExpenseResponse> pageExpense = expenseService.findAllExpenses(PageRequest.of(0, 1), UserCreator.createValidUser().getUsername());
 
         Assertions.assertThat(pageExpense).isNotNull();
         Assertions.assertThat(pageExpense.toList())
@@ -126,7 +123,7 @@ class ExpenseServiceTest {
     @DisplayName("findAllExpensesByCategoryName return list of expense by categoryname Inside Page Object when successful")
     void findAllExpensesByCategoryName_ReturnListOfExpenseByCategoryNameInsidePageObject_WhenSuccessful() {
         String expectedCategoryName = ExpenseCreator.createValidExpenseResponse().getCategoryName();
-        Page<ExpenseResponse> pageExpense = expenseService.findAllExpensesByCategoryName(expectedCategoryName, PageRequest.of(0, 1));
+        Page<ExpenseResponse> pageExpense = expenseService.findAllExpensesByCategoryName(expectedCategoryName, PageRequest.of(0, 1), UserCreator.createValidUser().getUsername());
 
         Assertions.assertThat(pageExpense).isNotNull();
         Assertions.assertThat(pageExpense.toList())
@@ -142,7 +139,7 @@ class ExpenseServiceTest {
     @DisplayName("findAllExpensesByCategoryName throw EntityNotFoundException when category does not exist")
     void findAllExpensesByCategoryName_ThrowEntityNotFoundException_WhenCategoryDoesNotExist() {
         String expectedCategoryName = "Some random categoryname";
-        Assertions.assertThatThrownBy(() -> expenseService.findAllExpensesByCategoryName(expectedCategoryName, PageRequest.of(0, 1)))
+        Assertions.assertThatThrownBy(() -> expenseService.findAllExpensesByCategoryName(expectedCategoryName, PageRequest.of(0, 1), UserCreator.createValidUser().getUsername()))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("Category not found: " + expectedCategoryName);
     }
@@ -151,7 +148,7 @@ class ExpenseServiceTest {
     @DisplayName("findAllBySubcategoryName return list of expense by subCategoryName inside page object when successful")
     void findAllBySubcategoryName_ReturnListOfExpenseBySubCategorynameInsidePageObject_WhenSuccessful() {
         String expectedSubcategoryName = ExpenseCreator.createValidExpenseResponse().getSubCategoryName();
-        Page<ExpenseResponse> pageExpense = expenseService.findAllBySubcategoryName(expectedSubcategoryName, PageRequest.of(0, 1));
+        Page<ExpenseResponse> pageExpense = expenseService.findAllBySubcategoryName(expectedSubcategoryName, PageRequest.of(0, 1), UserCreator.createValidUser().getUsername());
 
         Assertions.assertThat(pageExpense).isNotNull();
         Assertions.assertThat(pageExpense.toList())
@@ -167,7 +164,7 @@ class ExpenseServiceTest {
     @DisplayName("findAllBySubcategoryName throw EntityNotFoundException when Subcategory does not exist")
     void findAllBySubcategoryName_ThrowEntityNotFoundException_WhenSubcategoryDoesNotExist() {
         String expectedSubcategoryName = "Some random subcategoryname";
-        Assertions.assertThatThrownBy(() -> expenseService.findAllBySubcategoryName(expectedSubcategoryName, PageRequest.of(0, 1)))
+        Assertions.assertThatThrownBy(() -> expenseService.findAllBySubcategoryName(expectedSubcategoryName, PageRequest.of(0, 1), UserCreator.createValidUser().getUsername()))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("Subcategory not found: " + expectedSubcategoryName);
     }
@@ -176,7 +173,7 @@ class ExpenseServiceTest {
     @DisplayName("findAllExpensesByPaymentMethod return list of expense by PaymentMethod inside page object when successful")
     void findAllExpensesByPaymentMethod_ReturnListOfExpenseByPaymentMethodInsidePageObject_WhenSuccessful() {
         ExpenseMethodType expectedPaymentMethod = ExpenseCreator.createValidExpenseResponse().getExpenseMethod();
-        Page<ExpenseResponse> pageExpense = expenseService.findAllExpensesByPaymentMethod(expectedPaymentMethod, PageRequest.of(0, 1));
+        Page<ExpenseResponse> pageExpense = expenseService.findAllExpensesByPaymentMethod(expectedPaymentMethod, PageRequest.of(0, 1), UserCreator.createValidUser().getUsername());
 
         Assertions.assertThat(pageExpense).isNotNull();
         Assertions.assertThat(pageExpense.toList())
@@ -188,27 +185,26 @@ class ExpenseServiceTest {
                 .allMatch(expenseMethodType -> expenseMethodType.equals(expectedPaymentMethod));
     }
 
-//    Todo: Corrigir teste
-//    @Test
-//    @DisplayName("findAllExpensesByIsEssential return list of Expense by Essentiality inside page object when successful")
-//    void findAllExpensesByIsEssential_ReturnListOfExpenseByEssentialityInsidePageObject_WhenSuccessful() {
-//        boolean expectedEssentiality = ExpenseCreator.createValidExpenseResponse().isEssential();
-//        Page<ExpenseResponse> pageExpense = expenseService.find(PageRequest.of(0, 1));
-//
-//        Assertions.assertThat(pageExpense).isNotNull();
-//        Assertions.assertThat(pageExpense.toList())
-//                .isNotEmpty()
-//                .hasSize(1);
-//
-//        Assertions.assertThat(pageExpense.getContent())
-//                .extracting(ExpenseResponse::isEssential)
-//                .allMatch(isEssential -> isEssential.equals(expectedEssentiality));
-//    }
+    @Test
+    @DisplayName("findAllExpensesByIsEssential return list of Expense by Essentiality inside page object when successful")
+    void findAllExpensesByIsEssential_ReturnListOfExpenseByEssentialityInsidePageObject_WhenSuccessful() {
+        boolean expectedEssentiality = ExpenseCreator.createValidExpenseResponse().isEssential();
+        Page<ExpenseResponse> pageExpense = expenseService.findAllExpensesByIsEssential(true, PageRequest.of(0, 1), UserCreator.createValidUser().getUsername());
+
+        Assertions.assertThat(pageExpense).isNotNull();
+        Assertions.assertThat(pageExpense.toList())
+                .isNotEmpty()
+                .hasSize(1);
+
+        Assertions.assertThat(pageExpense.getContent())
+                .extracting(ExpenseResponse::isEssential)
+                .allMatch(isEssential -> isEssential.equals(expectedEssentiality));
+    }
 
     @Test
     @DisplayName("softDeleteExpense sofDelete expense when successful")
     void softDeleteExpense_UpdateDeletedAtField_WhenSuccessful(){
-        String deletedExpense = expenseService.softDeleteExpense(ExpenseCreator.createValidExpenseResponse().getExpenseId());
+        String deletedExpense = expenseService.softDeleteExpense(ExpenseCreator.createValidExpenseResponse().getExpenseId(), UserCreator.createValidUser().getUsername());
 
         Assertions.assertThat(deletedExpense)
                 .isNotNull()
@@ -219,7 +215,7 @@ class ExpenseServiceTest {
     @DisplayName("softDeleteExpense throw EntityNotFoundException when Expense does not exist(")
     void softDeleteExpense_ThrowsEntityNotFoundException_WhenExpenseDoesNotExist(){
         Integer expenseId = 999;
-        Assertions.assertThatThrownBy(() -> expenseService.softDeleteExpense(expenseId))
+        Assertions.assertThatThrownBy(() -> expenseService.softDeleteExpense(expenseId, UserCreator.createValidUser().getUsername()))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("Expense not found with id: " + expenseId);
     }

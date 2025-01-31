@@ -15,6 +15,7 @@ import com.yuri.freire.Cash_Stream.util.expense.ExpenseCategoryCreator;
 import com.yuri.freire.Cash_Stream.util.expense.ExpenseSubcategoryCreator;
 import com.yuri.freire.Cash_Stream.util.expense.ExpenseSubcategoryRequestCreator;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -72,8 +74,8 @@ public class ExpenseSubcategoryIT {
     @Test
     @DisplayName("createExpenseCategory persist ExpenseSubcategory when successful")
     void createExpenseCategory_PersistExpenseSubcategory_WhenSuccessful() {
-        expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
         userRepository.save(userTest);
+        expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
         ExpenseSubcategoryRequest expenseSubcategoryRequest = ExpenseSubcategoryRequestCreator.createExpenseSubcategoryRequest();
         ExpenseSubcategoryResponse expectedResponse = ExpenseSubcategoryCreator.createValidExpenseSubcategoryResponse();
         expectedResponse.setSubCategoryName("McDonalds");
@@ -120,11 +122,11 @@ public class ExpenseSubcategoryIT {
     }
 
     @Test
-    @DisplayName("findAllExpenses return List of ExpenseSubcategory inside page object when successful")
-    void findAllExpenses_ReturnListOfExpenseSubcategoryInsidePageObject_WhenSuccessful() {
+    @DisplayName("findAllExpensesSubcategory return List of ExpenseSubcategory inside page object when successful")
+    void findAllExpensesSubcategory_ReturnListOfExpenseSubcategoryInsidePageObject_WhenSuccessful() {
+        userRepository.save(userTest);
         expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
         expenseSubcategoryRepository.save(ExpenseSubcategoryCreator.createValidExpenseSubcategoryTobeSaved());
-        userRepository.save(userTest);
 
         ResponseEntity<ApiResponse<PageableResponse<ExpenseSubcategoryResponse>>> allExpenses = testRestTemplate.exchange(
                 "/expense-subcategory/find-all",
@@ -145,11 +147,12 @@ public class ExpenseSubcategoryIT {
     }
 
     @Test
-    @DisplayName("findAllExpenses return List of ExpenseSubcategory inside page object by Category when successful")
-    void findAllExpenses_ReturnListOfExpenseSubcategoryInsidePageObjectByCategory_WhenSuccessful() {
+    @WithMockUser(username = "Yuri Freire")
+    @DisplayName("findAllSubcategoryExpensesByCategory return List of ExpenseSubcategory inside page object by Category when successful")
+    void findAllSubcategoryExpensesByCategory_ReturnListOfExpenseSubcategoryInsidePageObjectByCategory_WhenSuccessful() {
+        userRepository.save(userTest);
         ExpenseCategory expectedCategoryName = expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
         ExpenseSubcategory savedSubcategory = expenseSubcategoryRepository.save(ExpenseSubcategoryCreator.createValidExpenseSubcategoryTobeSaved());
-        userRepository.save(userTest);
 
         ResponseEntity<ApiResponse<PageableResponse<ExpenseSubcategoryResponse>>> allExpenses = testRestTemplate.exchange(
                 "/expense-subcategory/all-by-category?categoryName=" + savedSubcategory.getExpenseCategory().getCategoryName(),
@@ -158,6 +161,8 @@ public class ExpenseSubcategoryIT {
                 new ParameterizedTypeReference<ApiResponse<PageableResponse<ExpenseSubcategoryResponse>>>() {
                 }
         );
+
+        System.out.println(allExpenses);
 
         Assertions.assertThat(allExpenses).isNotNull();
         Assertions.assertThat(allExpenses.getBody().getData().toList())
@@ -175,9 +180,9 @@ public class ExpenseSubcategoryIT {
     @Test
     @DisplayName("findAllExpenses return 404 NotFound when category does not exist")
     void findAllExpenses_Return404NotFound_WhenCategoryDoesNotExist() {
+        userRepository.save(userTest);
         expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
         expenseSubcategoryRepository.save(ExpenseSubcategoryCreator.createValidExpenseSubcategoryTobeSaved());
-        userRepository.save(userTest);
 
         ResponseEntity<ApiResponse<PageableResponse<ExpenseSubcategoryResponse>>> allExpenses = testRestTemplate.exchange(
                 "/expense-subcategory/all-by-category?categoryName=anyRandomName",
@@ -203,9 +208,9 @@ public class ExpenseSubcategoryIT {
     @Test
     @DisplayName("deleteSubcategoryById delete ExpenseSubcategory when successful")
     void deleteSubcategoryById_DeleteExpenseSubcategory_WhenSuccessful() {
+        userRepository.save(userTest);
         expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
         ExpenseSubcategory savedSubcategory = expenseSubcategoryRepository.save(ExpenseSubcategoryCreator.createValidExpenseSubcategoryTobeSaved());
-        userRepository.save(userTest);
         String expectedSubCategoryName = ExpenseSubcategoryCreator.createValidExpenseSubcategory().getSubCategoryName();
 
         ResponseEntity<ApiResponse<String>> deletedSubcategory = testRestTemplate.exchange(

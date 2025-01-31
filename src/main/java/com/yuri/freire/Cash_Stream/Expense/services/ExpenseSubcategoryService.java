@@ -12,6 +12,7 @@ import com.yuri.freire.Cash_Stream.Expense.entities.repositories.ExpenseSubcateg
 import com.yuri.freire.Cash_Stream.Expense.services.facade.ExpenseFacade;
 import com.yuri.freire.Cash_Stream.Expense.services.factory.ExpenseFactory;
 import com.yuri.freire.Cash_Stream.Utils.CookieUtils;
+import com.yuri.freire.Cash_Stream.Utils.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +33,8 @@ public class ExpenseSubcategoryService {
     private final JwtService jwtService;
     private final UserService userService;
 
-    public ExpenseSubcategoryResponse createExpenseSubcategory(ExpenseSubcategoryRequest expenseSubcategoryRequest, HttpServletRequest request){
-        String username = this.extractUsername(request);
-        Optional<ExpenseSubcategory> fectchedExpenseSubcategory = expenseSubcategoryRepository.findBySubCategoryName(username, expenseSubcategoryRequest.getSubcategoryName());
+    public ExpenseSubcategoryResponse createExpenseSubcategory(ExpenseSubcategoryRequest expenseSubcategoryRequest, String username){
+        Optional<ExpenseSubcategory> fectchedExpenseSubcategory = expenseSubcategoryRepository.findBySubCategoryName(expenseSubcategoryRequest.getSubcategoryName(), username);
         User fetchedUser = userService.findUserByUsername(username);
         if(fectchedExpenseSubcategory.isPresent()){
             throw new AlreadyExistsException("Expense subcategory with name '"
@@ -46,34 +46,25 @@ public class ExpenseSubcategoryService {
         return expenseFactory.createExpenseSubcategoryResponse(savedExpenseSubcategory);
     }
 //oi amor, te amo. vc codifica programas, mas decodifica meu coração s2
-    public ExpenseSubcategory findBySubcategoryName(String subcategoryName, HttpServletRequest request){
-        String username = this.extractUsername(request);
-        return expenseSubcategoryRepository.findBySubCategoryName(username, subcategoryName)
+    public ExpenseSubcategory findBySubcategoryName(String subcategoryName, String username){
+        return expenseSubcategoryRepository.findBySubCategoryName(subcategoryName, username)
                 .orElseThrow(() -> new EntityNotFoundException("Subcategory not found: " + subcategoryName));
     }
 
-    public Page<ExpenseSubcategoryResponse> findAllSubcategoryExpenses(Pageable pageable, HttpServletRequest request){
-        String username = this.extractUsername(request);
-        return expenseSubcategoryRepository.findAllSubcategoryExpenses(username, pageable);
+    public Page<ExpenseSubcategoryResponse> findAllSubcategoryExpenses(Pageable pageable, String username){
+        return expenseSubcategoryRepository.findAllSubcategoryExpenses(pageable, username);
     }
 
-    public Page<ExpenseSubcategoryResponse> findAllSubcategoryExpensesByCategory(String categoryName, Pageable pageable, HttpServletRequest request){
-        String username = this.extractUsername(request);
+    public Page<ExpenseSubcategoryResponse> findAllSubcategoryExpensesByCategory(String categoryName, Pageable pageable, String username){
         ExpenseCategory expenseCategory = expenseCategoryService.findByCategoryName(categoryName, username);
-        return expenseSubcategoryRepository.findAllSubcategoryExpensesByCategory(username, expenseCategory.getCategoryName(), pageable);
+        return expenseSubcategoryRepository.findAllSubcategoryExpensesByCategory(expenseCategory.getCategoryName(), pageable, username);
     }
 
-    public String deleteBySubcategoryId(Integer subcategoryId, HttpServletRequest request){
-        String username = this.extractUsername(request);
-        ExpenseSubcategory expenseSubcategory = expenseSubcategoryRepository.findBySubcategoryId(username, subcategoryId)
+    public String deleteBySubcategoryId(Integer subcategoryId, String username){
+        ExpenseSubcategory expenseSubcategory = expenseSubcategoryRepository.findBySubcategoryId(subcategoryId, username)
                 .orElseThrow(() -> new EntityNotFoundException("Subcategory not found: " + subcategoryId));
         expenseSubcategoryRepository.deleteById(subcategoryId);
         return expenseSubcategory.getSubCategoryName();
-    }
-
-    public String extractUsername(HttpServletRequest request){
-        String jwtFromCookie = CookieUtils.getJwtFromCookie(request);
-        return jwtService.extractUsername(jwtFromCookie);
     }
 }
 //fim?

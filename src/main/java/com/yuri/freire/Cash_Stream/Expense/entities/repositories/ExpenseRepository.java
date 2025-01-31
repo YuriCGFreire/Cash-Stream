@@ -20,7 +20,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
             AND ex.deletedAt IS NULL
             AND ex.user.username = :username
             """)
-    Optional<Expense> findExpenseById(@Param("username") String username, @Param("expenseId") Integer expenseId);
+    Optional<Expense> findExpenseById(@Param("expenseId") Integer expenseId, @Param("username") String username);
 
     @Query("""
             SELECT new com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseResponse(
@@ -44,7 +44,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
             WHERE ex.deletedAt IS NULL
             AND ex.user.username = :username
             """)
-    Page<ExpenseResponse>  findAllExpenses(@Param("username") String username, Pageable pageable);
+    Page<ExpenseResponse>  findAllExpenses(Pageable pageable, @Param("username") String username);
     @Query("""
             SELECT new com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseResponse(
             ex.expenseId,
@@ -68,7 +68,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
             AND ex.deletedAt IS NULL   
             AND ex.user.username = :username
             """)
-    Page<ExpenseResponse> findAllByCategory(@Param("username") String username, @Param("categoryName") String categoryName, Pageable pageable);
+    Page<ExpenseResponse> findAllByCategory(@Param("categoryName") String categoryName, Pageable pageable, @Param("username") String username);
     @Query("""
             SELECT new com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseResponse(
             ex.expenseId,
@@ -92,7 +92,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
             AND ex.deletedAt IS NULL    
             AND ex.user.username = :username     
             """)
-    Page<ExpenseResponse> findAllBySubcategory(@Param("username") String username, @Param("subCategoryName") String subCategoryName, Pageable pageable);
+    Page<ExpenseResponse> findAllBySubcategory(@Param("subCategoryName") String subCategoryName, Pageable pageable, @Param("username") String username);
     @Query("""
             SELECT new com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseResponse(
             ex.expenseId,
@@ -116,7 +116,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
             AND ex.deletedAt IS NULL   
             AND ex.user.username = :username
             """)
-    Page<ExpenseResponse> findAllBYPaymentMethod(@Param("username") String username, @Param("expenseMethodName") ExpenseMethodType expenseMethodName, Pageable pageable);
+    Page<ExpenseResponse> findAllBYPaymentMethod(@Param("expenseMethodName") ExpenseMethodType expenseMethodName, Pageable pageable, @Param("username") String username);
     @Query("""
             SELECT new com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseResponse(
             ex.expenseId,           
@@ -140,5 +140,5 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
             AND ex.deletedAt IS NULL  
             AND ex.user.username = :username 
             """)
-    Page<ExpenseResponse> findAllByEssentiality(@Param("username") String username, @Param("isEssential") boolean isEssential, Pageable pageable);
+    Page<ExpenseResponse> findAllByEssentiality(@Param("isEssential") boolean isEssential, Pageable pageable, @Param("username") String username);
 }

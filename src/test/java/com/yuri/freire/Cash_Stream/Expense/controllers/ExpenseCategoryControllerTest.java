@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
@@ -36,21 +37,26 @@ class ExpenseCategoryControllerTest {
     @Mock
     private HttpServletRequest servletRequestMock;
 
+    @Mock
+    private UserDetails userDetailsMock;
+
     @BeforeEach
     void setUp(){
         ExpenseCategoryResponse expenseCategoryResponse = ExpenseCategoryCreator.createValidExpenseCategoryResponse();
         PageImpl<ExpenseCategoryResponse> categoryPage = new PageImpl<>(List.of(expenseCategoryResponse));
 
-        BDDMockito.when(expenseCategoryServiceMock.createExpenseCategory(ArgumentMatchers.any()))
+        BDDMockito.when(userDetailsMock.getUsername()).thenReturn("Yuri Freire");
+
+        BDDMockito.when(expenseCategoryServiceMock.createExpenseCategory(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(expenseCategoryResponse);
 
-        BDDMockito.when(expenseCategoryServiceMock.findAllCategoryExpenses(ArgumentMatchers.any()))
+        BDDMockito.when(expenseCategoryServiceMock.findAllCategoryExpenses(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(categoryPage);
 
-        BDDMockito.when(expenseCategoryServiceMock.deleteByCategoryId(ArgumentMatchers.anyInt()))
+        BDDMockito.when(expenseCategoryServiceMock.deleteByCategoryId(ArgumentMatchers.anyInt(), ArgumentMatchers.any()))
                 .thenReturn(expenseCategoryResponse.getCategoryName());
 
-        BDDMockito.when(expenseCategoryServiceMock.deleteByCategoryId(ArgumentMatchers.eq(1298)))
+        BDDMockito.when(expenseCategoryServiceMock.deleteByCategoryId(ArgumentMatchers.eq(1298), ArgumentMatchers.any()))
                 .thenThrow(new EntityNotFoundException("Category not found: 1298"));
 
         BDDMockito.when(servletRequestMock.getRequestURI())
@@ -62,7 +68,7 @@ class ExpenseCategoryControllerTest {
     void createExpenseCategory_PersistExpenseCategory_WhenSuccessful() {
         ExpenseCategoryResponse expectedCategory = ExpenseCategoryCreator.createValidExpenseCategoryResponse();
         ResponseEntity<ApiResponse<ExpenseCategoryResponse>> expenseCategoryResponse = expenseCategoryController.createExpenseCategory(
-                ExpenseCategoryRequestCreator.createExpenseCategoryRequest(), servletRequestMock
+                ExpenseCategoryRequestCreator.createExpenseCategoryRequest(), servletRequestMock, userDetailsMock
         );
 
         Assertions.assertThat(expenseCategoryResponse).isNotNull();
@@ -78,7 +84,7 @@ class ExpenseCategoryControllerTest {
     void findAllExpenses_ReturnListOfExpenseCategoryInsidePageObject_WhenSuccessful() {
         ExpenseCategoryResponse expectedCategory = ExpenseCategoryCreator.createValidExpenseCategoryResponse();
         ResponseEntity<ApiResponse<Page<ExpenseCategoryResponse>>> allExpenses = expenseCategoryController.findAllExpenses(
-                PageRequest.of(0, 1), servletRequestMock
+                PageRequest.of(0, 1), servletRequestMock, userDetailsMock
         );
 
         Assertions.assertThat(allExpenses).isNotNull();
@@ -97,7 +103,8 @@ class ExpenseCategoryControllerTest {
         String expectedCategoryName = ExpenseCategoryCreator.createValidExpenseCategoryResponse().getCategoryName();
         ResponseEntity<ApiResponse<String>> deletedExpenseCategoryResponse = expenseCategoryController.deleteByCategoryId(
                 ExpenseCategoryCreator.createValidExpenseCategory().getExpenseCategoryId(),
-                servletRequestMock
+                servletRequestMock,
+                userDetailsMock
         );
 
         Assertions.assertThat(deletedExpenseCategoryResponse).isNotNull();
@@ -113,7 +120,7 @@ class ExpenseCategoryControllerTest {
         Integer someRandomId = 1298;
 
         Assertions.assertThatThrownBy(() ->
-                        expenseCategoryController.deleteByCategoryId(someRandomId, servletRequestMock)
+                        expenseCategoryController.deleteByCategoryId(someRandomId, servletRequestMock, userDetailsMock)
                 )
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessageContaining("Category not found: 1298");

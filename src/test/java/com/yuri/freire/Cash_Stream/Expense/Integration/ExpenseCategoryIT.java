@@ -110,8 +110,8 @@ public class ExpenseCategoryIT {
     @Test
     @DisplayName("findAllExpenses return List of ExpenseCategory inside page object when successful")
     void findAllExpenses_ReturnListOfExpenseCategoryInsidePageObject_WhenSuccessful() {
-        ExpenseCategory savedCategory = expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
         userRepository.save(userTest);
+        ExpenseCategory savedCategory = expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
         String expectedCategoryName = savedCategory.getCategoryName();
         ResponseEntity<ApiResponse<PageableResponse<ExpenseCategoryResponse>>> allExpenses = testRestTemplate.exchange(
                 "/expense-category/find-all",
@@ -134,9 +134,9 @@ public class ExpenseCategoryIT {
     @Test
     @DisplayName("deleteByCategoryId removes Expense Category when successful")
     void deleteByCategoryId_RemovesCategory_WhenSuccessfull() {
+        userRepository.save(userTest);
         String expectedCategoryName = ExpenseCategoryCreator.createValidExpenseCategoryResponse().getCategoryName();
         this.expenseCategoryRepository.save(ExpenseCategoryCreator.createExpenseCategoryToBeSaved());
-        userRepository.save(userTest);
 
         ResponseEntity<ApiResponse<String>> deletedExpenseCategoryResponse = testRestTemplate.exchange(
                 "/expense-category/delete/1",

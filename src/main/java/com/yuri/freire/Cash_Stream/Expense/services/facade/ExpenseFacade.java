@@ -19,6 +19,7 @@ import com.yuri.freire.Cash_Stream.Expense.services.factory.ExpenseFactory;
 import com.yuri.freire.Cash_Stream.Recurrence.entities.Recurrence;
 import com.yuri.freire.Cash_Stream.Recurrence.services.RecurrenceService;
 import com.yuri.freire.Cash_Stream.Utils.CookieUtils;
+import com.yuri.freire.Cash_Stream.Utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -28,17 +29,15 @@ import org.springframework.stereotype.Component;
 public class ExpenseFacade {
     private final ExpenseCategoryService expenseCategoryService;
     private final UserService userService;
-    private final JwtService jwtService;
     private final ExpenseSubcategoryService expenseSubcategoryService;
     private final ExpenseMethodService expenseMethodService;
     private final RecurrenceService recurrenceService;
     private final ExpenseFactory expenseFactory;
 
-    public Expense createExpense(ExpenseRequest expenseRequest, HttpServletRequest request){
-        String username = extractUsernameFromCookie(request);
+    public Expense createExpense(ExpenseRequest expenseRequest, String username){
         User user = findUserByName(username);
         ExpenseCategory expenseCategory = expenseCategoryService.findByCategoryName(expenseRequest.getExpenseCategory(), username);
-        ExpenseSubcategory expenseSubcategory = expenseSubcategoryService.findBySubcategoryName(expenseRequest.getExpenseSubcategory(), request);
+        ExpenseSubcategory expenseSubcategory = expenseSubcategoryService.findBySubcategoryName(expenseRequest.getExpenseSubcategory(), username);
         ExpenseMethod expenseMethod = expenseMethodService.findByExpenseMethodName(expenseRequest.getExpenseMethod());
         Recurrence recurrence = recurrenceService.findByRecurrenFrequency(expenseRequest.getRecurrence());
 
@@ -49,8 +48,8 @@ public class ExpenseFacade {
         return expenseCategoryService.findByCategoryName(categoryName, username);
     }
 
-    public ExpenseSubcategory findExpenseSubcategoryByName(String subcategoryName,HttpServletRequest request){
-        return expenseSubcategoryService.findBySubcategoryName(subcategoryName, request);
+    public ExpenseSubcategory findExpenseSubcategoryByName(String subcategoryName, String username){
+        return expenseSubcategoryService.findBySubcategoryName(subcategoryName, username);
     }
 
     public ExpenseMethod findExpenseMethod(ExpenseMethodType expenseMethodType){
@@ -64,8 +63,4 @@ public class ExpenseFacade {
         return userService.findUserByUsername(username);
     }
 
-    public String extractUsernameFromCookie(HttpServletRequest request){
-        String jwtFromCookie = CookieUtils.getJwtFromCookie(request);
-        return jwtService.extractUsername(jwtFromCookie);
-    }
 }

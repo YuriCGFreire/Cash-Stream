@@ -17,15 +17,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.BDDMockito;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
@@ -42,40 +40,44 @@ class ExpenseControllerTest {
     private ExpenseService expenseServiceMock;
     @Mock
     private HttpServletRequest requestMock;
+    @Mock
+    private UserDetails userDetailsMock;
 
     @BeforeEach
     void setUp(){
         ExpenseResponse validExpenseResponse = ExpenseCreator.createValidExpenseResponse();
         PageImpl<ExpenseResponse> pageExpenses = new PageImpl<>(List.of(validExpenseResponse));
 
-        BDDMockito.when(expenseServiceMock.createExpense(ArgumentMatchers.any()))
+        BDDMockito.when(userDetailsMock.getUsername()).thenReturn("Yuri Freire");
+
+        BDDMockito.when(expenseServiceMock.createExpense(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(validExpenseResponse);
 
-        BDDMockito.when(expenseServiceMock.findAllExpenses(ArgumentMatchers.any()))
+        BDDMockito.when(expenseServiceMock.findAllExpenses(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(pageExpenses);
 
-        BDDMockito.when(expenseServiceMock.findAllExpensesByCategoryName(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
+        BDDMockito.when(expenseServiceMock.findAllExpensesByCategoryName(ArgumentMatchers.anyString(), ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(pageExpenses);
 
-        BDDMockito.when(expenseServiceMock.findAllExpensesByCategoryName(ArgumentMatchers.eq("someRandomcategoryName"), ArgumentMatchers.any()))
+        BDDMockito.when(expenseServiceMock.findAllExpensesByCategoryName(ArgumentMatchers.eq("someRandomcategoryName"), ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenThrow(new EntityNotFoundException("Category not found: someRandomcategoryName"));
 
-        BDDMockito.when(expenseServiceMock.findAllBySubcategoryName(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
+        BDDMockito.when(expenseServiceMock.findAllBySubcategoryName(ArgumentMatchers.anyString(), ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(pageExpenses);
 
-        BDDMockito.when(expenseServiceMock.findAllBySubcategoryName(ArgumentMatchers.eq("someRandomSubcategoryName"), ArgumentMatchers.any()))
+        BDDMockito.when(expenseServiceMock.findAllBySubcategoryName(ArgumentMatchers.eq("someRandomSubcategoryName"), ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenThrow(new EntityNotFoundException("Category not found: someRandomSubcategoryName"));
 
-        BDDMockito.when(expenseServiceMock.findAllExpensesByPaymentMethod(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        BDDMockito.when(expenseServiceMock.findAllExpensesByPaymentMethod(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(pageExpenses);
 
-        BDDMockito.when(expenseServiceMock.findAllExpensesByIsEssential(ArgumentMatchers.anyBoolean(), ArgumentMatchers.any()))
+        BDDMockito.when(expenseServiceMock.findAllExpensesByIsEssential(ArgumentMatchers.anyBoolean(), ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(pageExpenses);
 
-        BDDMockito.when(expenseServiceMock.softDeleteExpense(ArgumentMatchers.eq(1)))
+        BDDMockito.when(expenseServiceMock.softDeleteExpense(ArgumentMatchers.eq(1), ArgumentMatchers.any()))
                 .thenReturn(validExpenseResponse.getExpenseDescription());
 
-        BDDMockito.when(expenseServiceMock.softDeleteExpense(999))
+        BDDMockito.when(expenseServiceMock.softDeleteExpense(ArgumentMatchers.eq(999), ArgumentMatchers.any()))
                 .thenThrow(new EntityNotFoundException("Expense not found with id: 999"));
     }
 
@@ -85,7 +87,8 @@ class ExpenseControllerTest {
         ExpenseResponse expectedExpenseResponse = ExpenseCreator.createValidExpenseResponse();
         ResponseEntity<ApiResponse<ExpenseResponse>> createdExpense = expenseController.createExpense(
                 ExpenseRequestCreator.createExpenseRequest(),
-                requestMock
+                requestMock,
+                userDetailsMock
         );
 
         Assertions.assertThat(createdExpense.getBody().getErrors()).isNull();
@@ -98,7 +101,7 @@ class ExpenseControllerTest {
     @Test
     @DisplayName("findAllExpenses return list of Expenses inside page object when successful")
     void findAllExpenses_ReturnListOfExpensesInsidePageObject_WhenSuccessful() {
-        ResponseEntity<ApiResponse<Page<ExpenseResponse>>> allExpenses = expenseController.findAllExpenses(PageRequest.of(0, 1), requestMock);
+        ResponseEntity<ApiResponse<Page<ExpenseResponse>>> allExpenses = expenseController.findAllExpenses(PageRequest.of(0, 1), requestMock, userDetailsMock);
         Assertions.assertThat(allExpenses).isNotNull();
 
         Assertions.assertThat(allExpenses.getBody().getData().toList())
@@ -117,7 +120,8 @@ class ExpenseControllerTest {
         ResponseEntity<ApiResponse<Page<ExpenseResponse>>> allExpensesByCategoryName = expenseController.findAllExpensesByCategoryName(
                 expectedCategoryName,
                 PageRequest.of(0, 1),
-                requestMock
+                requestMock,
+                userDetailsMock
         );
         Assertions.assertThat(allExpensesByCategoryName.getBody().getData().toList())
                 .isNotEmpty()
@@ -134,7 +138,7 @@ class ExpenseControllerTest {
     void findAllExpensesByCategoryName_ThrowEntityNotFoundException_WhenCategoryDoesNotExist() {
         String randomCategoryName = "someRandomcategoryName";
         Assertions.assertThatThrownBy(() ->
-                        expenseController.findAllExpensesByCategoryName(randomCategoryName, PageRequest.of(0, 1), requestMock)
+                        expenseController.findAllExpensesByCategoryName(randomCategoryName, PageRequest.of(0, 1), requestMock, userDetailsMock)
                 )
                 .hasMessage("Category not found: someRandomcategoryName")
                 .isInstanceOf(EntityNotFoundException.class);
@@ -147,7 +151,8 @@ class ExpenseControllerTest {
         ResponseEntity<ApiResponse<Page<ExpenseResponse>>> allExpensesBySubcategoryName = expenseController.findAllExpensesBySubcategoryName(
                 expectedsubcategoryName,
                 PageRequest.of(0, 1),
-                requestMock
+                requestMock,
+                userDetailsMock
         );
         Assertions.assertThat(allExpensesBySubcategoryName.getBody().getData().toList())
                 .isNotEmpty()
@@ -164,7 +169,7 @@ class ExpenseControllerTest {
     void findAllExpensesBySubcategoryName_ThrowEntityNotFoundException_WhenSubcategoryDoesNotExist() {
         String randomSubcategoryName = "someRandomSubcategoryName";
         Assertions.assertThatThrownBy(() ->
-                        expenseController.findAllExpensesBySubcategoryName(randomSubcategoryName, PageRequest.of(0, 1), requestMock)
+                        expenseController.findAllExpensesBySubcategoryName(randomSubcategoryName, PageRequest.of(0, 1), requestMock, userDetailsMock)
                 )
                 .hasMessage("Category not found: someRandomSubcategoryName")
                 .isInstanceOf(EntityNotFoundException.class);
@@ -177,7 +182,8 @@ class ExpenseControllerTest {
         ResponseEntity<ApiResponse<Page<ExpenseResponse>>> allExpensesByPaymentMethod = expenseController.findAllExpensesByPaymentMethod(
                 expenseMethodName,
                 PageRequest.of(0, 1),
-                requestMock
+                requestMock,
+                userDetailsMock
         );
         Assertions.assertThat(allExpensesByPaymentMethod.getBody().getData().toList())
                 .isNotEmpty()
@@ -196,7 +202,8 @@ class ExpenseControllerTest {
         ResponseEntity<ApiResponse<Page<ExpenseResponse>>> allByIsEssential = expenseController.findAllByIsEssential(
                 expectedEssentiality,
                 PageRequest.of(0, 1),
-                requestMock
+                requestMock,
+                userDetailsMock
         );
         Assertions.assertThat(allByIsEssential.getBody().getData().toList())
                 .isNotEmpty()
@@ -212,7 +219,7 @@ class ExpenseControllerTest {
     @DisplayName("softDeleteExpense update deletedAt field when successful")
     void softDeleteExpense_UpdateDeletedAtField_WhenSuccessful(){
         Expense expense = ExpenseCreator.createValidExpense();
-        ResponseEntity<ApiResponse<String>> deletedExpense = expenseController.softDeleteExpense(expense.getExpenseId(), requestMock);
+        ResponseEntity<ApiResponse<String>> deletedExpense = expenseController.softDeleteExpense(expense.getExpenseId(), requestMock, userDetailsMock);
 
         Assertions.assertThat(deletedExpense).isNotNull();
         Assertions.assertThat(deletedExpense.getBody().isSuccess()).isTrue();
@@ -227,7 +234,7 @@ class ExpenseControllerTest {
         Integer someRandomId = 999;
 
         Assertions.assertThatThrownBy(() ->
-                        expenseController.softDeleteExpense(someRandomId, requestMock)
+                        expenseController.softDeleteExpense(someRandomId, requestMock, userDetailsMock)
                 )
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessageContaining("Expense not found with id: 999");

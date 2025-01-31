@@ -48,34 +48,34 @@ class ExpenseControllerTest {
         ExpenseResponse validExpenseResponse = ExpenseCreator.createValidExpenseResponse();
         PageImpl<ExpenseResponse> pageExpenses = new PageImpl<>(List.of(validExpenseResponse));
 
-        BDDMockito.when(expenseServiceMock.createExpense(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        BDDMockito.when(expenseServiceMock.createExpense(ArgumentMatchers.any()))
                 .thenReturn(validExpenseResponse);
 
-        BDDMockito.when(expenseServiceMock.findAllExpenses(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        BDDMockito.when(expenseServiceMock.findAllExpenses(ArgumentMatchers.any()))
                 .thenReturn(pageExpenses);
 
-        BDDMockito.when(expenseServiceMock.findAllExpensesByCategoryName(ArgumentMatchers.any(), ArgumentMatchers.anyString(), ArgumentMatchers.any()))
+        BDDMockito.when(expenseServiceMock.findAllExpensesByCategoryName(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
                 .thenReturn(pageExpenses);
 
-        BDDMockito.when(expenseServiceMock.findAllExpensesByCategoryName(ArgumentMatchers.any(), ArgumentMatchers.eq("someRandomcategoryName"), ArgumentMatchers.any()))
+        BDDMockito.when(expenseServiceMock.findAllExpensesByCategoryName(ArgumentMatchers.eq("someRandomcategoryName"), ArgumentMatchers.any()))
                 .thenThrow(new EntityNotFoundException("Category not found: someRandomcategoryName"));
 
-        BDDMockito.when(expenseServiceMock.findAllBySubcategoryName(ArgumentMatchers.any(), ArgumentMatchers.anyString(), ArgumentMatchers.any()))
+        BDDMockito.when(expenseServiceMock.findAllBySubcategoryName(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
                 .thenReturn(pageExpenses);
 
-        BDDMockito.when(expenseServiceMock.findAllBySubcategoryName(ArgumentMatchers.any(), ArgumentMatchers.eq("someRandomSubcategoryName"), ArgumentMatchers.any()))
+        BDDMockito.when(expenseServiceMock.findAllBySubcategoryName(ArgumentMatchers.eq("someRandomSubcategoryName"), ArgumentMatchers.any()))
                 .thenThrow(new EntityNotFoundException("Category not found: someRandomSubcategoryName"));
 
-        BDDMockito.when(expenseServiceMock.findAllExpensesByPaymentMethod(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
+        BDDMockito.when(expenseServiceMock.findAllExpensesByPaymentMethod(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(pageExpenses);
 
-        BDDMockito.when(expenseServiceMock.findAllExpensesByIsEssential(ArgumentMatchers.any(), ArgumentMatchers.anyBoolean(), ArgumentMatchers.any()))
+        BDDMockito.when(expenseServiceMock.findAllExpensesByIsEssential(ArgumentMatchers.anyBoolean(), ArgumentMatchers.any()))
                 .thenReturn(pageExpenses);
 
-        BDDMockito.when(expenseServiceMock.softDeleteExpense(ArgumentMatchers.any(), ArgumentMatchers.eq(1)))
+        BDDMockito.when(expenseServiceMock.softDeleteExpense(ArgumentMatchers.eq(1)))
                 .thenReturn(validExpenseResponse.getExpenseDescription());
 
-        BDDMockito.when(expenseServiceMock.softDeleteExpense(ArgumentMatchers.any(), 999))
+        BDDMockito.when(expenseServiceMock.softDeleteExpense(999))
                 .thenThrow(new EntityNotFoundException("Expense not found with id: 999"));
     }
 

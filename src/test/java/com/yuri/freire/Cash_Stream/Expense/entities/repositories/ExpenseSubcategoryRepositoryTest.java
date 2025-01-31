@@ -1,10 +1,13 @@
 package com.yuri.freire.Cash_Stream.Expense.entities.repositories;
 
+import com.yuri.freire.Cash_Stream.Authentication.entities.User;
+import com.yuri.freire.Cash_Stream.Authentication.entities.repositories.UserRepository;
 import com.yuri.freire.Cash_Stream.Expense.controllers.model.ExpenseSubcategoryResponse;
 import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseCategory;
 import com.yuri.freire.Cash_Stream.Expense.entities.ExpenseSubcategory;
 import com.yuri.freire.Cash_Stream.util.expense.ExpenseCategoryCreator;
 import com.yuri.freire.Cash_Stream.util.expense.ExpenseSubcategoryCreator;
+import com.yuri.freire.Cash_Stream.util.user.UserCreator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,12 +32,20 @@ class ExpenseSubcategoryRepositoryTest {
     @Autowired
     private ExpenseCategoryRepository expenseCategoryRepository;
 
+    @Autowired
+    private UserRepository userRepositoryMock;
+
     private ExpenseCategory savedExpenseCategory;
+
+    private User savedUser;
 
     @BeforeEach
     void setUp(){
         ExpenseCategory category = ExpenseCategoryCreator.createExpenseCategoryToBeSaved();
         savedExpenseCategory = expenseCategoryRepository.save(category);
+
+        User user = UserCreator.createValidUser();
+        savedUser = userRepositoryMock.save(user);
     }
 
     @Test
@@ -42,8 +53,9 @@ class ExpenseSubcategoryRepositoryTest {
     void findBySubCategoryName_ReturnsExpenseSubcategory_WhenSuccessful(){
         ExpenseSubcategory tobeSaved = ExpenseSubcategoryCreator.createValidExpenseSubcategoryTobeSaved();
         tobeSaved.setExpenseCategory(savedExpenseCategory);
+        tobeSaved.setUser(savedUser);
         ExpenseSubcategory savedExpenseSubcategory = expenseSubcategoryRepository.save(tobeSaved);
-        Optional<ExpenseSubcategory> fetchedExpenseSubcategory = expenseSubcategoryRepository.findBySubCategoryName("username", savedExpenseSubcategory.getSubCategoryName());
+        Optional<ExpenseSubcategory> fetchedExpenseSubcategory = expenseSubcategoryRepository.findBySubCategoryName(savedExpenseSubcategory.getSubCategoryName(), savedUser.getUsername());
         Assertions.assertThat(fetchedExpenseSubcategory)
                 .isNotEmpty()
                 .contains(savedExpenseSubcategory);
@@ -54,9 +66,10 @@ class ExpenseSubcategoryRepositoryTest {
     void findAllSubcategoryExpenses_ReturnsListOfExpenseSubcategoryInsidePageObject_WhenSuccessful(){
         ExpenseSubcategory tobeSaved = ExpenseSubcategoryCreator.createValidExpenseSubcategoryTobeSaved();
         tobeSaved.setExpenseCategory(savedExpenseCategory);
+        tobeSaved.setUser(savedUser);
         ExpenseSubcategory savedExpenseSubcategory = expenseSubcategoryRepository.save(tobeSaved);
         Pageable pageable = PageRequest.of(0, 1);
-        Page<ExpenseSubcategoryResponse> pageExpenseSubcategoryResponse = this.expenseSubcategoryRepository.findAllSubcategoryExpenses("username", pageable);
+        Page<ExpenseSubcategoryResponse> pageExpenseSubcategoryResponse = this.expenseSubcategoryRepository.findAllSubcategoryExpenses(pageable, savedUser.getUsername());
 
         Assertions.assertThat(pageExpenseSubcategoryResponse).isNotNull();
         Assertions.assertThat(pageExpenseSubcategoryResponse.getContent())
@@ -69,10 +82,11 @@ class ExpenseSubcategoryRepositoryTest {
     void findAllSubcategoryExpensesByCategory_ReturnsListOfExpenseSubcategoryInsidePageObject_WhenSuccessful(){
         ExpenseSubcategory tobeSaved = ExpenseSubcategoryCreator.createValidExpenseSubcategoryTobeSaved();
         tobeSaved.setExpenseCategory(savedExpenseCategory);
+        tobeSaved.setUser(savedUser);
         ExpenseSubcategory savedExpenseSubcategory = expenseSubcategoryRepository.save(tobeSaved);
         Pageable pageable = PageRequest.of(0, 1);
         Page<ExpenseSubcategoryResponse> pageExpenseSubcategoryResponse = this.expenseSubcategoryRepository
-                .findAllSubcategoryExpensesByCategory("username", savedExpenseCategory.getCategoryName(), pageable);
+                .findAllSubcategoryExpensesByCategory(savedExpenseCategory.getCategoryName(), pageable, savedUser.getUsername());
 
         Assertions.assertThat(pageExpenseSubcategoryResponse).isNotNull();
         Assertions.assertThat(pageExpenseSubcategoryResponse.getContent())

@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -22,22 +24,31 @@ public class IncomingCategoryController {
     private final IncomingCategoryService incomingCategoryService;
 
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse<IncomingCategoryResponse>> createIncomingCategory(@Valid @RequestBody IncomingCategoryRequest incomingCategoryRequest, HttpServletRequest request){
-        IncomingCategoryResponse incomingCategory = incomingCategoryService.createIncomingCategory(incomingCategoryRequest);
+    public ResponseEntity<ApiResponse<IncomingCategoryResponse>> createIncomingCategory(
+            @Valid @RequestBody IncomingCategoryRequest incomingCategoryRequest,
+            HttpServletRequest request,
+            @AuthenticationPrincipal UserDetails userDetails){
+        IncomingCategoryResponse incomingCategory = incomingCategoryService.createIncomingCategory(incomingCategoryRequest, userDetails.getUsername());
         ApiResponse<IncomingCategoryResponse> response = ResponseUtil.success(incomingCategory, "Category created successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/find-all")
-    public ResponseEntity<ApiResponse<Page<IncomingCategoryResponse>>> findAllIncomingCategory(Pageable pageable, HttpServletRequest request){
-        Page<IncomingCategoryResponse> incomingCategories = incomingCategoryService.findAll(pageable);
+    public ResponseEntity<ApiResponse<Page<IncomingCategoryResponse>>> findAllIncomingCategory(
+            Pageable pageable,
+            HttpServletRequest request,
+            @AuthenticationPrincipal UserDetails userDetails){
+        Page<IncomingCategoryResponse> incomingCategories = incomingCategoryService.findAll(pageable, userDetails.getUsername());
         ApiResponse<Page<IncomingCategoryResponse>> response = ResponseUtil.success(incomingCategories, "List of categories fetched successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{categoryId}")
-    public ResponseEntity<ApiResponse<String>> deleteByCategoryId(@PathVariable Integer categoryId, HttpServletRequest request){
-        String deletedCategory = incomingCategoryService.deleteByCategoryId(categoryId);
+    public ResponseEntity<ApiResponse<String>> deleteByCategoryId(
+            @PathVariable Integer categoryId,
+            HttpServletRequest request,
+            @AuthenticationPrincipal UserDetails userDetails){
+        String deletedCategory = incomingCategoryService.deleteByCategoryId(categoryId, userDetails.getUsername());
         ApiResponse<String> response = ResponseUtil.success(deletedCategory, "Category deleted successfully", request.getRequestURI());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

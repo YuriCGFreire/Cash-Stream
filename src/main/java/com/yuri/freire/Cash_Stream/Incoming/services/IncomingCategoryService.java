@@ -27,10 +27,9 @@ public class IncomingCategoryService {
     private final IncomingFactory incomingFactory;
     private final UserService userService;
 
-    public IncomingCategoryResponse createIncomingCategory(@Valid IncomingCategoryRequest incomingCategoryRequest){
-        String currentUsername = SecurityUtils.getCurrentUsername();
-        User user = userService.findUserByUsername(currentUsername);
-        Optional<IncomingCategory> fetchedIncomingCategory = incomingCategoryRepository.findByCategoryName(incomingCategoryRequest.getCategoryName(), currentUsername);
+    public IncomingCategoryResponse createIncomingCategory(@Valid IncomingCategoryRequest incomingCategoryRequest, String username){
+        User user = userService.findUserByUsername(username);
+        Optional<IncomingCategory> fetchedIncomingCategory = incomingCategoryRepository.findByCategoryName(incomingCategoryRequest.getCategoryName(), username);
         if(fetchedIncomingCategory.isPresent()){
             throw new AlreadyExistsException("Incoming category with name '"
                     + incomingCategoryRequest.getCategoryName() + "' already exists");
@@ -40,21 +39,18 @@ public class IncomingCategoryService {
         return incomingFactory.createIncomingCategoryResponse(incomingCategorySaved);
     }
 
-    public Page<IncomingCategoryResponse> findAll(Pageable pageable) {
-        String currentUsername = SecurityUtils.getCurrentUsername();
-        return incomingCategoryRepository.findAllIncomingCategory(pageable, currentUsername);
+    public Page<IncomingCategoryResponse> findAll(Pageable pageable, String useername) {
+        return incomingCategoryRepository.findAllIncomingCategory(pageable, useername);
     }
 
-    public IncomingCategory findByCategoryName(String categoryName){
-        String currentUsername = SecurityUtils.getCurrentUsername();
+    public IncomingCategory findByCategoryName(String categoryName, String username){
         return incomingCategoryRepository
-                .findByCategoryName(categoryName, currentUsername)
+                .findByCategoryName(categoryName, username)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found: " + categoryName));
     }
 
-    public String deleteByCategoryId(Integer categoryId){
-        String currentUsername = SecurityUtils.getCurrentUsername();
-        IncomingCategory incomingCategory = incomingCategoryRepository.findByCategoryId(categoryId, currentUsername)
+    public String deleteByCategoryId(Integer categoryId, String username){
+        IncomingCategory incomingCategory = incomingCategoryRepository.findByCategoryId(categoryId, username)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found: " + categoryId));
         incomingCategoryRepository.deleteById(categoryId);
         return incomingCategory.getCategoryName();

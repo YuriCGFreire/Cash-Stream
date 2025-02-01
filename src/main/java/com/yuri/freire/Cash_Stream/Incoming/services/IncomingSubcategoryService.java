@@ -36,7 +36,7 @@ public class IncomingSubcategoryService {
             throw new AlreadyExistsException("Incoming subcategory with name '"
                     + incomingSubcategoryRequest.getSubcategoryName() + "' already exists");
         }
-        IncomingCategory incomingCategory = incomingCategoryService.findByCategoryName(incomingSubcategoryRequest.getIncomingCategoryName());
+        IncomingCategory incomingCategory = incomingCategoryService.findByCategoryName(incomingSubcategoryRequest.getIncomingCategoryName(), currentUsername);
         IncomingSubcategory incomingSubcategory = incomingFactory.createIncomingSubcategory(incomingSubcategoryRequest, incomingCategory, user);
         IncomingSubcategory savedSubcategory = incomingSubcategoryRepository.save(incomingSubcategory);
         return incomingFactory.createIncomingSubcategoryResponse(savedSubcategory);
@@ -55,7 +55,7 @@ public class IncomingSubcategoryService {
 
     public Page<IncomingSubcategoryResponse> findAllByCategoryName(String categoryName, Pageable pageable){
         String currentUsername = SecurityUtils.getCurrentUsername();
-        IncomingCategory category = incomingCategoryService.findByCategoryName(categoryName);
+        IncomingCategory category = incomingCategoryService.findByCategoryName(categoryName, currentUsername);
         return incomingSubcategoryRepository.findAllByCategory(category.getCategoryName(), pageable, currentUsername);
     }
 

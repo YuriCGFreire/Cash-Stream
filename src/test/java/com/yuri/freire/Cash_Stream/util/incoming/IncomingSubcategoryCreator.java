@@ -4,6 +4,7 @@ import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingSubcategor
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingSubcategory;
 import com.yuri.freire.Cash_Stream.util.incoming.IncomingCategoryCreator;
+import com.yuri.freire.Cash_Stream.util.user.UserCreator;
 
 public class IncomingSubcategoryCreator {
     public static IncomingSubcategory createSubcategoryToBeSaved(){
@@ -11,6 +12,7 @@ public class IncomingSubcategoryCreator {
         return IncomingSubcategory.builder()
                 .subCategoryName("Apple")
                 .incomingCategory(category)
+                .user(UserCreator.createValidUser())
                 .build();
     }
 
@@ -19,6 +21,7 @@ public class IncomingSubcategoryCreator {
                 .incomingSubcategoryId(1)
                 .subCategoryName("Apple")
                 .incomingCategory(IncomingCategoryCreator.createValidCategoryForRepository())
+                .user(UserCreator.createValidUser())
                 .build();
     }
 
@@ -28,6 +31,7 @@ public class IncomingSubcategoryCreator {
                 .incomingSubcategoryId(1)
                 .subCategoryName("Apple")
                 .categoryName(category.getCategoryName())
+                .username(UserCreator.createValidUser().getUsername())
                 .build();
     }
 

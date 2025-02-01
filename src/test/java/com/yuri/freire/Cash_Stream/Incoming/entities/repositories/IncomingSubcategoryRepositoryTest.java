@@ -1,10 +1,13 @@
 package com.yuri.freire.Cash_Stream.Incoming.entities.repositories;
 
+import com.yuri.freire.Cash_Stream.Authentication.entities.User;
+import com.yuri.freire.Cash_Stream.Authentication.entities.repositories.UserRepository;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingSubcategoryResponse;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingSubcategory;
 import com.yuri.freire.Cash_Stream.util.incoming.IncomingCategoryCreator;
 import com.yuri.freire.Cash_Stream.util.incoming.IncomingSubcategoryCreator;
+import com.yuri.freire.Cash_Stream.util.user.UserCreator;
 import jakarta.validation.ConstraintViolationException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,11 +31,20 @@ class IncomingSubcategoryRepositoryTest {
     @Autowired
     private IncomingCategoryRepository categoryRepository;
 
+    @Autowired
+    private UserRepository userRepositoryMock;
+
+    private User savedUser;
+
     private IncomingCategory savedIncomingCategory;
+
 
     @BeforeEach
     void setUp(){
+        User user = UserCreator.createValidUser();
+        savedUser = userRepositoryMock.save(user);
         IncomingCategory category = IncomingCategoryCreator.createCategoryToBeSaved();
+        category.setUser(savedUser);
         savedIncomingCategory = categoryRepository.save(category);
     }
 
@@ -93,10 +105,11 @@ class IncomingSubcategoryRepositoryTest {
     void findAllSubcategory_ReturnsListOfIncomingSubcategoryInsideOfPageObject_WhenSuccessfull(){
         IncomingSubcategory subCategoryToBeSaved = IncomingSubcategoryCreator.createSubcategoryToBeSaved();
         subCategoryToBeSaved.setIncomingCategory(savedIncomingCategory);
+        subCategoryToBeSaved.setUser(savedUser);
         this.subcategoryRepository.save(subCategoryToBeSaved);
 
         Pageable pageable = PageRequest.of(0, 1);
-        Page<IncomingSubcategoryResponse> allSubcategories = this.subcategoryRepository.findAllSubcategory(pageable, "username");
+        Page<IncomingSubcategoryResponse> allSubcategories = this.subcategoryRepository.findAllSubcategory(pageable, savedUser.getUsername());
 
         Assertions.assertThat(allSubcategories).isNotNull();
         Assertions.assertThat(allSubcategories.getContent())
@@ -109,9 +122,10 @@ class IncomingSubcategoryRepositoryTest {
     void findAllByCategory_ReturnsListOfIncomingSubcategoryByCategoryName_WhenSuccessfull(){
         IncomingSubcategory subCategoryToBeSaved = IncomingSubcategoryCreator.createSubcategoryToBeSaved();
         subCategoryToBeSaved.setIncomingCategory(savedIncomingCategory);
+        subCategoryToBeSaved.setUser(savedUser);
         this.subcategoryRepository.save(subCategoryToBeSaved);
         Pageable pageable = PageRequest.of(0, 1);
-        Page<IncomingSubcategoryResponse> allSubcategories = this.subcategoryRepository.findAllByCategory(savedIncomingCategory.getCategoryName(), pageable, "username");
+        Page<IncomingSubcategoryResponse> allSubcategories = this.subcategoryRepository.findAllByCategory(savedIncomingCategory.getCategoryName(), pageable, savedUser.getUsername());
 
         Assertions.assertThat(allSubcategories).isNotNull();
         Assertions.assertThat(allSubcategories.getContent())
@@ -124,9 +138,10 @@ class IncomingSubcategoryRepositoryTest {
     void findBySubCategoryName_ReturnsIncomingSubcategory_WhenSuccessfull(){
         IncomingSubcategory subCategoryToBeSaved = IncomingSubcategoryCreator.createSubcategoryToBeSaved();
         subCategoryToBeSaved.setIncomingCategory(savedIncomingCategory);
+        subCategoryToBeSaved.setUser(savedUser);
         IncomingSubcategory subcategorySaved = this.subcategoryRepository.save(subCategoryToBeSaved);
 
-        Optional<IncomingSubcategory> fetchedSubcategory = this.subcategoryRepository.findBySubCategoryName(subcategorySaved.getSubCategoryName(), "username");
+        Optional<IncomingSubcategory> fetchedSubcategory = this.subcategoryRepository.findBySubCategoryName(subcategorySaved.getSubCategoryName(), savedUser.getUsername());
 
         Assertions.assertThat(fetchedSubcategory)
                 .isNotEmpty()
@@ -137,7 +152,7 @@ class IncomingSubcategoryRepositoryTest {
     @DisplayName("findBySubCategoryName returns empty when no IncomingSubcategory is not found")
     void findBySubcategoryName_ReturnsEmpty_WhenIncomingSubcategoryIsNotFound(){
 
-        Optional<IncomingSubcategory> fetchedSubcategory = this.subcategoryRepository.findBySubCategoryName("Subcategoria qualquer", "username");
+        Optional<IncomingSubcategory> fetchedSubcategory = this.subcategoryRepository.findBySubCategoryName("Subcategoria qualquer", savedUser.getUsername());
         Assertions.assertThat(fetchedSubcategory).isEmpty();
     }
 

@@ -1,5 +1,6 @@
 package com.yuri.freire.Cash_Stream.Incoming.services;
 
+import com.yuri.freire.Cash_Stream.Authentication.services.UserService;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingSubcategoryResponse;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingSubcategory;
 import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingSubcategoryRepository;
@@ -7,6 +8,7 @@ import com.yuri.freire.Cash_Stream.Incoming.services.factory.IncomingFactory;
 import com.yuri.freire.Cash_Stream.util.incoming.IncomingCategoryCreator;
 import com.yuri.freire.Cash_Stream.util.incoming.IncomingSubcategoryCreator;
 import com.yuri.freire.Cash_Stream.util.incoming.IncomingSubcategoryRequestCreator;
+import com.yuri.freire.Cash_Stream.util.user.UserCreator;
 import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +38,8 @@ class IncomingSubcategoryServiceTest {
     private IncomingCategoryService categoryServiceMock;
     @Mock
     private IncomingFactory incomingFactory;
+    @Mock
+    private UserService userServiceMock;
 
     @BeforeEach
     void setUp() {
@@ -47,6 +51,9 @@ class IncomingSubcategoryServiceTest {
                 subcategory1,
                 subcategory2));
 
+        BDDMockito.when(userServiceMock.findUserByUsername(ArgumentMatchers.any()))
+                .thenReturn(UserCreator.createValidUser());
+
         BDDMockito.when(
                 subcategoryRepositoryMock.save(ArgumentMatchers.any(IncomingSubcategory.class))
         ).thenReturn(subcategory);
@@ -56,17 +63,20 @@ class IncomingSubcategoryServiceTest {
         ).thenReturn(Optional.of(subcategory));
 
         BDDMockito.when(
-                subcategoryRepositoryMock.findBySubCategoryName("Bonus do trabalho", ArgumentMatchers.any())
+                subcategoryRepositoryMock.findBySubCategoryName(ArgumentMatchers.eq("Bonus do trabalho"), ArgumentMatchers.any())
         ).thenReturn(Optional.empty());
 
         BDDMockito.when(
-                subcategoryRepositoryMock.findBySubCategoryName("Some random subcategoryname", ArgumentMatchers.any())
+                subcategoryRepositoryMock.findBySubCategoryName(ArgumentMatchers.eq("Some random subcategoryname"), ArgumentMatchers.any())
         ).thenReturn(Optional.empty());
 
         BDDMockito.when(subcategoryRepositoryMock.findAllSubcategory(ArgumentMatchers.any(PageRequest.class), ArgumentMatchers.any()))
                 .thenReturn(subcategoryPage);
 
-        BDDMockito.when(subcategoryRepositoryMock.findAllByCategory(IncomingCategoryCreator.createValidCategory().getCategoryName(), PageRequest.of(0, 2), ArgumentMatchers.any()))
+        BDDMockito.when(subcategoryRepositoryMock.findAllByCategory(ArgumentMatchers.eq(
+                IncomingCategoryCreator.createValidCategory().getCategoryName()),
+                        ArgumentMatchers.eq(PageRequest.of(0, 2)),
+                        ArgumentMatchers.any()))
                 .thenReturn(subcategoryPage);
 
         BDDMockito.when(categoryServiceMock.findByCategoryName(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
@@ -97,7 +107,9 @@ class IncomingSubcategoryServiceTest {
     @DisplayName("createIncomingSubcategory returns IncomingSubcategoryResponse when successfull")
     void createIncomingSubcategory_ReturnsIncomingSubcategoryResponse_WhenSuccessfull(){
         IncomingSubcategoryResponse validSubcategoryResponse = IncomingSubcategoryCreator.createValidSubcategoryResponse();
-        IncomingSubcategoryResponse incomingSubcategory = subcategoryService.createIncomingSubcategory(IncomingSubcategoryRequestCreator.createIncomingSubcategoryRequest());
+        IncomingSubcategoryResponse incomingSubcategory = subcategoryService.createIncomingSubcategory(
+                IncomingSubcategoryRequestCreator.createIncomingSubcategoryRequest(),
+                UserCreator.createValidUser().getUsername());
 
         Assertions.assertThat(incomingSubcategory)
                 .isNotNull()
@@ -113,7 +125,9 @@ class IncomingSubcategoryServiceTest {
     @DisplayName("findBySubcategoryName returns IncomingSubcategory by name when successfull")
     void findBySubcategoryName_ReturnsIncomingSubcategoryByName_WhenSuccessfull(){
         IncomingSubcategory expcetedSubcategory = IncomingSubcategoryCreator.createValidSubcategoryRepository();
-        IncomingSubcategory fetchedSubcategory = subcategoryService.findBySubcategoryName(IncomingSubcategoryCreator.createValidSubcategoryRepository().getSubCategoryName());
+        IncomingSubcategory fetchedSubcategory = subcategoryService.findBySubcategoryName(
+                IncomingSubcategoryCreator.createValidSubcategoryRepository().getSubCategoryName(),
+                UserCreator.createValidUser().getUsername());
         Assertions.assertThat(fetchedSubcategory).isNotNull().isInstanceOf(IncomingSubcategory.class);
         Assertions.assertThat(fetchedSubcategory.getIncomingSubcategoryId()).isNotNull();
         Assertions.assertThat(fetchedSubcategory.getSubCategoryName()).isNotNull().isEqualTo(expcetedSubcategory.getSubCategoryName());
@@ -124,7 +138,7 @@ class IncomingSubcategoryServiceTest {
     @DisplayName("findBySubcategoryName returns entityNotFoundException when subcategory was not found")
     void findBySubcategoryName_ReturnsEntityNotFoundException_WhenSubcategoryWastNotFound(){
         String fakeSubcategoryName = "Some random subcategoryname";
-        Assertions.assertThatThrownBy(() -> subcategoryService.findBySubcategoryName(fakeSubcategoryName))
+        Assertions.assertThatThrownBy(() -> subcategoryService.findBySubcategoryName(fakeSubcategoryName, UserCreator.createUserToBeSaved().getUsername()))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("Subcategory not found: " + fakeSubcategoryName);
     }
@@ -135,7 +149,9 @@ class IncomingSubcategoryServiceTest {
         String expectedSubcategoryName = IncomingSubcategoryCreator.createValidSubcategoryResponse().getSubCategoryName();
         Integer expctedSubcategoryId = IncomingSubcategoryCreator.createValidSubcategoryResponse().getIncomingSubcategoryId();
         String expectedCategoryName = IncomingSubcategoryCreator.createValidSubcategoryResponse().getCategoryName();
-        Page<IncomingSubcategoryResponse> subcategoryPage = subcategoryService.findAllSubcategory(PageRequest.of(0, 2));
+        Page<IncomingSubcategoryResponse> subcategoryPage = subcategoryService.findAllSubcategory(
+                PageRequest.of(0, 2),
+                UserCreator.createValidUser().getUsername());
 
         Assertions.assertThat(subcategoryPage).isNotNull();
         Assertions.assertThat(subcategoryPage.toList())
@@ -156,7 +172,10 @@ class IncomingSubcategoryServiceTest {
     @DisplayName("findAllByCategoryName returns list of Incoming Subcategory inside of Page Object by category name When successfull")
     void findAllByCategoryName_ReturnsListOfIncomingSubcategoryInsidePageObjectByCategoryName_WhenSuccessfull(){
         String expectedCategoryName = IncomingSubcategoryCreator.createValidSubcategoryResponse().getCategoryName();
-        Page<IncomingSubcategoryResponse> subcategoryPage = subcategoryService.findAllByCategoryName(expectedCategoryName, PageRequest.of(0, 2));
+        Page<IncomingSubcategoryResponse> subcategoryPage = subcategoryService.findAllByCategoryName(
+                expectedCategoryName,
+                PageRequest.of(0, 2),
+                UserCreator.createValidUser().getUsername());
         Assertions.assertThat(subcategoryPage).isNotNull();
         Assertions.assertThat(subcategoryPage.toList())
                 .isNotEmpty()
@@ -169,7 +188,8 @@ class IncomingSubcategoryServiceTest {
     @DisplayName("findAllByCategoryName throw EntityNotFoundException when Category does not exist")
     void findAllByCategoryName_ThrowEntityNotFoundException_WhenCategoryDoesNotExist(){
         String categoryName = "Some random categoryname";
-        Assertions.assertThatThrownBy(() -> subcategoryService.findAllByCategoryName(categoryName, PageRequest.of(0, 2)))
+        Assertions.assertThatThrownBy(() -> subcategoryService.findAllByCategoryName(
+                categoryName, PageRequest.of(0, 2), UserCreator.createValidUser().getUsername()))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("Category not found: " + categoryName);
     }
@@ -178,7 +198,7 @@ class IncomingSubcategoryServiceTest {
     @DisplayName("deleteBySubcategoryId removes subcategory when successfull")
     void deleteBySubcategoryId_RemovesSubcategory_WhenSuccessfull(){
         String expcetedSubcategoryName = IncomingSubcategoryCreator.createValidSubcategoryResponse().getSubCategoryName();
-        String subcategoryName = subcategoryService.deleteBySubcategoryId(1);
+        String subcategoryName = subcategoryService.deleteBySubcategoryId(1, UserCreator.createValidUser().getUsername());
         Assertions.assertThat(subcategoryName).isNotNull().isEqualTo(expcetedSubcategoryName);
     }
 
@@ -186,7 +206,7 @@ class IncomingSubcategoryServiceTest {
     @DisplayName("deleteBySubcategoryId throws EntityNotFoundException when subcategory does not exist")
     void expcetedSubcategoryName_ThrowsEntityNotFoundException_WhenSubcategoryDoesNotExist(){
         Integer subcategoryId = 999;
-        Assertions.assertThatThrownBy(() -> subcategoryService.deleteBySubcategoryId(subcategoryId))
+        Assertions.assertThatThrownBy(() -> subcategoryService.deleteBySubcategoryId(subcategoryId, UserCreator.createValidUser().getUsername()))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("Subcategory not found: " + subcategoryId);
     }

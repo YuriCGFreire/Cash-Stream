@@ -1,10 +1,14 @@
 package com.yuri.freire.Cash_Stream.Incoming.entities.repositories;
 
 
+import com.yuri.freire.Cash_Stream.Authentication.entities.User;
+import com.yuri.freire.Cash_Stream.Authentication.entities.repositories.UserRepository;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
 import com.yuri.freire.Cash_Stream.util.incoming.IncomingCategoryCreator;
+import com.yuri.freire.Cash_Stream.util.user.UserCreator;
 import jakarta.validation.ConstraintViolationException;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +22,17 @@ class IncomingCategoryRepositoryTest {
 
     @Autowired
     private IncomingCategoryRepository categoryRepository;
+
+    @Autowired
+    private UserRepository userRepositoryMock;
+
+    private User savedUser;
+
+    @BeforeEach
+    void setUp(){
+        User user = UserCreator.createValidUser();
+        savedUser = userRepositoryMock.save(user);
+    }
 
     @Test
     @DisplayName("Save persists Incoming Category when successfull")

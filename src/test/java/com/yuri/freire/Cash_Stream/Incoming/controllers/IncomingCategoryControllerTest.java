@@ -6,6 +6,7 @@ import com.yuri.freire.Cash_Stream.Incoming.services.IncomingCategoryService;
 import com.yuri.freire.Cash_Stream.Response.ApiResponse;
 import com.yuri.freire.Cash_Stream.util.incoming.IncomingCategoryCreator;
 import com.yuri.freire.Cash_Stream.util.incoming.IncomingCategoryRequestCreator;
+import com.yuri.freire.Cash_Stream.util.user.UserCreator;
 import jakarta.servlet.http.HttpServletRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +42,7 @@ class IncomingCategoryControllerTest {
     void setUp(){
         PageImpl<IncomingCategoryResponse> categoryPage = new PageImpl<>(List.of(IncomingCategoryCreator.createValidCategory()));
 
-        BDDMockito.when(userDetailsMock.getUsername()).thenReturn("Yuri Freire");
+        BDDMockito.when(userDetailsMock.getUsername()).thenReturn(UserCreator.createValidUser().getUsername());
 
         BDDMockito.when(categoryServiceMock.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(categoryPage);

@@ -1,11 +1,13 @@
 package com.yuri.freire.Cash_Stream.Incoming.services;
 
+import com.yuri.freire.Cash_Stream.Authentication.services.UserService;
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingCategoryResponse;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
 import com.yuri.freire.Cash_Stream.Incoming.entities.repositories.IncomingCategoryRepository;
 import com.yuri.freire.Cash_Stream.Incoming.services.factory.IncomingFactory;
 import com.yuri.freire.Cash_Stream.util.incoming.IncomingCategoryCreator;
 import com.yuri.freire.Cash_Stream.util.incoming.IncomingCategoryRequestCreator;
+import com.yuri.freire.Cash_Stream.util.user.UserCreator;
 import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,12 +36,17 @@ class IncomingCategoryServiceTest {
     private IncomingCategoryRepository categoryRepositoryMock;
     @Mock
     private IncomingFactory incomingFactory;
+    @Mock
+    private UserService userServiceMock;
 
     @BeforeEach
     void setUp(){
         PageImpl<IncomingCategoryResponse> categoryPage = new PageImpl<>(List.of(IncomingCategoryCreator.createValidCategory()));
         IncomingCategory incomingCategory = IncomingCategoryCreator.createValidCategoryForRepository();
         IncomingCategoryResponse incomingCategoryResponse = IncomingCategoryCreator.createValidCategory();
+
+        BDDMockito.when(userServiceMock.findUserByUsername(ArgumentMatchers.any()))
+                .thenReturn(UserCreator.createValidUser());
 
         BDDMockito.when(incomingFactory.createIncomingCategory(ArgumentMatchers.any(), ArgumentMatchers.any()))
                         .thenReturn(incomingCategory);
@@ -67,14 +74,14 @@ class IncomingCategoryServiceTest {
         BDDMockito.when(categoryRepositoryMock.findByCategoryName(ArgumentMatchers.eq("Trabalho"), ArgumentMatchers.any()))
                 .thenReturn(Optional.empty());
 
-        BDDMockito.when(categoryRepositoryMock.findByCategoryName("Some random categoryname", ArgumentMatchers.any()))
+        BDDMockito.when(categoryRepositoryMock.findByCategoryName(ArgumentMatchers.eq("Some random categoryname"), ArgumentMatchers.any()))
                 .thenReturn(Optional.empty());
     }
 
     @Test
     @DisplayName("createIncomingCategory return IncomingCategoryResponse when successfull")
     void createIncomingCategory_ReturnIncomingCategoryResponse_WhenSuccessfull(){
-        IncomingCategoryResponse category = categoryService.createIncomingCategory(IncomingCategoryRequestCreator.createIncomingCategoryRequest());
+        IncomingCategoryResponse category = categoryService.createIncomingCategory(IncomingCategoryRequestCreator.createIncomingCategoryRequest(), UserCreator.createValidUser().getUsername());
 
         Assertions.assertThat(category).isNotNull().isEqualTo(IncomingCategoryCreator.createValidCategory());
         Assertions.assertThat(category.getCategoryName()).isNotNull().isEqualTo(IncomingCategoryCreator.createValidCategory().getCategoryName());
@@ -86,7 +93,7 @@ class IncomingCategoryServiceTest {
     void findAll_ReturnsListOfIncomingCategoryInsideOfPageObject_WhenSuccessfull(){
         String expectedName = IncomingCategoryCreator.createValidCategoryForRepository().getCategoryName();
         Integer expectedId = IncomingCategoryCreator.createValidCategoryForRepository().getIncomingCategoryId();
-        Page<IncomingCategoryResponse> categoryPage = categoryService.findAll(PageRequest.of(1, 10));
+        Page<IncomingCategoryResponse> categoryPage = categoryService.findAll(PageRequest.of(1, 10), UserCreator.createValidUser().getUsername());
 
         Assertions.assertThat(categoryPage).isNotNull();
         Assertions.assertThat(categoryPage.toList())
@@ -99,7 +106,7 @@ class IncomingCategoryServiceTest {
     @Test
     @DisplayName("deleteByCategoryId removes category whem successfull")
     void deleteByCategoryId_RemovesCategory_WhenSuccessfull(){
-        String deletedCategory = categoryService.deleteByCategoryId(1);
+        String deletedCategory = categoryService.deleteByCategoryId(1, UserCreator.createValidUser().getUsername());
 
         Assertions.assertThat(deletedCategory)
                 .isNotNull()
@@ -110,7 +117,7 @@ class IncomingCategoryServiceTest {
     @DisplayName("deleteByCategoryId throws EntityNotFoundException when category does not exist")
     void deleteByCategoryId_ThrowsEntityNotFoundException_WhenCategoryDoesNotExiste(){
         Integer categoryId = 999;
-        Assertions.assertThatThrownBy(() -> categoryService.deleteByCategoryId(categoryId))
+        Assertions.assertThatThrownBy(() -> categoryService.deleteByCategoryId(categoryId, UserCreator.createValidUser().getUsername()))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("Category not found: " + categoryId);
     }
@@ -119,7 +126,7 @@ class IncomingCategoryServiceTest {
     @DisplayName("findCategoryByName returns Incoming Category when successfull")
     void findCategoryByName_ReturnsIncomingCategory_WhenSuccessfull(){
         IncomingCategory expctedCategory = IncomingCategoryCreator.createValidCategoryForRepository();
-        IncomingCategory category = categoryService.findByCategoryName("Stocks");
+        IncomingCategory category = categoryService.findByCategoryName("Stocks", UserCreator.createValidUser().getUsername());
 
         Assertions.assertThat(category)
                 .isNotNull()
@@ -133,7 +140,7 @@ class IncomingCategoryServiceTest {
     void findByCategoryName_ThrowsEntityNotFoundException_WhenCategoryDoesNotExiste(){
         String categoryName = "Some random categoryname";
 
-        Assertions.assertThatThrownBy(() -> categoryService.findByCategoryName(categoryName))
+        Assertions.assertThatThrownBy(() -> categoryService.findByCategoryName(categoryName, UserCreator.createValidUser().getUsername()))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("Category not found: " + categoryName);
     }

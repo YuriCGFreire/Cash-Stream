@@ -2,12 +2,14 @@ package com.yuri.freire.Cash_Stream.util.incoming;
 
 import com.yuri.freire.Cash_Stream.Incoming.controllers.model.IncomingCategoryResponse;
 import com.yuri.freire.Cash_Stream.Incoming.entities.IncomingCategory;
+import com.yuri.freire.Cash_Stream.util.user.UserCreator;
 
 public class IncomingCategoryCreator {
 
     public static IncomingCategory createCategoryToBeSaved(){
         return IncomingCategory.builder()
                 .categoryName("Stocks")
+                .user(UserCreator.createValidUser())
                 .build();
     }
 
@@ -15,6 +17,7 @@ public class IncomingCategoryCreator {
         return IncomingCategoryResponse.builder()
                 .incomingCategoryId(1)
                 .categoryName("Stocks")
+                .username(UserCreator.createValidUser().getUsername())
                 .build();
     }
 
@@ -22,6 +25,7 @@ public class IncomingCategoryCreator {
         return IncomingCategory.builder()
                 .incomingCategoryId(1)
                 .categoryName("Stocks")
+                .user(UserCreator.createValidUser())
                 .build();
     }
 

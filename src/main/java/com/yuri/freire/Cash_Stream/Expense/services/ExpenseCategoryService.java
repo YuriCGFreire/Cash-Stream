@@ -27,7 +27,6 @@ import java.util.Optional;
 public class ExpenseCategoryService {
     private final ExpenseCategoryRepository expenseCategoryRepository;
     private final ExpenseFactory expenseFactory;
-    private final JwtService jwtService;
     private final UserService userService;
 
     public ExpenseCategoryResponse createExpenseCategory(@Valid ExpenseCategoryRequest expenseCategoryRequest, String username){

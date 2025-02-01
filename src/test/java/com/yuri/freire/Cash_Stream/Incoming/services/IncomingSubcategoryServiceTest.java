@@ -69,13 +69,13 @@ class IncomingSubcategoryServiceTest {
         BDDMockito.when(subcategoryRepositoryMock.findAllByCategory(IncomingCategoryCreator.createValidCategory().getCategoryName(), PageRequest.of(0, 2), ArgumentMatchers.any()))
                 .thenReturn(subcategoryPage);
 
-        BDDMockito.when(categoryServiceMock.findByCategoryName(ArgumentMatchers.anyString()))
+        BDDMockito.when(categoryServiceMock.findByCategoryName(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
                 .thenReturn(IncomingCategoryCreator.createValidCategoryForRepository());
 
-        BDDMockito.when(categoryServiceMock.findByCategoryName(ArgumentMatchers.anyString()))
+        BDDMockito.when(categoryServiceMock.findByCategoryName(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
                 .thenReturn(IncomingCategoryCreator.createValidCategoryForRepository());
 
-        BDDMockito.when(categoryServiceMock.findByCategoryName("Some random categoryname"))
+        BDDMockito.when(categoryServiceMock.findByCategoryName(ArgumentMatchers.eq("Some random categoryname"), ArgumentMatchers.any()))
                 .thenThrow(new EntityNotFoundException("Category not found: Some random categoryname"));
 
         BDDMockito.when(subcategoryRepositoryMock.findBySubcategoryId(ArgumentMatchers.eq(1), ArgumentMatchers.any()))

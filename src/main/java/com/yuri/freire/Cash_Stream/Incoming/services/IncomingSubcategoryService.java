@@ -28,40 +28,35 @@ public class IncomingSubcategoryService {
     private final IncomingFactory incomingFactory;
     private final UserService userService;
 
-    public IncomingSubcategoryResponse createIncomingSubcategory(IncomingSubcategoryRequest incomingSubcategoryRequest){
-        String currentUsername = SecurityUtils.getCurrentUsername();
-        User user = userService.findUserByUsername(currentUsername);
-        Optional<IncomingSubcategory> fetchedSubcategory = incomingSubcategoryRepository.findBySubCategoryName(incomingSubcategoryRequest.getSubcategoryName(), currentUsername);
+    public IncomingSubcategoryResponse createIncomingSubcategory(IncomingSubcategoryRequest incomingSubcategoryRequest, String username){
+        User user = userService.findUserByUsername(username);
+        Optional<IncomingSubcategory> fetchedSubcategory = incomingSubcategoryRepository.findBySubCategoryName(incomingSubcategoryRequest.getSubcategoryName(), username);
         if(fetchedSubcategory.isPresent()){
             throw new AlreadyExistsException("Incoming subcategory with name '"
                     + incomingSubcategoryRequest.getSubcategoryName() + "' already exists");
         }
-        IncomingCategory incomingCategory = incomingCategoryService.findByCategoryName(incomingSubcategoryRequest.getIncomingCategoryName(), currentUsername);
+        IncomingCategory incomingCategory = incomingCategoryService.findByCategoryName(incomingSubcategoryRequest.getIncomingCategoryName(), username);
         IncomingSubcategory incomingSubcategory = incomingFactory.createIncomingSubcategory(incomingSubcategoryRequest, incomingCategory, user);
         IncomingSubcategory savedSubcategory = incomingSubcategoryRepository.save(incomingSubcategory);
         return incomingFactory.createIncomingSubcategoryResponse(savedSubcategory);
     }
 
-    public IncomingSubcategory findBySubcategoryName(String subcategoryName){
-        String currentUsername = SecurityUtils.getCurrentUsername();
-        return incomingSubcategoryRepository.findBySubCategoryName(subcategoryName, currentUsername)
+    public IncomingSubcategory findBySubcategoryName(String subcategoryName, String username){
+        return incomingSubcategoryRepository.findBySubCategoryName(subcategoryName, username)
                 .orElseThrow(() -> new EntityNotFoundException("Subcategory not found: " + subcategoryName));
     }
 
-    public Page<IncomingSubcategoryResponse> findAllSubcategory(Pageable pageable){
-        String currentUsername = SecurityUtils.getCurrentUsername();
-        return incomingSubcategoryRepository.findAllSubcategory(pageable, currentUsername);
+    public Page<IncomingSubcategoryResponse> findAllSubcategory(Pageable pageable, String username){
+        return incomingSubcategoryRepository.findAllSubcategory(pageable, username);
     }
 
-    public Page<IncomingSubcategoryResponse> findAllByCategoryName(String categoryName, Pageable pageable){
-        String currentUsername = SecurityUtils.getCurrentUsername();
-        IncomingCategory category = incomingCategoryService.findByCategoryName(categoryName, currentUsername);
-        return incomingSubcategoryRepository.findAllByCategory(category.getCategoryName(), pageable, currentUsername);
+    public Page<IncomingSubcategoryResponse> findAllByCategoryName(String categoryName, Pageable pageable, String username){
+        IncomingCategory category = incomingCategoryService.findByCategoryName(categoryName, username);
+        return incomingSubcategoryRepository.findAllByCategory(category.getCategoryName(), pageable, username);
     }
 
-    public String deleteBySubcategoryId(Integer incomginSubcategoryId){
-        String currentUsername = SecurityUtils.getCurrentUsername();
-        IncomingSubcategory subcategory = incomingSubcategoryRepository.findBySubcategoryId(incomginSubcategoryId, currentUsername)
+    public String deleteBySubcategoryId(Integer incomginSubcategoryId, String username){
+        IncomingSubcategory subcategory = incomingSubcategoryRepository.findBySubcategoryId(incomginSubcategoryId, username)
                 .orElseThrow(() -> new EntityNotFoundException("Subcategory not found: " + incomginSubcategoryId));
         incomingSubcategoryRepository.deleteById(subcategory.getIncomingSubcategoryId());
         return subcategory.getSubCategoryName();

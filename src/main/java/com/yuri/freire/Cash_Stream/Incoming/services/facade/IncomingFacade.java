@@ -30,7 +30,7 @@ public class IncomingFacade {
         String currentUsername = SecurityUtils.getCurrentUsername();
         User user = userService.findUserByUsername(currentUsername);
         IncomingCategory incomingCategory = incomingCategoryService.findByCategoryName(incomingRequest.getIncomingCategory(), currentUsername);
-        IncomingSubcategory incomingSubcategory = incomingSubcategoryService.findBySubcategoryName(incomingRequest.getIncomingSubcategory());
+        IncomingSubcategory incomingSubcategory = incomingSubcategoryService.findBySubcategoryName(incomingRequest.getIncomingSubcategory(), currentUsername);
         Recurrence recurrence = recurrenceService.findByRecurrenFrequency(incomingRequest.getRecurrence());
 
         return incomingFactory.createIncoming(incomingRequest, incomingCategory, incomingSubcategory, recurrence, user);
@@ -41,7 +41,7 @@ public class IncomingFacade {
     }
 
     public IncomingSubcategory findIncomingSubcategoryByName(String incomingSubcategoryName, String username){
-        return incomingSubcategoryService.findBySubcategoryName(incomingSubcategoryName);
+        return incomingSubcategoryService.findBySubcategoryName(incomingSubcategoryName, username);
     }
 
     public IncomingCategory findIncomingCategoryByName(String incomingCategoryName, String username){
